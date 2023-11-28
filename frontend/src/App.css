@@ -40,3 +40,135 @@
 .read-the-docs {
   color: #888;
 }
+
+
+body{
+  margin: 0px;
+  background-color: #B8A7AA;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.parent{
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  margin-inline: 10%;
+  
+}
+
+.navbar{
+ 
+  height: 40px;
+  
+  display: flex;
+  padding-block: 30px;
+  
+}
+.name{
+  width: 40%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  color:#EBE6EA;
+  line-height: 1;
+}
+
+.optionbar{
+  background-color: #83616F40;
+  padding: 0px;
+  width: 50%;
+  border-radius: 25px;
+  display: flex;
+  justify-content:space-evenly;
+  align-items: center;
+
+}
+
+.time{
+  color: #48373D;
+}
+
+.quantity{
+  color: #83616F;
+}
+
+.divider{
+  background-color: #B8A7AA;
+  color:#B8A7AA;
+  border-radius: 3px;
+}
+
+.number{
+  color: #48373D;
+}
+
+.userid{
+  color: #48373D;
+  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+
+.inputbar1{
+
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  padding-block: 15px;
+  color: #48373D;
+}
+
+.leftbar{
+  background-color:#83616F40;
+  width: 40%;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+
+.rightbar{
+  background-color: #83616F40;
+  width: 40%;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+
+.inputbar2{
+
+  height: 60px;
+  padding-block: 15px;
+  display: flex;
+  justify-content: space-between;
+  color: #48373D;
+}
+
+.middlebar{
+  background-color: #83616F40;
+  width:100%;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+
+.coding{
+
+  height: 400px;
+  padding-top: 15px;
+  color: #83616F;
+}
+
+.expanding-input {
+  width: 100%; 
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: width 0.3s, height 0.3s; /* Add smooth transition effect */
+}
