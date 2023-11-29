@@ -12,7 +12,7 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div>
+    <div className=' bg-darkblue min-h-screen flex flex-col'>
       <BrowserRouter>
         <Navbar/>
         <Routes>
