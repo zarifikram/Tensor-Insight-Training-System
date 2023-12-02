@@ -7,6 +7,7 @@ import { BrowserRouter,Route,Routes } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
 import Home from './components/Home'
+import Navbar2 from './components/Navbar2'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -14,7 +15,7 @@ function App() {
   return (
     <div className=' bg-darkblue min-h-screen flex flex-col'>
       <BrowserRouter>
-        <Navbar/>
+        <Navbar2/>
         <Routes>
           <Route exact path='/' element={<Home/>}/>
         </Routes>
