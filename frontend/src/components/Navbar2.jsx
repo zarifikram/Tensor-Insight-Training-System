@@ -3,8 +3,9 @@ import { FaCode } from "react-icons/fa6";
 import { FaCircleExclamation } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 
+import { AuthContext } from "./helpers/AuthContext";
 const Navbar2 = () =>{
-
+   
     return(
     <div className="w-screenwidth h-32 flex mx-40 py-10">
         <div className="w-15%  font-saira text-5xl font-bold text-white">TensorITS</div>
