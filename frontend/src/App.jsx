@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -10,22 +10,10 @@ import Home from './components/Home'
 import Navbar2 from './components/Navbar2'
 
 function App() {
-  const [className1, setClassName1] = useState('bg-green-100');
-
-  const handleThemeSwitch1 = () => {
-    // Update the state to change the className
-    setClassName1('bg-darkblue');
-  };
-
-  const handleThemeSwitch2 = () => {
-    // Update the state to change the className
-    setClassName1('bg-green-100');
-  };  
+  const [count, setCount] = useState(0)
 
   return (
-    <div className={`${className1} min-h-screen flex flex-col`}>
-      <button onClick={handleThemeSwitch1}>button1</button>
-      <button onClick={handleThemeSwitch2}>button2</button>
+    <div className=' bg-darkblue min-h-screen flex flex-col'>
       <BrowserRouter>
         <Navbar2/>
         <Routes>
