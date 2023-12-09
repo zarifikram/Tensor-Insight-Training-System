@@ -65,6 +65,36 @@ export default {
         'cp5-txt':'#EDE5B4',
         'cp5-box1':'#38502A',
         'cp5-box2':'#6A994E',
+
+        'cp6-bg':'#0D1C1C',
+        'cp6-cap':'#FFFFFF',
+        'cp6-txt':'#FF6600',
+        'cp6-box1':'#9C9191',
+        'cp6-box2':'#F0E800',
+
+        'cp7-bg':'#EAE4CF',
+        'cp7-cap':'#646669',
+        'cp7-txt':'#ADA998',
+        'cp7-box1':'#DED9C9',
+        'cp7-box2':'#9ABBCD',
+
+        'cp8-bg':'#F35588',
+        'cp8-cap':'#F0E9EC',
+        'cp8-txt':'#94294C',
+        'cp8-box1':'#DB4979',
+        'cp8-box2':'#05DFD7',
+
+        'cp9-bg':'#242933',
+        'cp9-cap':'#F6F0E9',
+        'cp9-txt':'#596172',
+        'cp9-box1':'#1C222D',
+        'cp9-box2':'#EC4C56',
+
+        'cp10-bg':'#F8AD34',
+        'cp10-cap':'#EEEEEE',
+        'cp10-txt':'#333333',
+        'cp10-box1':'#B12189',
+        'cp10-box2':'#545454',
       },
       screens: {
         'sm': '640px',
