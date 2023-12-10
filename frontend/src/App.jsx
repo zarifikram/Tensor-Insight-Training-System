@@ -11,9 +11,12 @@ import Navbar2 from './components/Navbar2'
 
 import { AuthContext } from './components/helpers/AuthContext'
 
+import ParentComponent from './components/popUpParent'
+
 function App() {
 
   const [authState, setAuthState] = useState({
+    cp:2,
     bgcolor:'bg-cp2-bg',
     captioncolor:'text-cp2-cap',
     textcolor:'text-cp2-txt',
@@ -25,6 +28,7 @@ function App() {
   const handleThemeSwitch1 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:1,
       bgcolor:'bg-cp1-bg',
       captioncolor:'text-cp1-cap',
       textcolor:'text-cp1-txt',
@@ -39,6 +43,7 @@ function App() {
   const handleThemeSwitch2 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:2,
       bgcolor:'bg-cp2-bg',
       captioncolor:'text-cp2-cap',
       textcolor:'text-cp2-txt',
@@ -53,6 +58,7 @@ function App() {
   const handleThemeSwitch3 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:3,
       bgcolor:'bg-cp3-bg',
       captioncolor:'text-cp3-cap',
       textcolor:'text-cp3-txt',
@@ -66,6 +72,7 @@ function App() {
   const handleThemeSwitch4 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:4,
       bgcolor:'bg-cp4-bg',
       captioncolor:'text-cp4-cap',
       textcolor:'text-cp4-txt',
@@ -79,6 +86,7 @@ function App() {
   const handleThemeSwitch5 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:5,
       bgcolor:'bg-cp5-bg',
       captioncolor:'text-cp5-cap',
       textcolor:'text-cp5-txt',
@@ -92,6 +100,7 @@ function App() {
   const handleThemeSwitch6 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:6,
       bgcolor:'bg-cp6-bg',
       captioncolor:'text-cp6-cap',
       textcolor:'text-cp6-txt',
@@ -105,6 +114,7 @@ function App() {
   const handleThemeSwitch7 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:7,
       bgcolor:'bg-cp7-bg',
       captioncolor:'text-cp7-cap',
       textcolor:'text-cp7-txt',
@@ -118,6 +128,7 @@ function App() {
   const handleThemeSwitch8 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:8,
       bgcolor:'bg-cp8-bg',
       captioncolor:'text-cp8-cap',
       textcolor:'text-cp8-txt',
@@ -131,6 +142,7 @@ function App() {
   const handleThemeSwitch9 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:9,
       bgcolor:'bg-cp9-bg',
       captioncolor:'text-cp9-cap',
       textcolor:'text-cp9-txt',
@@ -144,6 +156,7 @@ function App() {
   const handleThemeSwitch10 = () => {
     // Update the state to change the className
     setAuthState({
+      cp:10,
       bgcolor:'bg-cp10-bg',
       captioncolor:'text-cp10-cap',
       textcolor:'text-cp10-txt',
@@ -156,7 +169,9 @@ function App() {
   return (
     <div>
       <AuthContext.Provider value={[ authState, setAuthState]}>
+      
       <div className={`${authState.bgcolor} min-h-screen flex flex-col`}>
+      {/*
       <div className='flex justify-center'> 
         <button className='bg-cp1-bg w-10% text-cp1-txt' onClick={handleThemeSwitch1}>solarized light</button>
         <button className='bg-cp2-bg w-10% text-cp2-txt' onClick={handleThemeSwitch2}>nautilas</button>
@@ -168,7 +183,8 @@ function App() {
         <button className='bg-cp8-bg w-10% text-cp8-txt' onClick={handleThemeSwitch8}>miami</button>
         <button className='bg-cp9-bg w-10% text-cp9-txt' onClick={handleThemeSwitch9}>bushido</button>
         <button className='bg-cp10-bg w-10% text-cp10-txt' onClick={handleThemeSwitch10}>mexican</button>
-      </div>
+      </div>*/
+      }
       <BrowserRouter>
         <Navbar2/>
         <Routes>
