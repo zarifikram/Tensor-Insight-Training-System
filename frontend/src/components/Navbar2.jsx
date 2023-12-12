@@ -8,7 +8,7 @@ import React, { useContext } from "react";
 
 import { useState } from "react";
 
-import Popup from "./ColorProfilePickerPopUp";
+import SettingsPopUp from "./Settings";
 const Navbar2 = () =>{
     const [authState,setAuthState]= useContext(AuthContext);
     console.log("from navbar")
@@ -45,7 +45,7 @@ const Navbar2 = () =>{
         </div>
         <div className={`w-5%  flex justify-center py-2 font-saira ${authState.textcolor} font-bold text-3xl`}><FaUser /></div>
         {
-            <Popup isOpen={isPopupOpen} onClose={closePopup}/>
+            <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup}/>
         }
         
     </div>

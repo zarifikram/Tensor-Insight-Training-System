@@ -8,6 +8,7 @@ import { BrowserRouter,Route,Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import Navbar2 from './components/Navbar2'
+import Footer from './components/Footer'
 
 import { AuthContext } from './components/helpers/AuthContext'
 
@@ -49,6 +50,7 @@ function App() {
         <Routes>
           <Route exact path='/' element={<Home/>}/>
         </Routes>
+        <Footer/>
       </BrowserRouter>
       </div>
       </AuthContext.Provider>
