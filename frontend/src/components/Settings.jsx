@@ -15,6 +15,9 @@ const SettingsPopUp = ({ isOpen, onClose, children }) => {
 
     //Color-picker---------------------------------------
     const themeName = ['solar light', 'nautilas', 'matrix', 'gruvbox dark','hedge','tron orange','godspeed','miami','bushido','mexican'];
+    const hover_text_cp_box2=['hover:text-cp1-box2','hover:text-cp2-box2','hover:text-cp3-box2','hover:text-cp4-box2','hover:text-cp5-box2',
+    'hover:text-cp6-box2','hover:text-cp7-box2','hover:text-cp8-box2','hover:text-cp9-box2','hover:text-cp10-box2']
+
 
     const setTheme = (themeNumber) =>{
         setAuthState({
@@ -51,7 +54,8 @@ const SettingsPopUp = ({ isOpen, onClose, children }) => {
             <div className="flex flex-wrap justify-center ">
                
                 {Array.from({ length: 10 }, (_, index) => (               
-                    <div key={index} className={` flex w-30% h-16 m-2 bg-cp${index + 1}-bg rounded-md ${(authState.cp === index + 1 )?'':'hover:scale-110 transition-transform duration-300'} ${authState.cp === index + 1 ? `border-8 border-cp${index + 1}-box2`:``} text-cp${index + 1}-txt hover:text-cp${index + 1}-box2`} onClick={() => handleThemes(index+1)}>
+                    <div key={index} className={` flex w-30% h-16 m-2 bg-cp${index + 1}-bg rounded-md ${(authState.cp === index + 1 )?'':'hover:scale-110 transition-transform duration-300'}
+                     ${authState.cp === index + 1 ? `border-8 border-cp${index + 1}-box2`:``} text-cp${index + 1}-txt ${hover_text_cp_box2[index]}`} onClick={() => handleThemes(index+1)}>
                     <div className={`w-40%  flex justify-center items-center font-semibold text-xl  `}>{themeName[index]}</div>
                     <div className={`w-60% flex justify-evenly items-center`}>
                       <div className={`w-15% bg-cp${index + 1}-cap flex justify-center text-cp${index + 1}-cap rounded-full`}>a</div>
