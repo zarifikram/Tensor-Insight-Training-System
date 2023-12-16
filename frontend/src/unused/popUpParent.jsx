@@ -1,7 +1,7 @@
 // ParentComponent.js
 
 import React, { useState } from 'react';
-import Popup from './ColorProfilePickerPopUp';
+import Popup from '../components/ColorProfilePickerPopUp';
 
 const ParentComponent = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);

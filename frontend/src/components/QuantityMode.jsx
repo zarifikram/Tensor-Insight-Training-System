@@ -1,7 +1,7 @@
 import { AuthContext } from "./helpers/AuthContext";
 import React, { useContext } from "react";
 
-const Home = () =>{
+const QuantityMode = () =>{
     const [authState,setAuthState]= useContext(AuthContext);
 
     let m1="[[1, 2, 3]], [4, 1, 2], [2, 1, 5]]";
@@ -23,4 +23,4 @@ const Home = () =>{
     
     };
     
-    export default Home;
+    export default QuantityMode;
