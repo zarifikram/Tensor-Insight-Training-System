@@ -6,6 +6,8 @@ export default {
   ],
   theme: {
     extend: {
+      fontSize: {
+        'xxs': '0.4rem'},
       width:{
         '5%':'5%',
         '10%':'10%',
