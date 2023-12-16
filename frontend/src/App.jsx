@@ -22,6 +22,7 @@ function App() {
     captioncolor:'text-cp2-cap',
     textcolor:'text-cp2-txt',
     textcolor2:'text-cp2-box2',
+    textcolor3:'text-cp2-bg',
     box1color:'bg-cp2-box1',
     box2color:'bg-cp2-box2'
   });

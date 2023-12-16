@@ -1,6 +1,10 @@
 import { AuthContext } from "./helpers/AuthContext";
 import React, { useContext } from "react";
 
+import CodePane from "./CodePane";
+import { RxCross2 } from "react-icons/rx";//<RxCross2/>
+import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
+
 const QuantityMode = () =>{
     const [authState,setAuthState]= useContext(AuthContext);
 
@@ -10,14 +14,17 @@ const QuantityMode = () =>{
 
     return(
     <div className="mx-40">
-        <div className=" h-28 flex justify-between py-4">
-            <div className={` ${authState.box1color} w-40% rounded-3xl font-bold ${authState.textcolor} text-2xl flex justify-center py-5`}>{m1}</div>
-            <div className={` ${authState.box1color} w-40% rounded-3xl font-bold ${authState.textcolor} text-2xl flex justify-center py-5`}>{m2}</div>
+        <div className=" h-24 flex justify-center py-4 items-center">
+            <div className={` ${authState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
+
+                <div className={`bg-green-600 rounded-full `}><IoMdCheckmark/></div>
+                <div className={`bg-red-600 rounded-full `}><RxCross2/></div>
+                <div className={`bg-green-600 rounded-full `}><IoMdCheckmark/></div>
+                <div className={`bg-green-600 rounded-full `}><IoMdCheckmark/></div>
+                <div className={`bg-red-600 rounded-full `}><RxCross2/></div>
+            </div>
         </div>
-        <div className="  h-28 flex py-4">
-            <div className={` ${authState.box1color} w-100% rounded-3xl font-bold ${authState.textcolor} text-2xl flex justify-center py-5`}>{m3}</div>
-        </div>
-        <div className={`py-20 ${authState.textcolor} font-roboto text-4xl font-bold`}>start typing your code . . .</div>
+        <CodePane/>
     </div>
     );
     

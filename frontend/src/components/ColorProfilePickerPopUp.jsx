@@ -37,8 +37,9 @@ const ColorPickerPopup = ({ isOpen, onClose, children }) => {
           captioncolor:`text-cp${themeNumber}-cap`,
           textcolor:`text-cp${themeNumber}-txt`,
           textcolor2:`text-cp${themeNumber}-box2`,
+          textcolor3:`text-cp${themeNumber}-bg`,
           box1color:`bg-cp${themeNumber}-box1`,
-          box2color:`bg-cp${themeNumber}-box2`
+          box2color:`bg-cp${themeNumber}-box2`,
         })
   }
 
