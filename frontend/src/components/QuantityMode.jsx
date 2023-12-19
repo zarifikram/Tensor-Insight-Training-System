@@ -5,6 +5,8 @@ import CodePane from "./CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 
+
+
 const QuantityMode = () =>{
     const [authState,setAuthState]= useContext(AuthContext);
 
