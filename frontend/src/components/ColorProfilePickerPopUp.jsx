@@ -40,6 +40,7 @@ const ColorPickerPopup = ({ isOpen, onClose, children }) => {
           textcolor3:`text-cp${themeNumber}-bg`,
           box1color:`bg-cp${themeNumber}-box1`,
           box2color:`bg-cp${themeNumber}-box2`,
+          box3color:`bg-cp${themeNumber}-txt`,
         })
   }
 

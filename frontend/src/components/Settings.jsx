@@ -27,7 +27,8 @@ const SettingsPopUp = ({ isOpen, onClose, children }) => {
             textcolor:`text-cp${themeNumber}-txt`,
             textcolor2:`text-cp${themeNumber}-box2`,
             box1color:`bg-cp${themeNumber}-box1`,
-            box2color:`bg-cp${themeNumber}-box2`
+            box2color:`bg-cp${themeNumber}-box2`,
+            box3color:`bg-cp${themeNumber}-txt`,
           })
     }
 

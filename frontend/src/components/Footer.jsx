@@ -24,11 +24,11 @@ const Footer = () =>{
     const themeName = ['solar light', 'nautilas', 'matrix', 'gruvbox dark','hedge','tron orange','godspeed','miami','bushido','mexican'];
 
 return (
-<div className=" h-16 flex  mt-auto mx-40 justify-end"> 
+<div className=" h-16 flex  mt-auto mx-40 justify-end "> 
     <div className={`w-16 flex justify-center items-center font-bold text-2xl ${authState.textcolor} hover:text-gray-400`} onClick={openPopup} >
         <IoColorPalette />
     </div>
-    <div className={`flex justify-center items-center font-bold text-xl ${authState.textcolor}`} >
+    <div className={`flex justify-center items-center font-bold text-xl ${authState.textcolor} hover:text-gray-400`} onClick={openPopup}>
         {themeName[authState.cp-1]}
     </div>
 

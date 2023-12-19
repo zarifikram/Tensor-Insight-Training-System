@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      spacing: {
+        'lpop': '360px', // Adjust the pixel value as needed
+      },
       fontSize: {
         'xxs': '0.6rem'},
       width:{
@@ -32,7 +35,7 @@ export default {
       },
       fontFamily:{
         'saira':'Saira Semi Condensed',
-        'roboto':'Roboto&display'
+        'roboto':'Roboto Mono'
       },
       colors:{
         'darkblue':'#161821',
