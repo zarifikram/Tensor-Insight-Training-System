@@ -50,9 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'auth_firebase.apps.AuthFirebaseConfig',
-    'rest_framework',
     'main',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -83,11 +82,8 @@ TEMPLATES = [
     },
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'main.authentication.FirebaseAuthentication',
-    ]
-}
+AUTH_USER_MODEL = 'main.CustomUser'
+
 
 WSGI_APPLICATION = 'tits.wsgi.application'
 

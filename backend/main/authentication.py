@@ -1,5 +1,6 @@
 from rest_framework.authentication import BaseAuthentication
-from main import exceptions
+from main import exceptions,models
+from .models import CustomUser
 from django.contrib.auth.models import User
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -58,6 +59,6 @@ class FirebaseAuthentication(BaseAuthentication):
             raise exceptions.FirebaseError()
 
         """Get or create the user"""
-        user, created = User.objects.get_or_create(username=uid)
+        user, created = CustomUser.objects.get_or_create(username=uid)
 
         return (user, None)
