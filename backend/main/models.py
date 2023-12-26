@@ -40,6 +40,7 @@ class Problem(models.Model):
     difficulty = models.CharField(max_length=20)
     solve_count = models.IntegerField(default=0)
     try_count = models.IntegerField(default=0)
+    show_code = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class TestCase(models.Model):
@@ -51,7 +52,6 @@ class Submission(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
     code = models.TextField()
-    show_code = models.BooleanField(default=False)
     test_case_solved = models.IntegerField(default=0)
     test_case_failed = models.IntegerField(default=0)
     taken_time = models.IntegerField(default=0)
@@ -165,13 +165,13 @@ class Achievement(models.Model):
     xp = models.IntegerField(default=0)
     image = models.ImageField(upload_to='achievement_images/')
 
-class userAchievement(models.Model):
+class UserAchievement(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
 #User Added Problem
-class userProblem(models.Model):
+class UserProblem(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
