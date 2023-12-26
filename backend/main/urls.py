@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    HomePageView,SignUpView, SignInView, SignOutView,ProblemSetView,
+    HomePageView,SignUpView, SignInWithGoogleView, SignInWithEmailPassView,SignOutView,ProblemSetView,
     ProblemDetailView,ProblemSubmissionListView,EditorialDetailView,
     AddEditorialView,AddDiscussionView,ProblemSubmitView,SubmissionDetailView,
     UserDetailView, UserAchievementListView,UserProblemListView,
@@ -21,11 +21,12 @@ urlpatterns = [
 
     # Authentication
     path('api/signup/', SignUpView.as_view(), name='signup'),
-    path('api/signin/', SignInView.as_view(), name='signin'),
+    path('api/signin-with-google/', SignInWithGoogleView.as_view(), name='signin_with_google'),
+    path('api/signin-with-email-password/', SignInWithEmailPassView.as_view(), name='signin'),
     path('api/signout/', SignOutView.as_view(), name='signout'),
 
     # Problem Set
-    path('api/problem-set', ProblemSetView.as_view(), name='problem_set'),
+    path('api/problem-set/', ProblemSetView.as_view(), name='problem_set'),
 
     # Problem
     path('api/problem/<int:problem_id>/',ProblemDetailView.as_view(), name='problem_detail'),

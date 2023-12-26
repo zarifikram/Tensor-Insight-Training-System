@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Problem, TestCase, Submission, Discussion, DiscussionVote, Editorial, EditorialComment, EditorialCommentVote, EditorialVote, Contest, ContestProblem, ContestSubmission, ContestUser, QuantityMode, QuantityModeSubmission, TimeMode, TimeModeSubmission, CustomMode, CustomModeSubmission, Achievement, UserAchievement, userProblem
+from .models import CustomUser, Problem, TestCase, Submission, Discussion, DiscussionVote, Editorial, EditorialComment, EditorialCommentVote, EditorialVote, Contest, ContestProblem, ContestSubmission, ContestUser, QuantityMode, QuantityModeSubmission, TimeMode, TimeModeSubmission, CustomMode, CustomModeSubmission, Achievement, UserAchievement, UserProblem
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
@@ -136,5 +136,5 @@ class UserAchievementSerializer(serializers.ModelSerializer):
 # userProblem Serializer
 class userProblemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = userProblem
+        model = UserProblem
         fields = '__all__'

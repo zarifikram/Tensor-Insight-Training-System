@@ -2,6 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.http import JsonResponse
+from rest_framework.permissions import AllowAny
+from firebase_admin import credentials, auth
+from django.contrib.auth import login, logout, authenticate
 
 from .models import (
     CustomUser, Problem, TestCase, Submission,
@@ -33,21 +37,75 @@ class HomePageView(APIView):
 
 # Authentication Views:
 class SignUpView(APIView):
-    def post(self, request):
-        # Implementation for user registration
-        pass
+    permission_classes = [AllowAny]
 
-class SignInView(APIView):
-    def post(self, request):
-        # Implementation for user login
-        pass
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        if not (username and email and password):
+            return JsonResponse({'error': 'Username, email, and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        django_user, created = CustomUser.objects.get_or_create(username=username, email=email)
+
+        if created:
+            django_user.set_password(password)
+            django_user.save()
+
+        return JsonResponse({'message': 'Sign up successful'}, status=status.HTTP_201_CREATED)
+
+class SignInWithGoogleView(APIView):
+    def post(self, request, *args, **kwargs):
+        id_token = request.data.get('idToken')
+
+        if not id_token:
+            return JsonResponse({'error': 'ID token is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            decoded_token = auth.verify_id_token(id_token)
+            uid = decoded_token['uid']
+            django_user, created = CustomUser.objects.get_or_create(username=uid)
+
+            if created:
+                # If the user is newly created, update additional user information
+                email = decoded_token.get('email')
+                if email:
+                    django_user.email = email
+
+                # Add any additional user information from the decoded token
+
+                django_user.save()
+
+            login(request, django_user)
+            return JsonResponse({'message': 'Login successful'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+class SignInWithEmailPassView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        if not (username and password):
+            return JsonResponse({'error': 'Username and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            login(request, user)
+            return JsonResponse({'message': 'Login successful'}, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class SignOutView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        # Implementation for user logout
-        pass
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return JsonResponse({'message': 'Logout successful'}, status=status.HTTP_200_OK)
 
 # Problem Set View:
 class ProblemSetView(APIView):
