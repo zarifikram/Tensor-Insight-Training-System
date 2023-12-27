@@ -1,33 +1,15 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, uid, **extra_fields):
-        user = self.model(username=uid, **extra_fields)
-        user.save(using=self._db)
-        return user
 
-    def create_superuser(self, uid, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        return self.create_user(uid, **extra_fields)
-
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(unique=True, max_length=150)
-
-    name = models.CharField(max_length=150)
+class CustomUser(AbstractUser):
     xp = models.IntegerField(default=0)
     rating = models.IntegerField(default=0)
-    createdAt = models.DateTimeField(auto_now_add=True)
-
-    objects = CustomUserManager()
-
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.username
+
 
 class ProblemSetting(models.Model):
     generation_iteration = models.IntegerField(default=1)
