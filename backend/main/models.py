@@ -42,6 +42,7 @@ class Problem(models.Model):
     try_count = models.IntegerField(default=0)
     show_code = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+    solution = models.TextField(null=True, blank=True)
 
 class TestCase(models.Model):
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
