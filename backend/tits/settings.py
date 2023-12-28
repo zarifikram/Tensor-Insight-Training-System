@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from main.custom_azure import CustomAzureStorageStatic,CustomAzureStorageMedia
 
 load_dotenv()
 
@@ -29,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 FIREBASE_ACCOUNT_TYPE = os.environ.get('FIREBASE_ACCOUNT_TYPE')
 FIREBASE_PROJECT_ID = os.environ.get('FIREBASE_PROJECT_ID')
@@ -42,6 +43,7 @@ FIREBASE_TOKEN_URI = os.environ.get('FIREBASE_TOKEN_URI')
 FIREBASE_AUTH_PROVIDER_X509_CERT_URL = os.environ.get('FIREBASE_AUTH_PROVIDER_X509_CERT_URL')
 FIREBASE_CLIENT_X509_CERT_URL = os.environ.get('FIREBASE_CLIENT_X509_CERT_URL')
 FIREBASE_UNIVERSE_DOMAIN = os.environ.get('FIREBASE_UNIVERSE_DOMAIN')
+AZURE_STORAGE_CONNECTION_STRING = os.environ.get('AZURE_STORAGE_CONNECTION_STRING')
 
 
 # Application definition
@@ -56,6 +58,7 @@ INSTALLED_APPS = [
     'main',
     'rest_framework',
     'drf_spectacular',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -152,13 +155,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+AZURE_STORAGE_CONTAINER_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT')
+STATIC_URL = f'https://{AZURE_STORAGE_CONTAINER_NAME}.blob.core.windows.net/static/'
+STATICFILES_STORAGE = 'main.custom_azure.CustomAzureStorageStatic'
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static',]
+# Use Azure Storage for media files.
+AZURE_MEDIA_URL = f'https://{AZURE_STORAGE_CONTAINER_NAME}.blob.core.windows.net/media/'
+DEFAULT_FILE_STORAGE = 'main.custom_azure.CustomAzureStorageMedia'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'uploads'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [BASE_DIR / 'static',]
+
+# MEDIA_ROOT = BASE_DIR / 'uploads'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
