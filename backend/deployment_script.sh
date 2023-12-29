@@ -16,5 +16,6 @@ kubectl delete service tensorits-backend-service
 kubectl delete deployment tensorits-backend-deployment
 
 
-kubectl apply -f deployment.yaml
+kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
 

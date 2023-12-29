@@ -32,7 +32,7 @@ from .serializers import (
 # Example View:
 class HomePageView(APIView):
     def get(self, request):
-        return Response({"message": "Welcome to Tensor Insight Training System!"})
+        return Response({"message": "Welcome to Tensor Insight Training System:v2!"})
 
 
 # Authentication Views:

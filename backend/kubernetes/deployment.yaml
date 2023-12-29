@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: tensorits-backend-container
-          image: titsacr.azurecr.io/tensorits-backend-image:latest
+          image: ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }}
           ports:
             - containerPort: 8000
           envFrom:
