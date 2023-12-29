@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+from main.custom_azure import CustomAzureStorageStatic,CustomAzureStorageMedia
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +25,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--x&=u15#rnvvo*=%v=-h3xyn_58y)ml8ncm-xb1@tw8hw)$g*o'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+FIREBASE_ACCOUNT_TYPE = os.environ.get('FIREBASE_ACCOUNT_TYPE')
+FIREBASE_PROJECT_ID = os.environ.get('FIREBASE_PROJECT_ID')
+FIREBASE_PRIVATE_KEY_ID = os.environ.get('FIREBASE_PRIVATE_KEY_ID')
+FIREBASE_PRIVATE_KEY = os.environ.get('FIREBASE_PRIVATE_KEY')
+FIREBASE_CLIENT_EMAIL = os.environ.get('FIREBASE_CLIENT_EMAIL')
+FIREBASE_CLIENT_ID = os.environ.get('FIREBASE_CLIENT_ID')
+FIREBASE_AUTH_URI = os.environ.get('FIREBASE_AUTH_URI')
+FIREBASE_TOKEN_URI = os.environ.get('FIREBASE_TOKEN_URI')
+FIREBASE_AUTH_PROVIDER_X509_CERT_URL = os.environ.get('FIREBASE_AUTH_PROVIDER_X509_CERT_URL')
+FIREBASE_CLIENT_X509_CERT_URL = os.environ.get('FIREBASE_CLIENT_X509_CERT_URL')
+FIREBASE_UNIVERSE_DOMAIN = os.environ.get('FIREBASE_UNIVERSE_DOMAIN')
+AZURE_STORAGE_CONNECTION_STRING = os.environ.get('AZURE_STORAGE_CONNECTION_STRING')
 
 
 # Application definition
@@ -37,8 +55,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'main',
+    'rest_framework',
+    'drf_spectacular',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -69,16 +89,35 @@ TEMPLATES = [
     },
 ]
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'TensorITS',
+}
+
+AUTH_USER_MODEL = 'main.CustomUser'
+
+
 WSGI_APPLICATION = 'tits.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DB_SERVER_NAME = os.environ.get('DB_SERVER_NAME')
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('USER_NAME'),
+        'PASSWORD': os.environ.get('PASSWORD'),
+        'HOST': f'{DB_SERVER_NAME}.postgres.database.azure.com',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
 
@@ -116,8 +155,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+AZURE_STORAGE_CONTAINER_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT')
+STATIC_URL = f'https://{AZURE_STORAGE_CONTAINER_NAME}.blob.core.windows.net/static/'
+STATICFILES_STORAGE = 'main.custom_azure.CustomAzureStorageStatic'
 
-STATIC_URL = 'static/'
+# Use Azure Storage for media files.
+AZURE_MEDIA_URL = f'https://{AZURE_STORAGE_CONTAINER_NAME}.blob.core.windows.net/media/'
+DEFAULT_FILE_STORAGE = 'main.custom_azure.CustomAzureStorageMedia'
+
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [BASE_DIR / 'static',]
+
+# MEDIA_ROOT = BASE_DIR / 'uploads'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

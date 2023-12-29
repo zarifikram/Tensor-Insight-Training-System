@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tensorits-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tensorits-backend
+  template:
+    metadata:
+      labels:
+        app: tensorits-backend
+        dummy-label: "updated"
+    spec:
+      containers:
+        - name: tensorits-backend-container
+          image: ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }}
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: tits-secret

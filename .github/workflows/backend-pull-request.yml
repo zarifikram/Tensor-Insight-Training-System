@@ -1,0 +1,39 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    paths:
+      - 'backend/**'
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install Dependencies
+      run: |
+        pip install -r backend/requirements.txt
+
+    - name: Run Tests
+      run: |
+        python backend/manage.py test
+
+    - name: Run Collectstatic
+      run: |
+        python backend/manage.py collectstatic --noinput
+    - name: Run Migration
+      run: |
+        python backend/manage.py makemigrations --noinput
+    - name: Run Migrate
+      run: |
+        python backend/manage.py migrate --noinput

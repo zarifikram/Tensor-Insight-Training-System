@@ -1,0 +1,52 @@
+name: Merge CI/CD
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Azure ACR Login
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_USERNAME }}.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }} 
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: Build and push Docker image
+      working-directory: backend
+      run: |
+          docker build -t ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }} .
+          docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }}
+
+    - name: Set up Azure CLI
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+    
+    - name: Login to Azure Container Registry
+      run: az acr login --name ${{ secrets.ACR_USERNAME }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
+
+    - name: Azure AKS Login
+      run: |
+          az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }}
+
+    - name: Deploy to AKS
+      run: |
+        kubectl apply -f backend/kubernetes/deployment.yaml
+        kubectl apply -f backend/kubernetes/service.yaml
+    - name: Log and Notify on Failure
+      if: failure()
+      run: |
+        echo "Deployment failed. Notify relevant parties or log the failure details."
+
