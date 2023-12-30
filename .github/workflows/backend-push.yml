@@ -10,6 +10,31 @@ on:
 jobs:
   test_and_deploy:
     runs-on: ubuntu-latest
+    environment: Emtiaz_backend
+    env:
+      FIREBASE_ACCOUNT_TYPE: ${{ secrets.FIREBASE_ACCOUNT_TYPE }}
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+      FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
+      FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+      FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+      FIREBASE_CLIENT_ID: ${{ secrets.FIREBASE_CLIENT_ID }}
+      FIREBASE_AUTH_URI: ${{ secrets.FIREBASE_AUTH_URI }}
+      FIREBASE_TOKEN_URI: ${{ secrets.FIREBASE_TOKEN_URI }}
+      FIREBASE_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }}
+      FIREBASE_CLIENT_X509_CERT_URL: ${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }}
+      FIREBASE_UNIVERSE_DOMAIN: ${{ secrets.FIREBASE_UNIVERSE_DOMAIN }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      USER_NAME: ${{ secrets.USER_NAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
+      DEBUG: ${{ secrets.DEBUG }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+      AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+      AZURE_STORAGE_ACCOUNT_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
+      DISK_URI: ${{ secrets.DISK_URI }}
+      DOCKER_IMAGE_PATH: ${{ secrets.DOCKER_IMAGE_PATH }}
 
     steps:
     - name: Checkout Repository
@@ -25,21 +50,32 @@ jobs:
         pip install -r backend/requirements.txt
 
     - name: Run Tests
-      id: test
       run: |
         python backend/manage.py test
-
-    - name: Run Collectstatic
-      run: |
-        python backend/manage.py collectstatic --noinput
-
-    - name: Run Migration
-      run: |
-        python backend/manage.py makemigrations --noinput
-
-    - name: Run Migrate
-      run: |
-        python backend/manage.py migrate --noinput
+      env:
+        FIREBASE_ACCOUNT_TYPE: ${{ secrets.FIREBASE_ACCOUNT_TYPE }}
+        FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
+        FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+        FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+        FIREBASE_CLIENT_ID: ${{ secrets.FIREBASE_CLIENT_ID }}
+        FIREBASE_AUTH_URI: ${{ secrets.FIREBASE_AUTH_URI }}
+        FIREBASE_TOKEN_URI: ${{ secrets.FIREBASE_TOKEN_URI }}
+        FIREBASE_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }}
+        FIREBASE_CLIENT_X509_CERT_URL: ${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }}
+        FIREBASE_UNIVERSE_DOMAIN: ${{ secrets.FIREBASE_UNIVERSE_DOMAIN }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+        USER_NAME: ${{ secrets.USER_NAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+        DB_SERVER_NAME: ${{ secrets.DB_SERVER_NAME }}
+        DEBUG: ${{ secrets.DEBUG }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+        AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        AZURE_STORAGE_ACCOUNT_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
+        DISK_URI: ${{ secrets.DISK_URI }}
+        DOCKER_IMAGE_PATH: ${{ secrets.DOCKER_IMAGE_PATH }}
 
     - name: Azure ACR Login
       uses: azure/docker-login@v1
@@ -49,7 +85,6 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Build and push Docker image
-      if: steps.test.outcome == 'success'
       working-directory: backend
       run: |
         docker build -t ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }} .
@@ -61,22 +96,16 @@ jobs:
         azcliversion: latest
 
     - name: Login to Azure Container Registry
-      if: steps.test.outcome == 'success'
       run: az acr login --name ${{ secrets.ACR_USERNAME }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
 
     - name: Azure AKS Login
-      if: steps.test.outcome == 'success'
       run: |
         az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }}
 
     - name: Deploy to AKS
-      if: steps.test.outcome == 'success'
       run: |
         kubectl apply -f backend/kubernetes/deployment.yaml
         kubectl apply -f backend/kubernetes/service.yaml
 
-    - name: Log and Notify on Failure
-      if: steps.test.outcome == 'failure'
-      run: |
-        echo "Tests failed. Notify relevant parties or log the failure details."
+
