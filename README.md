@@ -36,3 +36,6 @@
 
 ### ER Diagram
 ![ERD](https://github.com/zarifikram/Tensor-Insight-Training-System/blob/ahemtiaj/diagrams/erd.png)
+
+### API Documentation
+![ERD](https://github.com/zarifikram/Tensor-Insight-Training-System/blob/ahemtiaj/diagrams/api_documentation.png)
