@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'backend/**'
+    branches:
+      - main
 
 jobs:
   test_and_deploy:
@@ -88,22 +90,22 @@ jobs:
         docker build -t ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }} .
         docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }}
 
-    - name: Set up Azure CLI
-      uses: azure/CLI@v1
+    - name: Azure login
+      uses: azure/login@v1.4.3
       with:
-        azcliversion: latest
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Login to Azure Container Registry
-      run: az acr login --name ${{ secrets.ACR_USERNAME }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
-
-    - name: Azure AKS Login
-      run: |
-        az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }}
-
+    - uses: azure/aks-set-context@v3
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
     - name: Deploy to AKS
-      run: |
-        kubectl apply -f backend/kubernetes/deployment.yaml
-        kubectl apply -f backend/kubernetes/service.yaml
+      uses: Azure/k8s-deploy@v4
+      with:
+        manifests: |
+          backend/kubernetes/deployment.yaml
+        images: titsacr.azurecr.io/tensorits-backend-image:${{ github.sha }}
+        pull-images: false
 
 
