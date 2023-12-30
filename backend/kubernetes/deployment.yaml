@@ -15,9 +15,22 @@ spec:
     spec:
       containers:
         - name: tensorits-backend-container
-          image: ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }}
+          image: titsacr.azurecr.io/tensorits-backend-image:latest
           ports:
             - containerPort: 8000
           envFrom:
             - secretRef:
                 name: tits-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tensorits-backend-service
+spec:
+  selector:
+    app: tensorits-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer
