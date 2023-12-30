@@ -10,7 +10,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    environment: Emtiaz_backend
 
     steps:
     - name: Checkout Repository
