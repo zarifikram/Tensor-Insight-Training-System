@@ -10,6 +10,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: Emtiaz_backend
 
     steps:
     - name: Checkout Repository
@@ -25,6 +26,7 @@ jobs:
         pip install -r backend/requirements.txt
 
     - name: Run Tests
+      environment: Emtiaz_backend
       run: |
         python backend/manage.py test
 
