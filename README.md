@@ -27,8 +27,12 @@
 ## _Backend_Link_ [_*Here*_](http://20.187.170.208)
 ## _Backend_API_Documentation_ [_*Here*_](http://20.187.170.208/api/schema/docs/)
 
+## Project Diagram
 ### CI/CD Diagram
 ![CI_CD](https://github.com/zarifikram/Tensor-Insight-Training-System/blob/ahemtiaj/diagrams/ci_cd_pipeline.jpg)
 
 ### Architecture Diagram
 ![Architecture](https://github.com/zarifikram/Tensor-Insight-Training-System/blob/ahemtiaj/diagrams/architecture_diagram.jpg)
+
+### ER Diagram
+![ERD](https://github.com/zarifikram/Tensor-Insight-Training-System/blob/ahemtiaj/diagrams/erd.png)
