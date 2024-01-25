@@ -32,12 +32,16 @@ const CodePane = () => {
                     ref={preRef}
                     style={{
                         selectionColor: 'green',
+                        caretColor: `${authState.textcolor3}`,
+                        // caretColor: 'orange',
+                        caretShape: 'block',
                     }}
                     className={`focus:outline-none p-4 h-60 p-0 overflow-auto font-roboto ${authState.textcolor} whitespace-pre-wrap text-2xl`}
                     contentEditable
                     spellCheck="false"
                     onInput={handleChange}
                     onKeyDown={onKeyDown}
+                    id='code'
                 >
                     {code}
                 </pre>
