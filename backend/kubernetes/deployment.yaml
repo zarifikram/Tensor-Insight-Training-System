@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tensorits-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tensorits-backend
+  template:
+    metadata:
+      labels:
+        app: tensorits-backend
+        dummy-label: "updated"
+    spec:
+      containers:
+        - name: tensorits-backend-container
+          image: titsacr.azurecr.io/tensorits-backend-image:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: tits-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tensorits-backend-service
+spec:
+  selector:
+    app: tensorits-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer
