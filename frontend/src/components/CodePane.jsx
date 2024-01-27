@@ -1,8 +1,9 @@
 import { AuthContext } from "./helpers/AuthContext";
+import { ColorContext } from "./helpers/ColorContext";
 import React, { useContext, useEffect, useRef } from "react";
 
 const CodePane = () => {
-    const [authState, setAuthState] = useContext(AuthContext);
+    const [colorState, setColorState] = useContext(ColorContext);
     const [code, setCode] = React.useState("Start typing your code...");
     const handleChange = (event) => {
         setCode(event.target.value);
@@ -25,18 +26,18 @@ const CodePane = () => {
 
     return (
         <div>
-            <div className={`pt-20 ${authState.textcolor2} font-roboto text-2xl font-bold`}>0/8</div>
-            {/* <div className={` ${authState.textcolor} font-roboto text-2xl font-bold`}>lol typing your code . . .</div> */}
+            <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>0/8</div>
+            {/* <div className={` ${colorState.textcolor} font-roboto text-2xl font-bold`}>lol typing your code . . .</div> */}
             <div className="py-4">
                 <pre
                     ref={preRef}
                     style={{
                         selectionColor: 'green',
-                        caretColor: `${authState.textcolor3}`,
+                        caretColor: `${colorState.textcolor3}`,
                         // caretColor: 'orange',
                         caretShape: 'block',
                     }}
-                    className={`focus:outline-none p-4 h-60 p-0 overflow-auto font-roboto ${authState.textcolor} whitespace-pre-wrap text-2xl`}
+                    className={`focus:outline-none  h-60 p-0 overflow-auto font-roboto ${colorState.textcolor} whitespace-pre-wrap text-2xl`}
                     contentEditable
                     spellCheck="false"
                     onInput={handleChange}

@@ -7,16 +7,16 @@ import { BrowserRouter,Route,Routes } from 'react-router-dom'
 
 
 import QuantityMode from './components/QuantityMode'
+import TimeMode from './components/TimeMode'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 
 import { AuthContext } from './components/helpers/AuthContext'
-
-import ParentComponent from './unused/popUpParent'
+import { ColorContext } from './components/helpers/ColorContext'
 
 function App() {
 
-  const [authState, setAuthState] = useState({
+  const [colorState, setColorState] = useState({
     cp:2,
     bgcolor:'bg-cp2-bg',
     captioncolor:'text-cp2-cap',
@@ -28,11 +28,17 @@ function App() {
     box3color:'bg-cp2-txt'
   });
 
+  const [authState,setAuthState ] = useState({
+    quantityModeRunning:false,
+    timerModeRunning:false
+  })
+
   return (
     <div>
+      <ColorContext.Provider value={[ colorState, setColorState]}>
       <AuthContext.Provider value={[ authState, setAuthState]}>
       
-      <div className={`${authState.bgcolor} min-h-screen flex flex-col`}>
+      <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
       {/*
       <div className='flex justify-center'> 
         <button className='bg-cp1-bg w-10% text-cp1-txt' onClick={handleThemeSwitch1}>solarized light</button>
@@ -51,11 +57,13 @@ function App() {
         <Navbar/>
         <Routes>
           <Route exact path='/' element={<QuantityMode/>}/>
+          <Route exact path='/TimeMode' element={<TimeMode/>}/>
         </Routes>
         <Footer/>
       </BrowserRouter>
       </div>
       </AuthContext.Provider>
+      </ColorContext.Provider>
     </div>
   )
 }

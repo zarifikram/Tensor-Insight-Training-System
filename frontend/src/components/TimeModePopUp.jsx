@@ -12,7 +12,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 
 import { useState } from "react";
 
-const QuantityModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, children }) => {
+const TimeModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     let m1="[[1, 2, 3]], [4, 1, 2], [2, 1, 5]]";
     let m2="[[1], [2], [5]]";
@@ -130,4 +130,4 @@ const QuantityModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, childr
   );
 };
 
-export default QuantityModePopUp;
+export default TimeModePopUp;
