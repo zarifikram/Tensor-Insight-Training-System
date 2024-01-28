@@ -1,10 +1,11 @@
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
 import React, { useContext, useEffect, useRef } from "react";
+//const [colorState, setColorState] = useContext(ColorContext);
 
-const CodePane = () => {
+const CodePane = ({code,setCode,children}) => {
     const [colorState, setColorState] = useContext(ColorContext);
-    const [code, setCode] = React.useState("Start typing your code...");
+    
     const handleChange = (event) => {
         setCode(event.target.value);
     }
@@ -26,7 +27,7 @@ const CodePane = () => {
 
     return (
         <div>
-            <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>0/8</div>
+            
             {/* <div className={` ${colorState.textcolor} font-roboto text-2xl font-bold`}>lol typing your code . . .</div> */}
             <div className="py-4">
                 <pre

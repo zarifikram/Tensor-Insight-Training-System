@@ -10,6 +10,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { useEffect } from "react";
+import axios from 'axios';
 
 import { useState } from "react";
 
@@ -19,6 +20,7 @@ const TimeSelectionPopUp = ({ isOpen, onClose, children }) => {
     const [selectedTime, setSelectedTime] = useState(0);
     const [minutes,setMinutes]=useState(10);
     const [seconds,setSeconds]=useState(0);
+    const [authState,setAuthState] = useContext(AuthContext);
 
     const increaseTime = () => {
         if(selectedTime<times.length-1)
@@ -31,7 +33,20 @@ const TimeSelectionPopUp = ({ isOpen, onClose, children }) => {
     }
 
     const initializeTimeMode = () =>{
-        console.log("hello")
+      
+      axios.post("http://127.0.0.1:8000/api/time-mode/create/",{time:times[selectedTime].toString()})
+      .then((response) => {
+        console.log(response.data);
+        console.log("okay----")
+        setAuthState({
+          quantityModeRunning:authState.quantityModeRunning,
+          timerModeRunning:1
+        })
+        onClose();
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     }
   
     useEffect(() => {

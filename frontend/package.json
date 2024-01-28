@@ -12,6 +12,7 @@
   "homepage": "https://zarifikram.github.io/tensor-insight-training-system",
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
+    "axios": "^1.6.7",
     "firebase": "^10.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

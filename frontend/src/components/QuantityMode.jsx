@@ -6,6 +6,7 @@ import { useState } from "react";
 import CodePane from "./CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
+import axios from 'axios';
 
 import QuantityModePopUp from "./QuantityModePopUp";
 
@@ -30,6 +31,17 @@ const QuantityMode = () =>{
     const closePopup = () => {
         setPopupOpen(false);
     };
+
+    const function1 = () => {
+        axios.get("http://127.0.0.1:8000/api/time-mode/")
+            .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+        console.log("tt");
+    };
     //-------------------------------------------------
 
     return(
@@ -42,6 +54,7 @@ const QuantityMode = () =>{
                 <div className={`bg-green-600 rounded-full`} onClick={()=>openPopup(3)}><IoMdCheckmark/></div>
                 <div className={`bg-red-600 rounded-full`} onClick={()=>openPopup(4)}><RxCross2/></div>
             </div>
+            <button onClick={function1}>aaa</button>
         </div>
         <CodePane/>
         {

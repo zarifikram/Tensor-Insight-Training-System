@@ -19,7 +19,7 @@ const Navbar = () =>{
     const [colorState,setColorState]= useContext(ColorContext);
     console.log("from navbar")
     console.log(colorState)
-    const [mode,setMode] = useState("time");
+    const [mode,setMode] = useState("quantity");
     //Popup--------------------------------------------
   
     const [isPopupOpen, setPopupOpen] = useState(false);

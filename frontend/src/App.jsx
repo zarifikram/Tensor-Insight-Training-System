@@ -14,6 +14,7 @@ import Footer from './components/Footer'
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
 
+
 function App() {
 
   const [colorState, setColorState] = useState({
@@ -30,28 +31,29 @@ function App() {
 
   const [authState,setAuthState ] = useState({
     quantityModeRunning:false,
-    timerModeRunning:false
+    timerModeRunning:0
   })
 
   return (
-    <div>
+    <div>{
+      
       <ColorContext.Provider value={[ colorState, setColorState]}>
       <AuthContext.Provider value={[ authState, setAuthState]}>
       
       <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
-      {/*
-      <div className='flex justify-center'> 
-        <button className='bg-cp1-bg w-10% text-cp1-txt' onClick={handleThemeSwitch1}>solarized light</button>
-        <button className='bg-cp2-bg w-10% text-cp2-txt' onClick={handleThemeSwitch2}>nautilas</button>
-        <button className='bg-cp3-bg w-10% text-cp3-txt' onClick={handleThemeSwitch3}>matrix</button>
-        <button className='bg-cp4-bg w-10% text-cp4-txt' onClick={handleThemeSwitch4}>gruvbox dark</button>
-        <button className='bg-cp5-bg w-10% text-cp5-txt' onClick={handleThemeSwitch5}>hedge</button>
-        <button className='bg-cp6-bg w-10% text-cp6-txt' onClick={handleThemeSwitch6}>tron orange</button>
-        <button className='bg-cp7-bg w-10% text-cp7-txt' onClick={handleThemeSwitch7}>godspeed</button>
-        <button className='bg-cp8-bg w-10% text-cp8-txt' onClick={handleThemeSwitch8}>miami</button>
-        <button className='bg-cp9-bg w-10% text-cp9-txt' onClick={handleThemeSwitch9}>bushido</button>
-        <button className='bg-cp10-bg w-10% text-cp10-txt' onClick={handleThemeSwitch10}>mexican</button>
-      </div>*/
+      {
+      // <div className='flex justify-center'> 
+      //   <button className='bg-cp1-bg w-10% text-cp1-txt' onClick={handleThemeSwitch1}>solarized light</button>
+      //   <button className='bg-cp2-bg w-10% text-cp2-txt' onClick={handleThemeSwitch2}>nautilas</button>
+      //   <button className='bg-cp3-bg w-10% text-cp3-txt' onClick={handleThemeSwitch3}>matrix</button>
+      //   <button className='bg-cp4-bg w-10% text-cp4-txt' onClick={handleThemeSwitch4}>gruvbox dark</button>
+      //   <button className='bg-cp5-bg w-10% text-cp5-txt' onClick={handleThemeSwitch5}>hedge</button>
+      //   <button className='bg-cp6-bg w-10% text-cp6-txt' onClick={handleThemeSwitch6}>tron orange</button>
+      //   <button className='bg-cp7-bg w-10% text-cp7-txt' onClick={handleThemeSwitch7}>godspeed</button>
+      //   <button className='bg-cp8-bg w-10% text-cp8-txt' onClick={handleThemeSwitch8}>miami</button>
+      //   <button className='bg-cp9-bg w-10% text-cp9-txt' onClick={handleThemeSwitch9}>bushido</button>
+      //   <button className='bg-cp10-bg w-10% text-cp10-txt' onClick={handleThemeSwitch10}>mexican</button>
+      // </div>
       }
       <BrowserRouter>
         <Navbar/>
@@ -64,6 +66,9 @@ function App() {
       </div>
       </AuthContext.Provider>
       </ColorContext.Provider>
+    }
+  
+    hello
     </div>
   )
 }
