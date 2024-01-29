@@ -13,6 +13,7 @@ import axios from 'axios';
 import { useEffect } from "react";
 
 import { useRef } from "react";
+axios.defaults.withCredentials= true;
 
 const TimeMode = () =>{
     const [colorState,setColorState]= useContext(ColorContext);
@@ -81,10 +82,10 @@ const TimeMode = () =>{
     const closeTimeSelectionPopup =  () => {
         setTimeSelecetionPopupOpen(false);
         //console.log("tttt");
-        axios.get("http://127.0.0.1:8000/api/custom-mode/")
+        axios.get("http://127.0.0.1:8000/api/time-mode/")
             .then((response) => {
             console.log(response.data);
-            const test_cases = JSON.parse(response.data.test_cases);
+            const test_cases = response.data.current_problem.test_cases;
             for (let i = 0; i < test_cases.length; i++) {
               //console.log(test_cases[i]);
               let temp = pages;

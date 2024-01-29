@@ -14,6 +14,8 @@ import axios from 'axios';
 
 import { useState } from "react";
 
+axios.defaults.withCredentials= true;
+
 const TimeSelectionPopUp = ({ isOpen, onClose, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     const [times, setTimes] = useState([600, 1800, 3600]);
