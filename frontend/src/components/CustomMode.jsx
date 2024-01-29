@@ -94,6 +94,7 @@ const CustomMode = () =>{
               temp[i].inputTensor=JSON.stringify(test_cases[i].input);
               temp[i].expectedTensor=JSON.stringify(test_cases[i].output);
               temp[i].currentTensor=JSON.stringify(test_cases[i].input);
+              temp[i].reached=false;
               console.log(JSON.stringify(test_cases[i].input));
               setPages(temp);
             }
@@ -186,7 +187,7 @@ const CustomMode = () =>{
             </div>
             <div onClick={openTimeSelectionPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><IoMdSettings/></div>
         </div>
-        <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.timerModeRunning}</div>
+        <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}></div>
         <CodePane  onCodeChange={handleCodeChange} />
         <div className={`flex justify-center`}>
           <div className={` flex items-center`}>
