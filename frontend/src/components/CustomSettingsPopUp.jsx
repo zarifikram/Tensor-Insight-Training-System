@@ -14,6 +14,42 @@ import axios from 'axios';
 
 import { useState } from "react";
 
+/*
+
+  "depth": 9223372036854776000,
+  "initiator": {
+    "id": 0,
+    "randint": true,
+    "zeros": true,
+    "ones": true,
+    "arange": true
+  },
+  "manipulator": {
+    "id": 0,
+    "argwhere": true,
+    "tensor_split": true,
+    "gather": true,
+    "masked_select": true,
+    "movedim": true,
+    "splicing": true,
+    "t": true,
+    "take": true,
+    "tile": true,
+    "unsqueeze": true,
+    "negative": true,
+    "positive": true,
+    "where": true,
+    "remainder": true,
+    "clip": true,
+    "argmax": true,
+    "argmin": true,
+    "sum": true,
+    "unique": true
+  }
+
+
+*/
+
 const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     const [times, setTimes] = useState([600, 1800, 3600]);
@@ -77,24 +113,112 @@ const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
         >
         <div className="flex items-center justify-center min-h-screen">
           <div className="overlay fixed inset-0 bg-black opacity-50"></div>
-          <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-9 max-w-screen-lg w-25% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
+          <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-9 max-w-screen-lg w-50% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
             <div className={`text-2xl font-bold`}>
                 Settings
+            </div >
+            <div className={`mt-4 mx-1 font-bold`}>
+            initiator
             </div>
-            <div className={`mt-4`}>
-            Total time: {minutes} minutes and {seconds} seconds
+            <div className={`flex`}>
+                <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                torch.randit
+                </div>
+                <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                torch.zeros
+                </div>
+                <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                torch.ones
+                </div>
+                <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                torch.arange
+                </div>
+
+                </div>
+
+            <div className={`mt-4 mx-1 font-bold`}>
+            manipulator
             </div>
-            <div className={`${colorState.box1color} h-9 mt-1 rounded-md flex justify-between items-center `}>
-               <IoIosArrowBack className={`hover:cursor-pointer hover:scale-150 pl-3 text-3xl font-bold`} onClick={decreaseTime}/>
-               <p>{times[selectedTime]}</p>
-               <IoIosArrowForward className={`hover:cursor-pointer hover:scale-150 pr-3 text-3xl font-bold`} onClick={increaseTime}/>
+            <div >
+                <div className={`flex`}>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.argwhere
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.tensor_split
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.gather
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.masked_select
+                    </div>
+                </div>
+                <div className={`flex`}>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.movedim
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    splicing
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.t
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.take
+                    </div>
+                </div>
+                <div className={`flex`}>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.tile
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.unsqueeze
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.negative
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.positive
+                    </div>
+                </div>
+                <div className={`flex`}>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.where
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.remainder
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.clip
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.argmax
+                    </div>
+                </div>
+                <div className={`flex`}>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.argmin
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.sum
+                    </div>
+                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                    torch.unique
+                    </div>
+                    <div className={`${colorState.bgcolor} h-9 mt-1 mx-1 rounded-md flex justify-center items-center ${colorState.textcolor3} w-25% font-semibold`}>
+                    
+                    </div>
+                    
+
+                </div>
+                <div className={`${colorState.box1color} h-9 mt-9 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-100% font-semibold`} onClick={initializeTimeMode}>
+                    ok
+                    </div>
+
+                
             </div>
-            <div className={`mt-2`}>
-            Change the time limit of set by increasing or decreasing
-            </div>
-            <div className={`${colorState.box1color} h-9 rounded-md mt-5 flex justify-center items-center hover:bg-gray-400`} onClick={initializeTimeMode}>
-            ok, let’s start
-            </div>
+                
           </div>
         </div>
       </div>
