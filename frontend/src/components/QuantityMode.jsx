@@ -32,16 +32,16 @@ const QuantityMode = () =>{
         setPopupOpen(false);
     };
 
-    const function1 = () => {
-        axios.get("http://127.0.0.1:8000/api/time-mode/")
-            .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-        console.log("tt");
-    };
+    // const function1 = () => {
+    //     axios.get("http://127.0.0.1:8000/api/time-mode/")
+    //         .then((response) => {
+    //         console.log(response.data);
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error fetching data:", error);
+    //     });
+    //     console.log("tt");
+    // };
     //-------------------------------------------------
 
     return(
@@ -54,7 +54,7 @@ const QuantityMode = () =>{
                 <div className={`bg-green-600 rounded-full`} onClick={()=>openPopup(3)}><IoMdCheckmark/></div>
                 <div className={`bg-red-600 rounded-full`} onClick={()=>openPopup(4)}><RxCross2/></div>
             </div>
-            <button onClick={function1}>aaa</button>
+           
         </div>
         <CodePane/>
         {

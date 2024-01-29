@@ -7,6 +7,7 @@ import { FaBoltLightning } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
 import { HiDotsHorizontal } from "react-icons/hi";//<HiDotsHorizontal />
 
+
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
 import React, { useContext } from "react";
@@ -19,7 +20,7 @@ const Navbar = () =>{
     const [colorState,setColorState]= useContext(ColorContext);
     console.log("from navbar")
     console.log(colorState)
-    const [mode,setMode] = useState("quantity");
+    const [mode,setMode] = useState("custom");
     //Popup--------------------------------------------
   
     const [isPopupOpen, setPopupOpen] = useState(false);
@@ -53,7 +54,7 @@ const Navbar = () =>{
                     <Link className={`${mode === "time" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/TimeMode" onClick={() => setMode("time")}>
                     <IoTimeSharp className="flex items-center mr-1" /><div>time</div>
                     </Link>
-                    <Link className={`${mode === "quantity" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/" onClick={() => setMode("quantity")}>
+                    <Link className={`${mode === "quantity" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/QuantityMode" onClick={() => setMode("quantity")}>
                     <FaBoltLightning className="flex items-center mr-1" /><div>quantity</div>
                     </Link>
                 </div>

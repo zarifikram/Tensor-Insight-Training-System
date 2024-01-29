@@ -10,6 +10,7 @@ import QuantityMode from './components/QuantityMode'
 import TimeMode from './components/TimeMode'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import CustomMode from './components/CustomMode'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
@@ -58,8 +59,9 @@ function App() {
       <BrowserRouter>
         <Navbar/>
         <Routes>
-          <Route exact path='/' element={<QuantityMode/>}/>
+          <Route exact path='/' element={<CustomMode/>}/>
           <Route exact path='/TimeMode' element={<TimeMode/>}/>
+          <Route exact path='/QuantityMode' element={<QuantityMode/>}/>
         </Routes>
         <Footer/>
       </BrowserRouter>
@@ -68,7 +70,7 @@ function App() {
       </ColorContext.Provider>
     }
   
-    hello
+   
     </div>
   )
 }
