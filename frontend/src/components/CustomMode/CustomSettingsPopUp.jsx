@@ -1,6 +1,6 @@
 // Popup.js
-import { AuthContext } from "./helpers/AuthContext";
-import { ColorContext } from "./helpers/ColorContext";
+import { AuthContext } from "../helpers/AuthContext";
+import { ColorContext } from "../helpers/ColorContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -114,10 +114,8 @@ const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
         <div className="flex items-center justify-center min-h-screen">
           <div className="overlay fixed inset-0 bg-black opacity-50"></div>
           <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-9 max-w-screen-lg w-50% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
-            <div className={`text-2xl font-bold`}>
-                Settings
-            </div >
-            <div className={`mt-4 mx-1 font-bold`}>
+  
+            <div className={`text-2xl mt-1 mx-1  ${colorState.captioncolor}`}>
             initiator
             </div>
             <div className={`flex`}>
@@ -136,7 +134,7 @@ const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
 
                 </div>
 
-            <div className={`mt-4 mx-1 font-bold`}>
+            <div className={`text-2xl mt-4 mx-1  ${colorState.captioncolor}`}>
             manipulator
             </div>
             <div >
@@ -207,17 +205,40 @@ const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
                     torch.unique
                     </div>
                     <div className={`${colorState.bgcolor} h-9 mt-1 mx-1 rounded-md flex justify-center items-center ${colorState.textcolor3} w-25% font-semibold`}>
-                    
                     </div>
-                    
-
                 </div>
+            </div>
+                <div className={`text-2xl mt-9 mx-1  ${colorState.captioncolor}`}>
+                Puzzle Generation Iteration
+                </div>
+                <div className={`mt-4 mx-1 font-bold`}>
+                More iteration adds more layer to the puzzle, increasing difficulty
+                </div>
+                <input type="number" className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold`} >
+                    
+                </input>
+                <div className={`text-2xl mt-9 mx-1  ${colorState.captioncolor}`}>
+                Maximum Character Limit
+                </div>
+                <div className={`mt-4 mx-1 font-bold`}>
+                Limit the amount of character used to write the code. Use 0 for no limit
+                </div>
+                <input type="number" className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold`} >
+                    
+                </input>
+                <div className={` text-2xl mt-9 mx-1  ${colorState.captioncolor}`}>
+                Maximum Line Limit
+                </div>
+                <div className={`mt-4 mx-1 font-bold`}>
+                Limit the amount of lines used to write the code. We count newlines. Use 0 for no limit
+                </div>
+                <input type="number" className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold`} >
+                    
+                </input>
                 <div className={`${colorState.box1color} h-9 mt-9 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-100% font-semibold`} onClick={initializeTimeMode}>
                     ok
-                    </div>
-
-                
-            </div>
+                </div>
+            
                 
           </div>
         </div>

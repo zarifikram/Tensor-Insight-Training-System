@@ -1,6 +1,6 @@
 // Popup.js
-import { AuthContext } from "./helpers/AuthContext";
-import { ColorContext } from "./helpers/ColorContext";
+import { AuthContext } from "../helpers/AuthContext";
+import { ColorContext } from "../helpers/ColorContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -12,7 +12,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 
 import { useState } from "react";
 
-const TimeModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
+const QuantityModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     const handleNavigation = (direction) => {
       if (direction === "prev") {
@@ -91,4 +91,4 @@ const TimeModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,chil
   );
 };
 
-export default TimeModePopUp;
+export default QuantityModePopUp;

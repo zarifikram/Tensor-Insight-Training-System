@@ -1,9 +1,9 @@
-import { AuthContext } from "./helpers/AuthContext";
-import { ColorContext } from "./helpers/ColorContext";
+import { AuthContext } from "../helpers/AuthContext";
+import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 
-import CodePane from "./CodePane";
+import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 

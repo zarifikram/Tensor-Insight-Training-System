@@ -1,6 +1,6 @@
 // Popup.js
-import { AuthContext } from "./helpers/AuthContext";
-import { ColorContext } from "./helpers/ColorContext";
+import { AuthContext } from "../helpers/AuthContext";
+import { ColorContext } from "../helpers/ColorContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -12,47 +12,8 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 
 import { useState } from "react";
 
-const QuantityModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, children }) => {
+const CustomModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
-    let m1="[[1, 2, 3]], [4, 1, 2], [2, 1, 5]]";
-    let m2="[[1], [2], [5]]";
-    let m3="[[1], [1], [5]]";
-
-    // const [currentPage, setCurrentPage] = useState(0);
-
-    const pages = [
-      {
-        inputTensor: "[[1, 2, 3]], [4, 1, 2], [2, 1, 5]]",
-        expectedTensor: "[[1], [2], [5]]",
-        currentTensor: "[[1], [2], [5]]",
-        reached:true
-      },
-      {
-        inputTensor: "[[5, 2, 4]], [2, 1, 2], [1, 1, 5]]",
-        expectedTensor: "[[2], [1], [4]]",
-        currentTensor: "[[4], [5], [6]]",
-        reached:false
-      },
-      {
-        inputTensor: "[[3, 2, 3]], [4, 5, 2], [2, 6, 5]]",
-        expectedTensor: "[[3], [3], [1]]",
-        currentTensor: "[[3], [3], [1]]",
-        reached:true
-      },
-      {
-        inputTensor: "[[9, 9, 0]], [3, 1, 2], [3, 4, 5]]",
-        expectedTensor: "[[8], [2], [1]]",
-        currentTensor: "[[8], [2], [1]]",
-        reached:true
-      },
-      {
-        inputTensor: "[[3, 2, 3]], [4, 5, 2], [2, 6, 5]]",
-        expectedTensor: "[[3], [3], [1]]",
-        currentTensor: "[[2], [2], [2]]",
-        reached:false
-      },
-    ];
-
     const handleNavigation = (direction) => {
       if (direction === "prev") {
         setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
@@ -82,15 +43,15 @@ const QuantityModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, childr
             <div className={`mx-16 font-roboto `} >
               <div>
                 <div className={` h-16 flex items-end text-2xl font-bold pb-2.5`}>Input Tensor</div>
-                <div className={`${colorState.box1color} h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].inputTensor}</div>
+                <div className={`${colorState.box1color} min-h-16 flex justify-start items-center text-base font-extrabold p-5 rounded-lg`}>t1 = {pages[currentPage].inputTensor}</div>
               </div>
               <div>
                 <div className={` h-20 flex items-end text-2xl font-bold pb-2.5`}>Expected Tensor</div>
-                <div className={`${colorState.box1color} h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].expectedTensor}</div>
+                <div className={`${colorState.box1color} min-h-16 flex justify-start items-center text-base font-extrabold p-5 rounded-lg`}>t1 = {pages[currentPage].expectedTensor}</div>
               </div>
               <div >
                 <div className={` h-14 flex items-end text-2xl font-bold pb-2.5 `}>Current Tensor <IoIosCloseCircle className={`text-red-600 ${pages[currentPage].reached? `hidden`:``}`}/><IoIosCheckmarkCircle className={`text-green-600 ${pages[currentPage].reached? ``:`hidden`}`}/>  </div>
-                <div className={`${colorState.box1color} h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].currentTensor}</div>
+                <div className={`${colorState.box1color} min-h-16 flex justify-start items-center text-base font-extrabold p-5 rounded-lg`}>t1 = {pages[currentPage].currentTensor}</div>
               </div>
             </div>
             <div className={`mx-16 flex justify-center items-end h-16 py-1`}>
@@ -130,4 +91,4 @@ const QuantityModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, childr
   );
 };
 
-export default QuantityModePopUp;
+export default CustomModePopUp;

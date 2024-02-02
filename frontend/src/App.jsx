@@ -6,11 +6,11 @@ import './App.css'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
 
 
-import QuantityMode from './components/QuantityMode'
-import TimeMode from './components/TimeMode'
+import QuantityMode from './components/QuantityMode/QuantityMode'
+import TimeMode from './components/TimeMode/TimeMode'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import CustomMode from './components/CustomMode'
+import CustomMode from './components/CustomMode/CustomMode'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'

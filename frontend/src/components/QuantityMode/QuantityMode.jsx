@@ -1,23 +1,21 @@
-import { AuthContext } from "./helpers/AuthContext";
-import { ColorContext } from "./helpers/ColorContext";
+import { AuthContext } from "../helpers/AuthContext";
+import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
-import { IoMdSettings } from "react-icons/io";
-import { MdRestartAlt } from "react-icons/md";
 
-import CodePane from "./CodePane";
+import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 
-import CustomSettingsPopUp from "./CustomSettingsPopUp";
-import CustomModePopUp from "./CustomModePopUp";
+import TimeModePopUp from "./QuantityModePopUp";
+import TimeSelectionPopUp from "./QuantitySelectionPopUp";
 import axios from 'axios';
 import { useEffect } from "react";
 
-
 import { useRef } from "react";
+axios.defaults.withCredentials= true;
 
-const CustomMode = () =>{
+const QuantityMode = () =>{
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
     const codeRef = useRef();
@@ -58,7 +56,7 @@ const CustomMode = () =>{
   
     //Popup--------------------------------------------
     const [isPopupOpen, setPopupOpen] = useState(false);
-    const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(false);
+    const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(true);
     const [currentPage,setCurrentPage] = useState(0);
     
 
@@ -84,17 +82,16 @@ const CustomMode = () =>{
     const closeTimeSelectionPopup =  () => {
         setTimeSelecetionPopupOpen(false);
         //console.log("tttt");
-        axios.get("http://127.0.0.1:8000/api/custom-mode/")
+        axios.get("http://127.0.0.1:8000/api/quantity-mode/")
             .then((response) => {
             console.log(response.data);
-            const test_cases = JSON.parse(response.data.test_cases);
+            const test_cases = response.data.current_problem.test_cases;
             for (let i = 0; i < test_cases.length; i++) {
               //console.log(test_cases[i]);
               let temp = pages;
               temp[i].inputTensor=JSON.stringify(test_cases[i].input);
               temp[i].expectedTensor=JSON.stringify(test_cases[i].output);
               temp[i].currentTensor=JSON.stringify(test_cases[i].input);
-              temp[i].reached=false;
               console.log(JSON.stringify(test_cases[i].input));
               setPages(temp);
             }
@@ -162,7 +159,6 @@ const CustomMode = () =>{
     return(
     <div className="mx-40">
         <div className=" h-24 flex justify-center py-4 items-center">
-        <div onClick={closeTimeSelectionPopup} className={`hover:bg-gray-400 mr-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><MdRestartAlt /></div>
             <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
                 <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
@@ -185,9 +181,9 @@ const CustomMode = () =>{
                   <div className={`${pages[4].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
             </div>
-            <div onClick={openTimeSelectionPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><IoMdSettings/></div>
+            
         </div>
-        <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}></div>
+        <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.timerModeRunning}</div>
         <CodePane  onCodeChange={handleCodeChange} />
         <div className={`flex justify-center`}>
           <div className={` flex items-center`}>
@@ -198,14 +194,14 @@ const CustomMode = () =>{
           </div>
         </div>
         {
-            <CustomModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
+            <TimeModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
         }
                 {
-            <CustomSettingsPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup}  />
+            <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup}  />
         }
     </div>
     );
     
     };
     
-    export default CustomMode;
+    export default QuantityMode;
