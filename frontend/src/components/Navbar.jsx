@@ -83,7 +83,7 @@ const Navbar = () =>{
             </div>
         </div>
         <div className={`w-5%`}></div>
-        <div className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`}><FaUser/></div>
+        <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication"><FaUser/></Link>
         {
             <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup}/>
         }
