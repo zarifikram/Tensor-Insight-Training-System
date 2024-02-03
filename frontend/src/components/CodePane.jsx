@@ -1,20 +1,30 @@
 import { AuthContext } from "./helpers/AuthContext";
+import { ColorContext } from "./helpers/ColorContext";
 import React, { useContext, useEffect, useRef } from "react";
+import { useState } from "react";
+//const [colorState, setColorState] = useContext(ColorContext);
 
-const CodePane = () => {
-    const [authState, setAuthState] = useContext(AuthContext);
-    const [code, setCode] = React.useState("Start typing your code...");
+const CodePane = ({onCodeChange}) => {
+    const [colorState, setColorState] = useContext(ColorContext);
+    const [code, setCode] = useState("Start typing your 1 code...");
+    
     const handleChange = (event) => {
-        setCode(event.target.value);
+        const newCode = event.target.value;
+        setCode(newCode);
+        const text= event.target.innerText;
+        onCodeChange(text); // Call the callback function to update code in TimeMode
     }
 
     const onKeyDown = (e) => {
         if (e.key === "Tab") {
             e.preventDefault();
             document.execCommand('insertText', false, '    ');
-            // setCode(e.target.value+"\t");
         }
     };
+
+    // useEffect(() => {
+    //     console.log(code);
+    // }, [code]);
 
     const preRef = useRef();
 
@@ -22,29 +32,27 @@ const CodePane = () => {
         // Set focus on the pre element when the component mounts
         preRef.current.focus();
     }, []);
-
     return (
         <div>
-            <div className={`pt-20 ${authState.textcolor2} font-roboto text-2xl font-bold`}>0/8</div>
-            {/* <div className={` ${authState.textcolor} font-roboto text-2xl font-bold`}>lol typing your code . . .</div> */}
+            
+            {/* <div className={` ${colorState.textcolor} font-roboto text-2xl font-bold`}>lol typing your code . . .</div> */}
             <div className="py-4">
-                <pre
-                    ref={preRef}
-                    style={{
-                        selectionColor: 'green',
-                        caretColor: `${authState.textcolor3}`,
-                        // caretColor: 'orange',
-                        caretShape: 'block',
-                    }}
-                    className={`focus:outline-none p-4 h-60 p-0 overflow-auto font-roboto ${authState.textcolor} whitespace-pre-wrap text-2xl`}
-                    contentEditable
-                    spellCheck="false"
-                    onInput={handleChange}
-                    onKeyDown={onKeyDown}
-                    id='code'
-                >
-                    {code}
-                </pre>
+            <pre
+                ref={preRef}
+                style={{
+                    selectionColor: 'green',
+                    caretColor: `${colorState.textcolor3}`,
+                    caretShape: 'block',
+                }}
+                className={`focus:outline-none h-60 p-0 overflow-auto font-roboto ${colorState.textcolor} whitespace-pre-wrap text-2xl`}
+                contentEditable
+                spellCheck="false"
+                onInput={handleChange}
+                onKeyDown={onKeyDown}
+                id='code'
+            >
+                {code}
+            </pre>
 
             </div>
         </div>

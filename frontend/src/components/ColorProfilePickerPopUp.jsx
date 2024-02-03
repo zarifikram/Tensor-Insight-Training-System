@@ -3,9 +3,10 @@ import { AuthContext } from "./helpers/AuthContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { AiOutlineCheck } from "react-icons/ai";
+import { ColorContext } from "./helpers/ColorContext";
 
 const ColorPickerPopup = ({ isOpen, onClose, children }) => {
-    const [authState,setAuthState]= useContext(AuthContext);
+    const [colorState,setColorState]= useContext(ColorContext);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked
@@ -31,7 +32,7 @@ const ColorPickerPopup = ({ isOpen, onClose, children }) => {
     const themeName = ['solar light', 'nautilas', 'matrix', 'gruvbox dark','hedge','tron orange','godspeed','miami','bushido','mexican'];
 
     const setTheme = (themeNumber) =>{
-      setAuthState({
+      setColorState({
           cp:themeNumber,
           bgcolor:`bg-cp${themeNumber}-bg`,
           captioncolor:`text-cp${themeNumber}-cap`,
@@ -40,6 +41,7 @@ const ColorPickerPopup = ({ isOpen, onClose, children }) => {
           textcolor3:`text-cp${themeNumber}-bg`,
           box1color:`bg-cp${themeNumber}-box1`,
           box2color:`bg-cp${themeNumber}-box2`,
+          box3color:`bg-cp${themeNumber}-txt`,
         })
   }
 
@@ -57,9 +59,9 @@ const ColorPickerPopup = ({ isOpen, onClose, children }) => {
         >
         <div className="flex items-center justify-center min-h-screen">
           <div className="overlay fixed inset-0 bg-black opacity-50"></div>
-          <div className={` z-50 ${authState.bgcolor} ${authState.textcolor} p-4 max-w-screen-lg w-50% mx-auto rounded-md
+          <div className={` z-50 ${colorState.bgcolor} ${colorState.textcolor} p-4 max-w-screen-lg w-50% mx-auto rounded-md
            shadow-md transition-transform transform duration-300 font-saira my-16`}>
-            <div className={`flex justify-center ${authState.textcolor} pb-2 font-semibold text-2xl `}>
+            <div className={`flex justify-center ${colorState.textcolor} pb-2 font-semibold text-2xl `}>
                 <div>
                     <h2>Set Theme</h2>
                 </div>
@@ -68,8 +70,8 @@ const ColorPickerPopup = ({ isOpen, onClose, children }) => {
                
                 {Array.from({ length: 10 }, (_, index) => (    
                 <div className={`flex justify-between  hover:bg-gray-400 rounded-md`} onClick={() => handleThemes(index+1)}>
-                  <div className={`w-40% pl-3 flex items-center font-semibold text-xl ${authState.textcolor} hover:${authState.textcolor2} `}>
-                    <AiOutlineCheck className={`${authState.cp === index + 1 ?``:`invisible`}`}/>
+                  <div className={`w-40% pl-3 flex items-center font-semibold text-xl ${colorState.textcolor} hover:${colorState.textcolor2} `}>
+                    <AiOutlineCheck className={`${colorState.cp === index + 1 ?``:`invisible`}`}/>
                     {themeName[index]}
                     
                     </div>

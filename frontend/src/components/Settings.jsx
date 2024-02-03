@@ -1,10 +1,11 @@
 // Popup.js
 import { AuthContext } from "./helpers/AuthContext";
+import { ColorContext } from "./helpers/ColorContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const SettingsPopUp = ({ isOpen, onClose, children }) => {
-    const [authState,setAuthState]= useContext(AuthContext);
+    const [colorState,setColorState]= useContext(ColorContext);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked
@@ -20,14 +21,15 @@ const SettingsPopUp = ({ isOpen, onClose, children }) => {
 
 
     const setTheme = (themeNumber) =>{
-        setAuthState({
+        setColorState({
             cp:themeNumber,
             bgcolor:`bg-cp${themeNumber}-bg`,
             captioncolor:`text-cp${themeNumber}-cap`,
             textcolor:`text-cp${themeNumber}-txt`,
             textcolor2:`text-cp${themeNumber}-box2`,
             box1color:`bg-cp${themeNumber}-box1`,
-            box2color:`bg-cp${themeNumber}-box2`
+            box2color:`bg-cp${themeNumber}-box2`,
+            box3color:`bg-cp${themeNumber}-txt`,
           })
     }
 
@@ -45,8 +47,8 @@ const SettingsPopUp = ({ isOpen, onClose, children }) => {
         >
         <div className="flex items-center justify-center min-h-screen">
           <div className="overlay fixed inset-0 bg-black opacity-50"></div>
-          <div className={` z-50 ${authState.bgcolor} ${authState.textcolor} p-4 max-w-screen-lg w-4/5 mx-auto rounded-md shadow-md transition-transform transform duration-300 font-saira`}>
-            <div className={`flex justify-center ${authState.textcolor} pb-2 font-semibold text-2xl `}>
+          <div className={` z-50 ${colorState.bgcolor} ${colorState.textcolor} p-4 max-w-screen-lg w-4/5 mx-auto rounded-md shadow-md transition-transform transform duration-300 font-saira`}>
+            <div className={`flex justify-center ${colorState.textcolor} pb-2 font-semibold text-2xl `}>
                 <div>
                     <h2>Settings</h2>
                 </div>
@@ -54,8 +56,8 @@ const SettingsPopUp = ({ isOpen, onClose, children }) => {
             <div className="flex flex-wrap justify-center ">
                
                 {Array.from({ length: 10 }, (_, index) => (               
-                    <div key={index} className={` flex w-30% h-16 m-2 bg-cp${index + 1}-bg rounded-md ${(authState.cp === index + 1 )?'':'hover:scale-110 transition-transform duration-300'}
-                     ${authState.cp === index + 1 ? `border-8 border-cp${index + 1}-box2`:``} text-cp${index + 1}-txt ${hover_text_cp_box2[index]}`} onClick={() => handleThemes(index+1)}>
+                    <div key={index} className={` flex w-30% h-16 m-2 bg-cp${index + 1}-bg rounded-md ${(colorState.cp === index + 1 )?'':'hover:scale-110 transition-transform duration-300'}
+                     ${colorState.cp === index + 1 ? `border-8 border-cp${index + 1}-box2`:``} text-cp${index + 1}-txt ${hover_text_cp_box2[index]}`} onClick={() => handleThemes(index+1)}>
                     <div className={`w-40%  flex justify-center items-center font-semibold text-xl  `}>{themeName[index]}</div>
                     <div className={`w-60% flex justify-evenly items-center`}>
                       <div className={`w-15% bg-cp${index + 1}-cap flex justify-center text-cp${index + 1}-cap rounded-full`}>a</div>
@@ -68,7 +70,7 @@ const SettingsPopUp = ({ isOpen, onClose, children }) => {
 
             </div>
          
-            <button className={`${authState.textcolor2} absolute top-2 right-2  hover:text-gray-400`} onClick={onClose}>
+            <button className={`${colorState.textcolor2} absolute top-2 right-2  hover:text-gray-400`} onClick={onClose}>
               <AiOutlineCloseCircle /> 
             </button>
           </div>
