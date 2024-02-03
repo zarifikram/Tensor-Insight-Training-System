@@ -9,6 +9,7 @@ import Problem from "./Problem";
 import axios from 'axios';
 import { useEffect } from "react";
 
+axios.defaults.withCredentials= true;
 
 import { useRef } from "react";
 
