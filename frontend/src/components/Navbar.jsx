@@ -10,6 +10,7 @@ import { HiDotsHorizontal } from "react-icons/hi";//<HiDotsHorizontal />
 
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
+import ProblemSet from "./ProblemSet/ProblemSet";
 import React, { useContext } from "react";
 
 import { useState } from "react";
@@ -34,11 +35,24 @@ const Navbar = () =>{
     };
     //-------------------------------------------------
 
+    const [isPopupOpen2, setPopupOpen2] = useState(false);
+    
+    const openPopup2 = (page) => { 
+        setPopupOpen2(true);
+        
+    };
+    
+    const closePopup2 = () => {
+        setPopupOpen2(false);
+    };
+
+
+
     return(
     <div className="w-screenwidth h-28 flex mx-40 py-10">
         <div className={`w-10% flex items-center font-saira text-3xl font-black ${colorState.captioncolor}`}>TensorITS</div>
         <div className={`w-15% flex justify-evenly`}>
-            <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}><FaCode /></div>
+            <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={openPopup2}><FaCode /></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}><AiOutlineGlobal/></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}><FaCircleExclamation /></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}>
@@ -72,6 +86,9 @@ const Navbar = () =>{
         <div className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`}><FaUser/></div>
         {
             <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup}/>
+        }
+        {
+           <ProblemSet isOpen ={isPopupOpen2} onClose={closePopup2}/>
         }
         
     </div>
