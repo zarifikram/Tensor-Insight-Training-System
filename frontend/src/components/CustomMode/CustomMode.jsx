@@ -83,18 +83,19 @@ const CustomMode = () =>{
 
     const closeTimeSelectionPopup =  () => {
         setTimeSelecetionPopupOpen(false);
-        //console.log("tttt");
-        axios.get("http://127.0.0.1:8000/api/custom-mode/")
+
+        console.log(authState.loggedIn);
+        if(authState.loggedIn){
+            axios.get("http://127.0.0.1:8000/api/custom-mode/")
             .then((response) => {
             console.log(response.data);
-            const test_cases = JSON.parse(response.data.test_cases);
+            const test_cases = response.data.test_cases;
             for (let i = 0; i < test_cases.length; i++) {
               //console.log(test_cases[i]);
               let temp = pages;
               temp[i].inputTensor=JSON.stringify(test_cases[i].input);
               temp[i].expectedTensor=JSON.stringify(test_cases[i].output);
               temp[i].currentTensor=JSON.stringify(test_cases[i].input);
-              temp[i].reached=false;
               console.log(JSON.stringify(test_cases[i].input));
               setPages(temp);
             }
@@ -103,6 +104,28 @@ const CustomMode = () =>{
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
+        }else{
+          axios.get("http://127.0.0.1:8000/api/custom-mode/")
+          .then((response) => {
+          console.log(response.data);
+          const test_cases = JSON.parse(response.data.test_cases);
+          for (let i = 0; i < test_cases.length; i++) {
+            //console.log(test_cases[i]);
+            let temp = pages;
+            temp[i].inputTensor=JSON.stringify(test_cases[i].input);
+            temp[i].expectedTensor=JSON.stringify(test_cases[i].output);
+            temp[i].currentTensor=JSON.stringify(test_cases[i].input);
+            temp[i].reached=false;
+            console.log(JSON.stringify(test_cases[i].input));
+            setPages(temp);
+          }
+          console.log(pages);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+        }
+
     };
 
      useEffect(() => {
