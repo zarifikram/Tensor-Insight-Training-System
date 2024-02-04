@@ -34,7 +34,8 @@ function App() {
 
   const [authState,setAuthState ] = useState({
     quantityModeRunning:false,
-    timerModeRunning:0
+    timerModeRunning:0,
+    loggedIn:false
   })
 
   return (

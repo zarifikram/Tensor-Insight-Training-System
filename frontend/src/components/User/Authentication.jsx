@@ -51,8 +51,14 @@ const Authentication = () =>{
             username: usernameLogin,
             password: passwordLogin,
             }).then((response) => {
+                
                 console.log("You Have Successfully Logged In");
                 toast.success("You Have Successfully Logged In");
+                setAuthState({
+                    quantityModeRunning:authState.quantityModeRunning,
+                    timerModeRunning:authState.timerModeRunning,
+                    loggedIn:true
+                })
             }).catch((error) => {
                 console.log("error");
                 console.error("Error fetching data:", error);
@@ -60,23 +66,11 @@ const Authentication = () =>{
             });
     }
 
-    const printCookies = () => {
-        // Get all cookies
-        const cookies = document.cookie.split(";");
-      
-        // Loop through cookies and print the name and value
-        for (const cookie of cookies) {
-          const [name, value] = cookie.trim().split("=");
-      
-          console.log(`${name}: ${value}`);
-        }
-      };
-  
 
 
 
     const SignOut=()=>{
-        printCookies();
+        console.log(document.cookie)
         axios.post(`http://127.0.0.1:8000/api/signout/`
         ).then((response) => {
                 console.log("You Have Successfully Logged In");
@@ -90,7 +84,7 @@ const Authentication = () =>{
  
     return(
     <div className="mx-40 font-roboto">
-        <div className={` ${colorState.box1color} ${colorState.textcolor} rounded-md py-3 w-32  flex justify-center items-center hover:bg-gray-400` } onClick={SignOut}> sign out</div>
+        <div className={` ${colorState.box1color} ${colorState.textcolor} rounded-md py-3 w-32  flex justify-center items-center hover:bg-gray-400 ` } onClick={SignOut}> sign out</div>
         <div className={`flex justify-end pt-32 ${colorState.textcolor} font-bold  text-lg`}>
             <div className={`w-50% flex justify-center items-center`}>
                 <div className={`w-45%`}>
