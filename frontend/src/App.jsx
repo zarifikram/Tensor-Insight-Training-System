@@ -12,7 +12,8 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import CustomMode from './components/CustomMode/CustomMode'
 import Authentication from './components/User/Authentication'
-//import ProblemSet from './components/ProblemSet/ProblemSet'
+import Problem from './components/ProblemSet/Problem'
+import ProblemSet from './components/ProblemSet/ProblemSet'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
@@ -67,8 +68,12 @@ function App() {
           <Route exact path='/QuantityMode' element={<QuantityMode/>}/>
           <Route exact path='/Authentication' element={<Authentication/>}/>
           {
-           // <Route exact path='/ProblemSet' element={<ProblemSet/>}/>
+              <Route path='/Problem/:id' element={<Problem />} />
           }
+          
+          
+           // <Route exact path='/ProblemSet' element={<ProblemSet/>}/>
+          
         </Routes>
         <Footer/>
       </BrowserRouter>

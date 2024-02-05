@@ -31,6 +31,7 @@ const Navbar = () =>{
     };
   
     const closePopup = () => {
+        console.log("close")
       setPopupOpen(false);
     };
     //-------------------------------------------------

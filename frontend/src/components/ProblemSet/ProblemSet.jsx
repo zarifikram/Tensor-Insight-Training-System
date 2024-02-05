@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 
 import Problem from "./Problem";
 import axios from 'axios';
@@ -14,34 +15,23 @@ axios.defaults.withCredentials= true;
 import { useRef } from "react";
 
 const ProblemSet = ({ isOpen, onClose,children }) =>{
+
+    let navigate = useNavigate();
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
 
     const handleClose = (e) => {
         // Close the popup only if the overlay is clicked
-        if(!isPopupOpen)
+       
             if (e.target.classList.contains('overlay')) {
                 onClose();
             }
         };
    
-    //Popup--------------------------------------------
-    const [isPopupOpen, setPopupOpen] = useState(false);
-    
-    const openPopup = () => { 
-        setPopupOpen(true);    
-    };
-    
-    const closePopup = () => {
-        setPopupOpen(false);
-    };
-
     //Problems------------------------------------------
     const [perPage, setPerPage] = useState('10');
     const [currentPage,setCurrentPage] =useState(1);
-
     const [currentProblem,setCurrentProblem] = useState();
-
     const [problems,setProblems] = useState({
         "count": 27,
         "next": "http://127.0.0.1:8000/api/problem-set/?page=3&page_size=10",
@@ -94,18 +84,15 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
       }, [perPage]);
 
       useEffect(() => {
-            console.log("ee");
       }, [problems]);
 
     const enterProblem =(id)=>{
-        console.log("enter:"+id)
         setCurrentProblem(id);
-        
     }
 
      useEffect(() => {
-        console.log("openPop")
-        openPopup();
+        onClose();
+        navigate(`/Problem/${currentProblem}`);
    }, [currentProblem]);
 
     const goToPage=(page)=>{
@@ -145,16 +132,11 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
         if((currentPage-1)>0)
             setCurrentPage(currentPage-1);
     }
-//----------------
-    
 
     const handleSelectChange = (e) => {
         const selectedOptionValue = e.target.value;
         setPerPage(selectedOptionValue);
-        console.log(perPage)
     };
-
-    
 
     return(
         <>
@@ -218,10 +200,6 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
                         </div>   
                     </div>
                 </div>
-                        
-                {
-                    <Problem isOpen={isPopupOpen} onClose={closePopup} problemId={currentProblem}/>
-                }
               </div>
             </div>
           </div>
