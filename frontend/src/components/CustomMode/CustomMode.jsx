@@ -1,9 +1,11 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { CSRFContext } from "../helpers/CSRFContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { IoMdSettings } from "react-icons/io";
 import { MdRestartAlt } from "react-icons/md";
+import { toast } from 'react-toastify';
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -13,6 +15,7 @@ import CustomSettingsPopUp from "./CustomSettingsPopUp";
 import CustomModePopUp from "./CustomModePopUp";
 import axios from 'axios';
 import { useEffect } from "react";
+import Cookies from 'js-cookie';
 
 
 import { useRef } from "react";
@@ -33,9 +36,18 @@ axios.defaults.withCredentials = true;
 // setCSRFToken();
 
 const CustomMode = () =>{
+
+  useEffect(() => {
+      console.log(Cookies.get('csrf'))
+    axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+  }, []);
+  
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+  
     const codeRef = useRef();
+
+
 
     const [pages,setPages] = useState([
         {
@@ -145,6 +157,9 @@ const CustomMode = () =>{
 
      useEffect(() => {
     const handleKeyPress = (event) => {
+
+
+
       if (event.shiftKey && event.ctrlKey ) {
         console.log("Shift + ctrlKey");
         let test_cases=[];
@@ -176,7 +191,7 @@ const CustomMode = () =>{
               temp[i].currentTensor = response.data.result[i].output;
               temp[i].reached = response.data.result[i].correct
             }
-            setPages(pages);
+            setPages(temp);
           }
         })
         .catch((error) => {

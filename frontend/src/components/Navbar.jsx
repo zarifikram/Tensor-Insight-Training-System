@@ -63,7 +63,7 @@ const Navbar = () =>{
         <div className="w-65% flex align-middle justify-end items-center">
             <div  className={`w-65% ${colorState.box1color}  rounded-md flex justify-evenly py-1 font-saira ${colorState.textcolor} font-thin text-lg`}>
                 <div className="flex w-65% justify-around mx-2.5">
-                    <Link className={`${mode === "custom" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/" onClick={() => setMode("custom")}>
+                    <Link className={`${mode === "custom" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/CustomMode" onClick={() => setMode("custom")}>
                     <AiOutlineSliders  className="flex items-center mr-1" /><div>custom</div>
                     </Link>
                     <Link className={`${mode === "time" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/TimeMode" onClick={() => setMode("time")}>

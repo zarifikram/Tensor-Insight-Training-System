@@ -107,10 +107,7 @@ const Problem = () => {
         });
       }, [id]);
 
-      useEffect(() => {
-        console.log("ret1212")
-   
-      }, [problem]);
+
 
 
     return (
@@ -157,7 +154,8 @@ const Problem = () => {
             </div>
             
         </div>
-          <DiscussionList id={id}></DiscussionList>
+        <div className=" flex justify-center text-2xl font-bold py-5"> Discussions</div>
+        <DiscussionList id={id}></DiscussionList>
         {
             <ProblemPopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} problem={problem}/>
         }

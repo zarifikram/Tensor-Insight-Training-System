@@ -17,6 +17,9 @@ import ProblemSet from './components/ProblemSet/ProblemSet'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
+import { CSRFContext } from './components/helpers/CSRFContext'
+
+import Home from './components/Home'
 
 
 function App() {
@@ -39,11 +42,14 @@ function App() {
     loggedIn:false
   })
 
+  const [ csrfState, setCSRFState]=useState();
+
   return (
     <div>{
       
       <ColorContext.Provider value={[ colorState, setColorState]}>
       <AuthContext.Provider value={[ authState, setAuthState]}>
+      <CSRFContext.Provider value={[ csrfState, setCSRFState]}>
       
       <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
       {
@@ -63,7 +69,8 @@ function App() {
       <BrowserRouter>
         <Navbar/>
         <Routes>
-          <Route exact path='/' element={<CustomMode/>}/>
+        <Route path='/' element={<Home />} />
+          <Route exact path='/CustomMode' element={<CustomMode/>}/>
           <Route exact path='/TimeMode' element={<TimeMode/>}/>
           <Route exact path='/QuantityMode' element={<QuantityMode/>}/>
           <Route exact path='/Authentication' element={<Authentication/>}/>
@@ -79,8 +86,10 @@ function App() {
         <Footer/>
       </BrowserRouter>
       </div>
+      </CSRFContext.Provider>
       </AuthContext.Provider>
       </ColorContext.Provider>
+    
     }
   
    
