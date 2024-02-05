@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-axios.defaults.withCredentials= true;
+axios.defaults.withCredentials = true;
 
 const Authentication = () =>{
     const [colorState,setColorState]= useContext(ColorContext);
@@ -59,6 +59,8 @@ const Authentication = () =>{
                     timerModeRunning:authState.timerModeRunning,
                     loggedIn:true
                 })
+
+                setCSRFToken();
             }).catch((error) => {
                 console.log("error");
                 console.error("Error fetching data:", error);
@@ -66,6 +68,17 @@ const Authentication = () =>{
             });
     }
 
+const setCSRFToken = () => {
+  axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+  .then(response => {
+    const csrfToken = response.data.csrftoken;
+    console.log(csrfToken);
+    axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
+  })
+  .catch(error => {
+    console.error('Error fetching CSRF token:', error);
+  });
+};
 
 
 
