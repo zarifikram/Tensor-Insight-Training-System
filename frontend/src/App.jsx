@@ -69,10 +69,11 @@ function App() {
           <Route exact path='/Authentication' element={<Authentication/>}/>
           {
               <Route path='/Problem/:id' element={<Problem />} />
+               // <Route exact path='/ProblemSet' element={<ProblemSet/>}/>
           }
           
           
-           // <Route exact path='/ProblemSet' element={<ProblemSet/>}/>
+          
           
         </Routes>
         <Footer/>

@@ -13,6 +13,7 @@ import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 
 import { useState } from "react";
+import DiscussionList from "./DiscussionList";
 axios.defaults.withCredentials= true;
 
 const Problem = () => {
@@ -113,43 +114,50 @@ const Problem = () => {
 
 
     return (
-<div className="mx-40">
-        <div className=" h-24 flex justify-center py-4 items-center">
-            <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
-                <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
+<div className={`mx-40 ${colorState.textcolor2} font-roboto`}>
+        <div className={`flex justify-start items-end`}>
+          <div className={`py-2 px-3 text-2xl`}>{problem.id}</div>
+          <div className={`py-2 px-3`}>{problem.title}</div>
+          <div className={`py-2 px-3 ${colorState.textcolor}`}>difficulty:   {problem.difficulty}</div>
+        </div>
+        <div className={`py-2 px-3 flex justify-start`}>
+          <div >Manipulators:</div>
+          <div className={ `pl-3 ${colorState.textcolor}`}>{problem.used_manipulator}</div>
+        </div>
+        <div className={`py-2 px-3`}>
+          <div>Description:</div>
+          <div className={`${colorState.textcolor}`}>{problem.description}</div>
+        </div>
+
+        <div className={`py-2 px-3`}>
+          <div>Test Cases:</div>
+        </div>
+        <div className=" h-24 flex justify-start py-4 items-center">
+            <div className={` ${colorState.box1color}  w-40% rounded-md font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
+                <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[0].reached?`hidden invisible`:``}`}><RxCross2/></div>
+                  <div className={`${pages[0].reached?`hidden invisible`:``}`}>1</div>
                 </div>
-                <div className={`${pages[1].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(1)}>
+                <div className={`${pages[1].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(1)}>
                   <div className={`${pages[1].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[1].reached?`hidden invisible`:``}`}><RxCross2/></div>
+                  <div className={`${pages[1].reached?`hidden invisible`:``}`}>2</div>
                 </div>
-                <div className={`${pages[2].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(2)}>
+                <div className={`${pages[2].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(2)}>
                   <div className={`${pages[2].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[2].reached?`hidden invisible`:``}`}><RxCross2/></div>
+                  <div className={`${pages[2].reached?`hidden invisible`:``}`}>3</div>
                 </div>
-                <div className={`${pages[3].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(3)}>
+                <div className={`${pages[3].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(3)}>
                   <div className={`${pages[3].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[3].reached?`hidden invisible`:``}`}><RxCross2/></div>
+                  <div className={`${pages[3].reached?`hidden invisible`:``}`}>4</div>
                 </div>
-                <div className={`${pages[4].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(4)}>
+                <div className={`${pages[4].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(4)}>
                   <div className={`${pages[4].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[4].reached?`hidden invisible`:``}`}><RxCross2/></div>
+                  <div className={`${pages[4].reached?`hidden invisible`:``}`}>5</div>
                 </div>
             </div>
             
         </div>
-        
-        <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.timerModeRunning}</div>
-        <CodePane  onCodeChange={handleCodeChange} />
-        <div className={`flex justify-center`}>
-          <div className={` flex items-center`}>
-            <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor}`}>shift</div>
-            <p className={`${colorState.textcolor}`}>+</p>
-            <div className={`${colorState.box1color} mx-2 py-1 px-2 items-center rounded-md ${colorState.textcolor}`}>ctrl</div>
-            <p className={`${colorState.textcolor}`}>- Run</p>
-          </div>
-        </div>
+          <DiscussionList id={id}></DiscussionList>
         {
             <ProblemPopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} problem={problem}/>
         }

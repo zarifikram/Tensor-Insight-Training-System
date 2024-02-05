@@ -46,11 +46,11 @@ const ProblemPopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,probl
             <div className={`mx-16 font-roboto `} >
               <div>
                 <div className={` h-16 flex items-end text-2xl font-bold pb-2.5`}>Input Tensor</div>
-                <div className={`${colorState.box1color} h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {problem.test_cases[currentPage].input}</div>
+                <div className={`${colorState.box1color} min-h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg p-5`}>t1 = {problem.test_cases[currentPage].input}</div>
               </div>
               <div>
                 <div className={` h-20 flex items-end text-2xl font-bold pb-2.5`}>Output Tensor</div>
-                <div className={`${colorState.box1color} h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {problem.test_cases[currentPage].output}</div>
+                <div className={`${colorState.box1color} min-h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg p-5`}>t1 = {problem.test_cases[currentPage].output}</div>
               </div>
             </div>
             <div className={`mx-16 flex justify-center items-end h-16 py-1`}>
