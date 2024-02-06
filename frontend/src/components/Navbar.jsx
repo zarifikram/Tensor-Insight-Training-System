@@ -21,7 +21,7 @@ const Navbar = () =>{
     const [colorState,setColorState]= useContext(ColorContext);
     console.log("from navbar")
     console.log(colorState)
-    const [mode,setMode] = useState("custom");
+    const [mode,setMode] = useState("none");
     //Popup--------------------------------------------
   
     const [isPopupOpen, setPopupOpen] = useState(false);
@@ -39,6 +39,7 @@ const Navbar = () =>{
     const [isPopupOpen2, setPopupOpen2] = useState(false);
     
     const openPopup2 = (page) => { 
+        setMode("none");
         setPopupOpen2(true);
         
     };
@@ -84,7 +85,7 @@ const Navbar = () =>{
             </div>
         </div>
         <div className={`w-5%`}></div>
-        <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication"><FaUser/></Link>
+        <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication"   onClick={() => {setMode("none");}}><FaUser/></Link>
         {
             <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup}/>
         }

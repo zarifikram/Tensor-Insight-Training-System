@@ -75,8 +75,7 @@ const ColorPickerPopup = ({ isOpen, onClose, children }) => {
                     {themeName[index]}
                     
                     </div>
-                  <div key={index} className={` flex w-10% h-8 m-2 bg-cp${index + 1}-bg rounded-full } 
-                   text-cp${index + 1}-txt ${hover_text_cp_box2[index]}`}>
+                  <div key={index} className={` flex w-10% h-8 m-2 bg-cp${index + 1}-bg rounded-full   text-cp${index + 1}-txt ${hover_text_cp_box2[index]}`}>
                     <div className={`w-100% flex justify-evenly items-center text-xxs`}>
                       <div className={`w-20% bg-cp${index + 1}-cap flex justify-center text-cp${index + 1}-cap rounded-full`}>-</div>
                       <div className={`w-20% ${bg_cp_box1[index]} flex justify-center text-cp${index + 1}-box1 rounded-full`}>-</div>
