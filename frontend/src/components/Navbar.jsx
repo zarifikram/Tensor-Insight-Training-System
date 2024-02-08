@@ -21,7 +21,7 @@ const Navbar = () =>{
     const [colorState,setColorState]= useContext(ColorContext);
     console.log("from navbar")
     console.log(colorState)
-    const [mode,setMode] = useState("custom");
+    const [mode,setMode] = useState("none");
     //Popup--------------------------------------------
   
     const [isPopupOpen, setPopupOpen] = useState(false);
@@ -31,6 +31,7 @@ const Navbar = () =>{
     };
   
     const closePopup = () => {
+        console.log("close")
       setPopupOpen(false);
     };
     //-------------------------------------------------
@@ -38,6 +39,7 @@ const Navbar = () =>{
     const [isPopupOpen2, setPopupOpen2] = useState(false);
     
     const openPopup2 = (page) => { 
+        setMode("none");
         setPopupOpen2(true);
         
     };
@@ -62,7 +64,7 @@ const Navbar = () =>{
         <div className="w-65% flex align-middle justify-end items-center">
             <div  className={`w-65% ${colorState.box1color}  rounded-md flex justify-evenly py-1 font-saira ${colorState.textcolor} font-thin text-lg`}>
                 <div className="flex w-65% justify-around mx-2.5">
-                    <Link className={`${mode === "custom" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/" onClick={() => setMode("custom")}>
+                    <Link className={`${mode === "custom" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/CustomMode" onClick={() => setMode("custom")}>
                     <AiOutlineSliders  className="flex items-center mr-1" /><div>custom</div>
                     </Link>
                     <Link className={`${mode === "time" ?`flex  items-center justify-center ${colorState.textcolor2}`:`flex  items-center justify-center`}`} to="/TimeMode" onClick={() => setMode("time")}>
@@ -83,7 +85,7 @@ const Navbar = () =>{
             </div>
         </div>
         <div className={`w-5%`}></div>
-        <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication"><FaUser/></Link>
+        <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication"   onClick={() => {setMode("none");}}><FaUser/></Link>
         {
             <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup}/>
         }

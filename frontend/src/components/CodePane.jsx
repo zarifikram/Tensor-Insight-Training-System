@@ -50,6 +50,7 @@ const CodePane = ({onCodeChange}) => {
                 onInput={handleChange}
                 onKeyDown={onKeyDown}
                 id='code'
+                
             >
                 {code}
             </pre>

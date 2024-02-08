@@ -14,85 +14,10 @@ import axios from 'axios';
 
 import { useState } from "react";
 
-/*
-
-  "depth": 9223372036854776000,
-  "initiator": {
-    "id": 0,
-    "randint": true,
-    "zeros": true,
-    "ones": true,
-    "arange": true
-  },
-  "manipulator": {
-    "id": 0,
-    "argwhere": true,
-    "tensor_split": true,
-    "gather": true,
-    "masked_select": true,
-    "movedim": true,
-    "splicing": true,
-    "t": true,
-    "take": true,
-    "tile": true,
-    "unsqueeze": true,
-    "negative": true,
-    "positive": true,
-    "where": true,
-    "remainder": true,
-    "clip": true,
-    "argmax": true,
-    "argmin": true,
-    "sum": true,
-    "unique": true
-  }
-
-
-*/
-
-const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
-    const [colorState,setColorState]= useContext(ColorContext);
-    const [times, setTimes] = useState([600, 1800, 3600]);
-    const [selectedTime, setSelectedTime] = useState(0);
-    const [minutes,setMinutes]=useState(10);
-    const [seconds,setSeconds]=useState(0);
-    const [authState,setAuthState] = useContext(AuthContext);
-
-    const increaseTime = () => {
-        if(selectedTime<times.length-1)
-            setSelectedTime(selectedTime+1);
-    };
-
-    const decreaseTime = () => {
-        if(selectedTime>0)
-            setSelectedTime(selectedTime - 1);
-    }
-
-    const initializeTimeMode = () =>{
-      
-      axios.post("http://127.0.0.1:8000/api/time-mode/create/",{time:times[selectedTime].toString()})
-      .then((response) => {
-        console.log(response.data);
-        console.log("okay----")
-        setAuthState({
-          quantityModeRunning:authState.quantityModeRunning,
-          timerModeRunning:1
-        })
-        onClose();
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    }
+const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children }) => {
   
-    useEffect(() => {
-        // This effect runs whenever selectedTime changes
-        console.log(selectedTime)
-        console.log(times[selectedTime])
-        console.log(times[selectedTime]/60)
-        setMinutes(times[selectedTime]/60);
-        setSeconds(times[selectedTime]%60);
-    }, [selectedTime]);
+    const [colorState,setColorState]= useContext(ColorContext);
+    const [authState,setAuthState] = useContext(AuthContext);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked
@@ -101,7 +26,17 @@ const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
         }
     };
 
+    const settingsToggle=(set1,set2)=>{
+      setSettings(prevSettings => ({
+        ...prevSettings,
+        [set1]: {
+            ...prevSettings[set1],
+            [set2]: !prevSettings[set1][set2] // Update argmin to true
+        }
+    }));
 
+    console.log(settings)
+    }
 
 
     return (
@@ -119,89 +54,133 @@ const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
             initiator
             </div>
             <div className={`flex`}>
-                <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
-                torch.randit
+                <div className={`${settings.initiator.randint?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                onClick={() => settingsToggle('initiator','randint')}>
+                torch.randint
                 </div>
-                <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                 <div className={`${settings.initiator.zeros?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                 `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                 onClick={() => settingsToggle('initiator','zeros')}>
                 torch.zeros
                 </div>
-                <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                 <div className={`${settings.initiator.ones?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                 `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                 onClick={() => settingsToggle('initiator','ones')}>
                 torch.ones
                 </div>
-                <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                 <div className={`${settings.initiator.arange?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                 `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                 onClick={() => settingsToggle('initiator','arange')}>
                 torch.arange
                 </div>
-
-                </div>
-
+              </div>
             <div className={`text-2xl mt-4 mx-1  ${colorState.captioncolor}`}>
             manipulator
             </div>
             <div >
                 <div className={`flex`}>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.argwhere?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','argwhere')}>
                     torch.argwhere
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.tensor_split?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','tensor_split')}>
                     torch.tensor_split
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.gather?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','gather')}>
                     torch.gather
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.masked_select?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','masked_select')}>
                     torch.masked_select
                     </div>
                 </div>
                 <div className={`flex`}>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.movedim?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','movedim')}>
                     torch.movedim
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.splicing?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','splicing')}>
                     splicing
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.t?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','t')}>
                     torch.t
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.take?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','take')}>
                     torch.take
                     </div>
                 </div>
                 <div className={`flex`}>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.tile?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','tile')}>
                     torch.tile
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.unsqueeze?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','unsqueeze')}>
                     torch.unsqueeze
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.negative?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','negative')}>
                     torch.negative
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.positive?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','positive')}>
                     torch.positive
                     </div>
                 </div>
                 <div className={`flex`}>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.where?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','where')}>
                     torch.where
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.remainder?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','remainder')}>
                     torch.remainder
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.clip?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','clip')}>
                     torch.clip
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.argmax?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','argmax')}>
                     torch.argmax
                     </div>
                 </div>
                 <div className={`flex`}>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.argmin?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','argmin')}>
                     torch.argmin
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.sum?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','sum')}>
                     torch.sum
                     </div>
-                    <div className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}>
+                     <div className={`${settings.manipulator.unique?`${colorState.box2color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`:
+                     `${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-25% font-semibold`}`}
+                     onClick={() => settingsToggle('manipulator','unique')}>
                     torch.unique
                     </div>
                     <div className={`${colorState.bgcolor} h-9 mt-1 mx-1 rounded-md flex justify-center items-center ${colorState.textcolor3} w-25% font-semibold`}>
@@ -235,7 +214,7 @@ const CustomSettingsPopUp = ({ isOpen, onClose, children }) => {
                 <input type="number" className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold`} >
                     
                 </input>
-                <div className={`${colorState.box1color} h-9 mt-9 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-100% font-semibold`} onClick={initializeTimeMode}>
+                <div className={`${colorState.box1color} h-9 mt-9 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-100% font-semibold`} onClick={onClose}>
                     ok
                 </div>
             
