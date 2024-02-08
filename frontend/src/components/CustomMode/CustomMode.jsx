@@ -251,7 +251,7 @@ const CustomMode = () =>{
     <div className="mx-40">
         <div className=" h-24 flex justify-center py-4 items-center">
           <div onClick={submitAnswer} className={ `${authState.loggedIn?`hover:bg-gray-400 mr-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`:`invisible`}   `}><CgArrowUpO /></div>
-        <div onClick={closeSettingsSelectionPopUp} className={`hover:bg-gray-400 mr-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><MdRestartAlt /></div>
+        <div onClick={closeSettingsSelectionPopUp} className={`${authState.loggedIn?`invisible`:`hover:bg-gray-400 mr-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}`}><MdRestartAlt /></div>
             <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
                 <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
