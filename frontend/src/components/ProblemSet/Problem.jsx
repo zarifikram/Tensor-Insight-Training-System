@@ -5,7 +5,7 @@ import react,{ useContext } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import ProblemPopUp from "./ProblemPopUp";
+import ProblemPopUp from "../../unused/ProblemPopUp";
 import { useRef } from "react";
 
 import CodePane from "../CodePane";

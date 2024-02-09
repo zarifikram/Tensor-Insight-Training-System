@@ -41,7 +41,7 @@ const TimeMode = () =>{
     if(running){
       const intervalId = setInterval(() => {
         setTime(prevTime => {
-          if(prevTime == time){
+          if(prevTime == sendTime){//sendTime
             submitAnswer();
             complete();
             run();
