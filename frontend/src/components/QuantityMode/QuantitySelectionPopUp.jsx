@@ -35,7 +35,7 @@ const QuantitySelectionPopUp = ({ isOpen, onClose, children }) => {
         console.log(response.data);
         console.log("okay----")
         setAuthState({
-          quantityModeRunning:authState.quantityModeRunning,
+          ...prevState,
           QuantityrModeRunning:1
         })
         onClose();

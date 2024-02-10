@@ -144,7 +144,7 @@ const TimeMode = () =>{
         console.log(response.data);
         console.log("okay----")
         setAuthState({
-          quantityModeRunning:authState.quantityModeRunning,
+          ...prevState,
           timerModeRunning:1
         })
         //onClose();
