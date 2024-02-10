@@ -60,17 +60,34 @@ const Authentication = () =>{
             password: passwordLogin,
             }).then((response) => {
                 
-                console.log("You Have Successfully Logged In");
+                console.log(response.data);
                 toast.success("You Have Successfully Logged In");
-                setAuthState({
-                    quantityModeRunning:authState.quantityModeRunning,
-                    timerModeRunning:authState.timerModeRunning,
-                    loggedIn:true
-                })
-
-
+                setAuthState(prevState => ({
+                    ...prevState,
+                    loggedIn: true // or false to change the state to logged out
+                  }));
 
                 setCSRFToken();
+
+                            axios.get(`http://127.0.0.1:8000/api/user/${response.data.id}`
+                            ).then((response) => {         
+                                console.log(response.data);
+
+                            /* 
+                            {id: 4, 
+                            first_name: "saif",
+                            last_name: "hafiz",
+                            level: 1, xp: 299,
+                            image: null,
+                            username: "whatever",
+                            }
+                            */
+
+                            }).catch((error) => {
+                                console.log("error");
+                            });
+
+
             }).catch((error) => {
                 console.log("error");
                 console.error("Error fetching data:", error);
@@ -101,11 +118,10 @@ const setCSRFToken = () => {
         ).then((response) => {
                 console.log("You Have Successfully Logged Out");
                 toast.success("Successfully Logged Out");
-                setAuthState({
-                    quantityModeRunning:authState.quantityModeRunning,
-                    timerModeRunning:authState.timerModeRunning,
-                    loggedIn:false
-                })
+                setAuthState(prevState => ({
+                    ...prevState,
+                    loggedIn: false // or false to change the state to logged out
+                  }));
             }).catch((error) => {
                 console.log("error");
                 console.error("Error fetching data:", error);
