@@ -41,7 +41,7 @@ const TimeMode = () =>{
     if(running){
       const intervalId = setInterval(() => {
         setTime(prevTime => {
-          if(prevTime == time){
+          if(prevTime == sendTime){//sendTime
             submitAnswer();
             complete();
             run();
@@ -144,7 +144,7 @@ const TimeMode = () =>{
         console.log(response.data);
         console.log("okay----")
         setAuthState({
-          quantityModeRunning:authState.quantityModeRunning,
+          ...prevState,
           timerModeRunning:1
         })
         //onClose();

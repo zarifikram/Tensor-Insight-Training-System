@@ -1,6 +1,6 @@
 // Popup.js
-import { AuthContext } from "../helpers/AuthContext";
-import { ColorContext } from "../helpers/ColorContext";
+import { AuthContext } from "../components/helpers/AuthContext";
+import { ColorContext } from "../components/helpers/ColorContext";
 import react,{ useContext, useEffect } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>

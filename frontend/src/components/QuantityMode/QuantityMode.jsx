@@ -197,6 +197,8 @@ const QuantityMode = () =>{
     //-------------------------------------------------
 
     const forceEnd = () =>{
+        submitAnswer();
+
       axios.post("http://127.0.0.1:8000/api/quantity-mode/force-end/")
       .then((response) => {
         console.log(response.data)
@@ -204,6 +206,8 @@ const QuantityMode = () =>{
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+
+      
     }
 
     return(
