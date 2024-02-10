@@ -16,7 +16,7 @@ import { useState } from "react";
 
 axios.defaults.withCredentials= true;
 
-const TimeSelectionPopUp = ({ isOpen, onClose, children }) => {
+const TimeSelectionPopUp = ({ isOpen, onClose,setSendTime, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     const [times, setTimes] = useState([600, 1800, 3600]);
     const [selectedTime, setSelectedTime] = useState(0);
@@ -34,22 +34,7 @@ const TimeSelectionPopUp = ({ isOpen, onClose, children }) => {
             setSelectedTime(selectedTime - 1);
     }
 
-    const initializeTimeMode = () =>{
-      
-      axios.post("http://127.0.0.1:8000/api/time-mode/create/",{time:times[selectedTime].toString()})
-      .then((response) => {
-        console.log(response.data);
-        console.log("okay----")
-        setAuthState({
-          quantityModeRunning:authState.quantityModeRunning,
-          timerModeRunning:1
-        })
-        onClose();
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    }
+
   
     useEffect(() => {
         // This effect runs whenever selectedTime changes
@@ -67,6 +52,10 @@ const TimeSelectionPopUp = ({ isOpen, onClose, children }) => {
         }
     };
 
+    const closeSetTime =()=>{
+      setSendTime(times[selectedTime].toString())
+      onClose();
+    }
 
 
 
@@ -94,7 +83,7 @@ const TimeSelectionPopUp = ({ isOpen, onClose, children }) => {
             <div className={`mt-2`}>
             Change the time limit of set by increasing or decreasing
             </div>
-            <div className={`${colorState.box1color} h-9 rounded-md mt-5 flex justify-center items-center hover:bg-gray-400`} onClick={initializeTimeMode}>
+            <div className={`${colorState.box1color} h-9 rounded-md mt-5 flex justify-center items-center hover:bg-gray-400`} onClick={closeSetTime}>
             ok, let’s start
             </div>
           </div>

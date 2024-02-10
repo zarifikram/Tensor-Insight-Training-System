@@ -13,9 +13,21 @@ import axios from 'axios';
 import { useEffect } from "react";
 
 import { useRef } from "react";
+import { CgArrowUpO } from "react-icons/cg";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
+import { FaStop } from "react-icons/fa6";
 axios.defaults.withCredentials= true;
 
 const QuantityMode = () =>{
+  useEffect(() => {
+    //set axios csrf header
+    axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+  }, []);
+
+
+
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
     const codeRef = useRef();
@@ -79,28 +91,56 @@ const QuantityMode = () =>{
       codeRef.current = newCode;
     };
 
+    const submitAnswer=()=>{
+      axios.post("http://127.0.0.1:8000/api/quantity-mode/submit/",{
+        code:codeRef.current,
+        taken_time:2
+      }).then((response) => {
+        console.log(response.data)
+        console.log("toast time")
+        toast.success("seccessfully submited");
+        const received_result = JSON.parse(response.data);
+        console.log(received_result);
+        if(received_result.result[0].correct &&
+          received_result.result[1].correct &&
+          received_result.result[2].correct &&
+          received_result.result[3].correct &&
+          received_result.result[4].correct)
+          getProblem()
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+
+      
+    }
+
     const closeTimeSelectionPopup =  () => {
         setTimeSelecetionPopupOpen(false);
         //console.log("tttt");
-        axios.get("http://127.0.0.1:8000/api/quantity-mode/")
-            .then((response) => {
-            console.log(response.data);
-            const test_cases = response.data.current_problem.test_cases;
-            for (let i = 0; i < test_cases.length; i++) {
-              //console.log(test_cases[i]);
-              let temp = pages;
-              temp[i].inputTensor=JSON.stringify(test_cases[i].input);
-              temp[i].expectedTensor=JSON.stringify(test_cases[i].output);
-              temp[i].currentTensor=JSON.stringify(test_cases[i].input);
-              console.log(JSON.stringify(test_cases[i].input));
-              setPages(temp);
-            }
-            console.log(pages);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
+        getProblem();
     };
+
+    const getProblem = () =>{
+      axios.get("http://127.0.0.1:8000/api/quantity-mode/")
+      .then((response) => {
+      console.log(response.data);
+      const test_cases = response.data.current_problem.test_cases;
+      for (let i = 0; i < test_cases.length; i++) {
+        //console.log(test_cases[i]);
+        let temp = pages;
+        temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
+        temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+        console.log(JSON.stringify(test_cases[i].input));
+        setPages(temp);
+      }
+      console.log(pages);
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+  });
+    }
 
      useEffect(() => {
     const handleKeyPress = (event) => {
@@ -156,9 +196,24 @@ const QuantityMode = () =>{
 
     //-------------------------------------------------
 
+    const forceEnd = () =>{
+        submitAnswer();
+
+      axios.post("http://127.0.0.1:8000/api/quantity-mode/force-end/")
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+
+      
+    }
+
     return(
     <div className="mx-40">
         <div className=" h-24 flex justify-center py-4 items-center">
+        <div onClick={forceEnd} className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><FaStop /></div>
             <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
                 <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
@@ -181,7 +236,7 @@ const QuantityMode = () =>{
                   <div className={`${pages[4].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
             </div>
-            
+            <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
         </div>
         <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.timerModeRunning}</div>
         <CodePane  onCodeChange={handleCodeChange} />

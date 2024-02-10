@@ -4,12 +4,24 @@ import { ColorContext } from "../helpers/ColorContext";
 import react,{ useContext } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import ProblemPopUp from "../../unused/ProblemPopUp";
+import { useRef } from "react";
+
+import CodePane from "../CodePane";
+import { RxCross2 } from "react-icons/rx";//<RxCross2/>
+import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 
 import { useState } from "react";
+import DiscussionList from "./DiscussionList";
 axios.defaults.withCredentials= true;
 
-const Problem = ({ isOpen, onClose,problemId,children }) => {
+const Problem = () => {
+  let {id} = useParams();
+  const codeRef = useRef();
+
     const [colorState,setColorState]= useContext(ColorContext);
+    const [authState,setAuthState] = useContext(AuthContext);
     const [problem,setProblem] = useState({
         "id": 1,
         "title": "Untitled",
@@ -53,48 +65,101 @@ const Problem = ({ isOpen, onClose,problemId,children }) => {
         "is_user_added": false
     })
 
-    const handleClose = (e) => {
-    // Close the popup only if the overlay is clicked
-        if (e.target.classList.contains('overlay')) {
-            onClose();
-        }
-    };
+    const [pages,setPages] = useState([  {
+      reached:false
+    }, {
+      reached:false
+    } ,{
+      reached:false
+    }, {
+      reached:false
+    }, {
+      reached:false
+    }
+  ])
+
+  const handleCodeChange = (newCode) => {
+    codeRef.current = newCode;
+  };
+
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [currentPage,setCurrentPage] = useState(0);
+  
+
+  const openPopup = (page) => {
+      console.log("pop");
+      setPopupOpen(true);
+      setCurrentPage(page);
+  };
+  
+  const closePopup = () => {
+      setPopupOpen(false);
+  };
 
     useEffect(() => {
         console.log("ret")
-        axios.get(`http://127.0.0.1:8000/api/problem/${problemId}/`)
+        axios.get(`http://127.0.0.1:8000/api/problem/${id}/`)
         .then((response) => {
         console.log(response.data);
         setProblem(response.data)
         }).catch((error) => {
             console.error("Error fetching data:", error);
         });
-      }, [problemId]);
+      }, [id]);
 
-      useEffect(() => {
-        console.log("ret1212")
-   
-      }, [problem]);
+
 
 
     return (
-    <>
-      <div
-        className={`fixed inset-0 overflow-y-auto transition-opacity duration-300 
-        ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-        onClick={handleClose} // Added onClick event for the entire popup
-        >
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="overlay fixed inset-0 bg-black opacity-50"></div>
-          <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-4 max-w-screen-lg w-100% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
-            <div>
-                {problem.addedAt}
-
-            </div>
-          </div>
+<div className={`mx-40 ${colorState.textcolor2} font-roboto`}>
+        <div className={`flex justify-start items-end`}>
+          <div className={`py-2 px-3 text-2xl`}>{problem.id}</div>
+          <div className={`py-2 px-3`}>{problem.title}</div>
+          <div className={`py-2 px-3 ${colorState.textcolor}`}>difficulty:   {problem.difficulty}</div>
         </div>
-      </div>
-    </>
+        <div className={`py-2 px-3 flex justify-start`}>
+          <div >Manipulators:</div>
+          <div className={ `pl-3 ${colorState.textcolor}`}>{problem.used_manipulator}</div>
+        </div>
+        <div className={`py-2 px-3`}>
+          <div>Description:</div>
+          <div className={`${colorState.textcolor}`}>{problem.description}</div>
+        </div>
+
+        <div className={`py-2 px-3`}>
+          <div>Test Cases:</div>
+        </div>
+        <div className=" h-24 flex justify-start py-4 items-center">
+            <div className={` ${colorState.box1color}  w-40% rounded-md font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
+                <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(0)}>
+                  <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
+                  <div className={`${pages[0].reached?`hidden invisible`:``}`}>1</div>
+                </div>
+                <div className={`${pages[1].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(1)}>
+                  <div className={`${pages[1].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
+                  <div className={`${pages[1].reached?`hidden invisible`:``}`}>2</div>
+                </div>
+                <div className={`${pages[2].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(2)}>
+                  <div className={`${pages[2].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
+                  <div className={`${pages[2].reached?`hidden invisible`:``}`}>3</div>
+                </div>
+                <div className={`${pages[3].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(3)}>
+                  <div className={`${pages[3].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
+                  <div className={`${pages[3].reached?`hidden invisible`:``}`}>4</div>
+                </div>
+                <div className={`${pages[4].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(4)}>
+                  <div className={`${pages[4].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
+                  <div className={`${pages[4].reached?`hidden invisible`:``}`}>5</div>
+                </div>
+            </div>
+            
+        </div>
+        <div className=" flex justify-center text-2xl font-bold py-5"> Discussions</div>
+        <DiscussionList id={id}></DiscussionList>
+        {
+            <ProblemPopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} problem={problem}/>
+        }
+    </div>
   );
 };
 

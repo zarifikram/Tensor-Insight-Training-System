@@ -7,12 +7,20 @@ import { toast } from 'react-toastify';
 import { useEffect } from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { CSRFContext } from "../helpers/CSRFContext";
+import Cookies from 'js-cookie';
 
-axios.defaults.withCredentials= true;
+axios.defaults.withCredentials = true;
 
 const Authentication = () =>{
+
+    useEffect(() => {
+        console.log(Cookies.get('csrf'))
+      axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+    }, []);
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const  [ csrfState, setCSRFState]= useContext(CSRFContext);
 
     const [username,setUsername] = useState("");
     const [email,setEmail] = useState("");
@@ -59,6 +67,10 @@ const Authentication = () =>{
                     timerModeRunning:authState.timerModeRunning,
                     loggedIn:true
                 })
+
+
+
+                setCSRFToken();
             }).catch((error) => {
                 console.log("error");
                 console.error("Error fetching data:", error);
@@ -66,15 +78,34 @@ const Authentication = () =>{
             });
     }
 
+const setCSRFToken = () => {
+  axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+  .then(response => {
+    const csrfToken = response.data.csrftoken;
+    console.log(csrfToken);
+    axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
+    Cookies.set('csrf', csrfToken, { expires: 7 });
+
+  })
+  .catch(error => {
+    console.error('Error fetching CSRF token:', error);
+  });
+};
 
 
 
     const SignOut=()=>{
+        console.log(Cookies.get('csrf'))
         console.log(document.cookie)
         axios.post(`http://127.0.0.1:8000/api/signout/`
         ).then((response) => {
-                console.log("You Have Successfully Logged In");
+                console.log("You Have Successfully Logged Out");
                 toast.success("Successfully Logged Out");
+                setAuthState({
+                    quantityModeRunning:authState.quantityModeRunning,
+                    timerModeRunning:authState.timerModeRunning,
+                    loggedIn:false
+                })
             }).catch((error) => {
                 console.log("error");
                 console.error("Error fetching data:", error);
@@ -85,7 +116,7 @@ const Authentication = () =>{
     return(
     <div className="mx-40 font-roboto">
         <div className={` ${colorState.box1color} ${colorState.textcolor} rounded-md py-3 w-32  flex justify-center items-center hover:bg-gray-400 ` } onClick={SignOut}> sign out</div>
-        <div className={`flex justify-end pt-32 ${colorState.textcolor} font-bold  text-lg`}>
+        <div className={`flex justify-end pt-20 ${colorState.textcolor} font-bold  text-lg`}>
             <div className={`w-50% flex justify-center items-center`}>
                 <div className={`w-45%`}>
                     <div className={`w-100% h-10  mt-1 pl-4 flex items-center rounded-md ${colorState.captioncolor} text-lg`}>register</div>
