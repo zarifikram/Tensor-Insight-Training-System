@@ -1,5 +1,5 @@
-import { AuthContext } from "../helpers/AuthContext";
-import { ColorContext } from "../helpers/ColorContext";
+import { AuthContext } from "../components/helpers/AuthContext";
+import { ColorContext } from "../components/helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
@@ -7,7 +7,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 
-import Problem from "./Problem";
+import Problem from "../components/ProblemSet/Problem";
 import axios from 'axios';
 import { useEffect } from "react";
 

@@ -31,7 +31,7 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
     //Problems------------------------------------------
     const [perPage, setPerPage] = useState('10');
     const [currentPage,setCurrentPage] =useState(1);
-    const [currentProblem,setCurrentProblem] = useState();
+    const [currentProblem,setCurrentProblem] = useState(1);
     const [problems,setProblems] = useState({
         "count": 27,
         "next": "http://127.0.0.1:8000/api/problem-set/?page=3&page_size=10",
@@ -89,12 +89,11 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
     const enterProblem =(id)=>{
         setCurrentProblem(id);
         onClose();
-        navigate(`/Problem/${currentProblem}`);
+        
     }
 
      useEffect(() => {
-        
-        
+        navigate(`/Problem/${currentProblem}`);
    }, [currentProblem]);
 
     const goToPage=(page)=>{

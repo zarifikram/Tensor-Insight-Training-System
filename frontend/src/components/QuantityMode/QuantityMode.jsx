@@ -18,13 +18,13 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 import { FaStop } from "react-icons/fa6";
-axios.defaults.withCredentials= true;
+//axios.defaults.withCredentials= true;
 
 const QuantityMode = () =>{
-  useEffect(() => {
-    //set axios csrf header
-    axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
-  }, []);
+  // useEffect(() => {
+  //   //set axios csrf header
+  //   axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+  // }, []);
 
 
 

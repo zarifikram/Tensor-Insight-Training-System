@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import { useEffect } from 'react'
 import './App.css'
 
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
@@ -14,15 +15,47 @@ import CustomMode from './components/CustomMode/CustomMode'
 import Authentication from './components/User/Authentication'
 import Problem from './components/ProblemSet/Problem'
 import ProblemSet from './components/ProblemSet/ProblemSet'
+import Cookies from 'js-cookie'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
 import { CSRFContext } from './components/helpers/CSRFContext'
+import axios from 'axios'
 
 import Home from './components/Home'
 
+axios.defaults.withCredentials= true;
 
 function App() {
+
+  const [authState,setAuthState ] = useState({
+    quantityModeRunning:false,
+    timerModeRunning:0,
+    loggedIn:false,
+    id: 1, 
+    first_name: "response.data.first_name",
+    last_name: "response.data.last_name",
+    level: 5, 
+    xp: 5,
+    image: null,
+    username: "response.data.username",
+  })
+
+  useEffect(() => {
+    const authStateFromCookie = JSON.parse(Cookies.get('authState'));
+    setAuthState(authStateFromCookie);
+    const csrfToken =  Cookies.get('csrf')
+    if (csrfToken) {
+      axios.defaults.headers.common['X-CSRFToken'] =csrfToken;
+    } else {
+      console.log("first time entry in the website");
+    }
+    
+  }, []);
+
+   useEffect(() => {console.log("change");
+     Cookies.set('authState', JSON.stringify(authState));
+  }, [authState]);
 
   const [colorState, setColorState] = useState({
     cp:2,
@@ -35,12 +68,6 @@ function App() {
     box2color:'bg-cp2-box2',
     box3color:'bg-cp2-txt'
   });
-
-  const [authState,setAuthState ] = useState({
-    quantityModeRunning:false,
-    timerModeRunning:0,
-    loggedIn:false
-  })
 
   const [ csrfState, setCSRFState]=useState();
 
@@ -69,19 +96,12 @@ function App() {
       <BrowserRouter>
         <Navbar/>
         <Routes>
-        <Route path='/' element={<Home />} />
+        <Route exact path='/' element={<Home />} />
           <Route exact path='/CustomMode' element={<CustomMode/>}/>
           <Route exact path='/TimeMode' element={<TimeMode/>}/>
           <Route exact path='/QuantityMode' element={<QuantityMode/>}/>
           <Route exact path='/Authentication' element={<Authentication/>}/>
-          {
-              <Route path='/Problem/:id' element={<Problem />} />
-               // <Route exact path='/ProblemSet' element={<ProblemSet/>}/>
-          }
-          
-          
-          
-          
+          <Route exact path='/Problem/:id' element={<Problem />} />
         </Routes>
         <Footer/>
       </BrowserRouter>
@@ -89,10 +109,7 @@ function App() {
       </CSRFContext.Provider>
       </AuthContext.Provider>
       </ColorContext.Provider>
-    
     }
-  
-   
     </div>
   )
 }

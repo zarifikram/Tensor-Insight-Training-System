@@ -12,15 +12,17 @@ import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
 import ProblemSet from "./ProblemSet/ProblemSet";
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 
 import SettingsPopUp from "./Settings";
 import { Link } from "react-router-dom";
 const Navbar = () =>{
+    const navigate = useNavigate();
     const [colorState,setColorState]= useContext(ColorContext);
-    console.log("from navbar")
-    console.log(colorState)
+    //console.log("from navbar")
+    //console.log(colorState)
     const [mode,setMode] = useState("none");
     //Popup--------------------------------------------
   
@@ -52,10 +54,11 @@ const Navbar = () =>{
 
     return(
     <div className="w-screenwidth h-28 flex mx-40 py-10">
+        
         <div className={`w-10% flex items-center font-saira text-3xl font-black ${colorState.captioncolor}`}>TensorITS</div>
         <div className={`w-15% flex justify-evenly`}>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={openPopup2}><FaCode /></div>
-            <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}><AiOutlineGlobal/></div>
+            <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => navigate('/')}><AiOutlineGlobal/></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}><FaCircleExclamation /></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}>
                 {<button onClick={openPopup} className={`hover:text-gray-400`}><IoMdSettings /></button>}

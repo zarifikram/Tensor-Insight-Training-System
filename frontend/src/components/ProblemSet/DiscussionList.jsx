@@ -12,7 +12,7 @@ import { FaUserCircle } from "react-icons/fa";
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
-import Discussion from "./Discussion";
+//import Discussion from "./Discussion";
 import Cookies from "js-cookie";
 
 import { useState } from "react";
@@ -124,6 +124,7 @@ const DiscussionList = ({id}) => {
   // ])
   const [discussionList,setDiscussionList] = useState([]);
 
+  //-------------for later use
   const [isPopupOpen, setPopupOpen] = useState(false);
   
   
@@ -136,6 +137,7 @@ const DiscussionList = ({id}) => {
   const closePopup = () => {
     setPopupOpen(false)
   };
+  //-------------for later use
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -182,7 +184,7 @@ const DiscussionList = ({id}) => {
               {discussionList.map(comment => (
                 <Comment key={comment.id} comment={comment} />
               ))}
-                <Discussion isOpen={isPopupOpen}  onClose={closePopup} comment></Discussion>
+                
     </div>
   );
 };
@@ -191,6 +193,7 @@ const DiscussionList = ({id}) => {
 const Comment = ({ comment }) => {
 
   const [colorState,setColorState]= useContext(ColorContext);
+  const [authState,setAuthState] = useContext(AuthContext);
   const [replying,setReplying] =useState(false);
   const [replyText, setReplyText] = useState("");
 
@@ -226,7 +229,7 @@ const Comment = ({ comment }) => {
     <div className={`w-2 flex-shrink-0 ${colorState.box1color} mx-1 rounded-full hover:bg-gray-400`}></div>
     <div className={`w-full pl-1`}>{comment.comment}
     <div className={`flex pt-2`}>
-      <div className={`py-2 px-3  ${colorState.box1color} rounded-md hover:bg-gray-400 hover:cursor-pointer`} onClick={toggleReply}>Reply</div>
+      <div className={`${(authState.loggedIn)?`py-2 px-3  ${colorState.box1color} rounded-md hover:bg-gray-400 hover:cursor-pointer`:`hidden`}`} onClick={toggleReply}>Reply</div>
     </div>
     <div className={`${replying?`pl-0 flex pt-2`:`hidden`}`}>
       <div className={`w-2 flex-shrink-0 ${colorState.box1color} mx-1 rounded-full`}></div>
@@ -239,8 +242,6 @@ const Comment = ({ comment }) => {
     </textarea>
     </div>
     <div className={`${replying?`mt-2 py-2 px-3  ${colorState.box2color} rounded-md hover:bg-gray-400 hover:cursor-pointer w-20`:`hidden`}`} onClick={submitReply}>Submit</div>
-    
-
           {comment.replies.map(reply => (
             <Comment key={reply.id} comment={reply} />
           ))}

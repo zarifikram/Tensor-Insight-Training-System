@@ -73,16 +73,17 @@ const Authentication = () =>{
                             ).then((response) => {         
                                 console.log(response.data);
 
-                            /* 
-                            {id: 4, 
-                            first_name: "saif",
-                            last_name: "hafiz",
-                            level: 1, xp: 299,
-                            image: null,
-                            username: "whatever",
-                            }
-                            */
 
+                                setAuthState(prevState => ({
+                                    ...prevState,
+                                    id: response.data.id, 
+                                    first_name: response.data.first_name,
+                                    last_name: response.data.last_name,
+                                    level: response.data.level, 
+                                    xp: response.data.xp,
+                                    image: response.data.image,
+                                    username: response.data.username,
+                                  }));
                             }).catch((error) => {
                                 console.log("error");
                             });
@@ -94,6 +95,8 @@ const Authentication = () =>{
                 toast.error("Couldn't log in");
             });
     }
+
+
 
 const setCSRFToken = () => {
   axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
@@ -108,6 +111,7 @@ const setCSRFToken = () => {
     console.error('Error fetching CSRF token:', error);
   });
 };
+
 
 
 
@@ -128,6 +132,12 @@ const setCSRFToken = () => {
                 toast.error("Couldn't log Out");
             });
     }
+
+    // useEffect(() => {
+    //     console.log(authState);
+    //     Cookies.set('authState', JSON.stringify(authState));
+    //     console.log(Cookies.get('authState'))
+    // }, [authState]);
  
     return(
     <div className="mx-40 font-roboto">
