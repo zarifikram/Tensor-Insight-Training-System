@@ -195,7 +195,32 @@ const Comment = ({ comment }) => {
   const [colorState,setColorState]= useContext(ColorContext);
   const [authState,setAuthState] = useContext(AuthContext);
   const [replying,setReplying] =useState(false);
-  const [replyText, setReplyText] = useState("");
+  const [replyText, setReplyText] = useState("Write Your Opinion ...");
+  const [editing,setEditing] =useState(false);
+  const [editText, setEditText] = useState(comment.comment);
+
+
+  const handleEditChange = (event) => {
+    setEditText(event.target.value);
+  };
+
+
+  const toggleEdit = () =>{
+    setEditing(prevIsEditing => !prevIsEditing);
+    setEditText(comment.comment)
+  }
+
+  const EditComment = () =>{
+    toggleEdit();
+    axios.patch(`http://127.0.0.1:8000/api/discussion/${comment.id}/edit/`,{
+      comment:editText
+    }).then((response) => {
+        console.log(response.data);
+    })
+    .catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+  }
 
   const handleReplyChange = (event) => {
     setReplyText(event.target.value);
@@ -206,7 +231,18 @@ const Comment = ({ comment }) => {
     setReplying(prevIsReplying => !prevIsReplying);
   }
 
+  const DeleteComment = () =>{
+    axios.delete(`http://127.0.0.1:8000/api/discussion/${comment.id}/delete/`)
+    .then((response) => {
+        console.log(response.data);
+    })
+    .catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+  }
+
   const submitReply = () =>{
+    toggleReply();
     console.log(replyText);
             axios.post(`http://127.0.0.1:8000/api/discussion/${comment.id}/reply/`,{comment:replyText})
             .then((response) => {
@@ -230,6 +266,8 @@ const Comment = ({ comment }) => {
     <div className={`w-full pl-1`}>{comment.comment}
     <div className={`flex pt-2`}>
       <div className={`${(authState.loggedIn)?`py-2 px-3  ${colorState.box1color} rounded-md hover:bg-gray-400 hover:cursor-pointer`:`hidden`}`} onClick={toggleReply}>Reply</div>
+      <div className={`${(authState.loggedIn && authState.id==comment.user.id)?`py-2 px-3 ml-2 ${colorState.box1color} rounded-md hover:bg-gray-400 hover:cursor-pointer`:`hidden`}`} onClick={toggleEdit}>Edit</div>
+      <div className={`${(authState.loggedIn && authState.id==comment.user.id)?`py-2 px-3 ml-2 ${colorState.box1color} rounded-md hover:bg-gray-400 hover:cursor-pointer`:`hidden`}`} onClick={DeleteComment}>Delete</div>
     </div>
     <div className={`${replying?`pl-0 flex pt-2`:`hidden`}`}>
       <div className={`w-2 flex-shrink-0 ${colorState.box1color} mx-1 rounded-full`}></div>
@@ -238,10 +276,19 @@ const Comment = ({ comment }) => {
       value={replyText}
       onChange={handleReplyChange}
       >
-      Write Your Opinion ...
+    </textarea>
+    </div>
+    <div className={`${editing?`pl-0 flex pt-2`:`hidden`}`}>
+      <div className={`w-2 flex-shrink-0 ${colorState.box1color} mx-1 rounded-full`}></div>
+      <textarea  name="w3review" rows="4"  className={`w-full ${colorState.box1color}  px-2 ml-2 rounded-md w-full `}
+      value={editText}
+      onChange={handleEditChange}
+      >
+      
     </textarea>
     </div>
     <div className={`${replying?`mt-2 py-2 px-3  ${colorState.box2color} rounded-md hover:bg-gray-400 hover:cursor-pointer w-20`:`hidden`}`} onClick={submitReply}>Submit</div>
+    <div className={`${editing?`mt-2 py-2 px-3  ${colorState.box2color} rounded-md hover:bg-gray-400 hover:cursor-pointer w-20`:`hidden`}`} onClick={EditComment}>Submit</div>
           {comment.replies.map(reply => (
             <Comment key={reply.id} comment={reply} />
           ))}
