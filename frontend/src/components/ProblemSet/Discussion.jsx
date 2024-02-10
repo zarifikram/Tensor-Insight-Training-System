@@ -5,6 +5,7 @@ import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
+import Cookies from "js-cookie";
 
 import Problem from "./Problem";
 import axios from 'axios';
@@ -15,6 +16,11 @@ axios.defaults.withCredentials= true;
 import { useRef } from "react";
 
 const Discussion = ({  isOpen,onClose,children }) =>{
+
+    useEffect(() => {
+        //set axios csrf header
+        axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+    }, []);
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
