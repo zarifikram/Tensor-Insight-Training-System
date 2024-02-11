@@ -141,7 +141,7 @@ const DiscussionList = ({id}) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-
+        console.log(authState)
         console.log("loading comments: "+id);
         axios.get(`http://127.0.0.1:8000/api/problem/${id}/discussion-list/`)
             .then((response) => {

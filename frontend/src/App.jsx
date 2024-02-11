@@ -29,10 +29,10 @@ axios.defaults.withCredentials= true;
 function App() {
 
   const [authState,setAuthState ] = useState({
-    quantityModeRunning:false,
+    QuantityModeRunning:0,
     timerModeRunning:0,
     loggedIn:false,
-    id: 1, 
+    id: -1, 
     first_name: "response.data.first_name",
     last_name: "response.data.last_name",
     level: 5, 
@@ -42,7 +42,9 @@ function App() {
   })
 
   useEffect(() => {
+    console.log("99999999999999999999999999999999999999999999999999999999")
     const authStateFromCookie = JSON.parse(Cookies.get('authState'));
+    console.log(authStateFromCookie)
     setAuthState(authStateFromCookie);
     const csrfToken =  Cookies.get('csrf')
     if (csrfToken) {
@@ -54,7 +56,8 @@ function App() {
   }, []);
 
    useEffect(() => {console.log("change");
-     Cookies.set('authState', JSON.stringify(authState));
+   if(authState.id!=-1)
+      Cookies.set('authState', JSON.stringify(authState));
   }, [authState]);
 
   const [colorState, setColorState] = useState({
