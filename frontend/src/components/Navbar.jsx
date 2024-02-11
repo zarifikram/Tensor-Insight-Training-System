@@ -59,7 +59,7 @@ const Navbar = () =>{
         <div className={`w-15% flex justify-evenly`}>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={openPopup2}><FaCode /></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => navigate('/')}><AiOutlineGlobal/></div>
-            <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}><FaCircleExclamation /></div>
+            <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() =>navigate('AddProblem')}><FaCircleExclamation /></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}>
                 {<button onClick={openPopup} className={`hover:text-gray-400`}><IoMdSettings /></button>}
             </div>

@@ -16,6 +16,7 @@ import Authentication from './components/User/Authentication'
 import Problem from './components/ProblemSet/Problem'
 import ProblemSet from './components/ProblemSet/ProblemSet'
 import Cookies from 'js-cookie'
+import AddProblem from './components/AddProblem'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
@@ -105,6 +106,7 @@ function App() {
           <Route exact path='/QuantityMode' element={<QuantityMode/>}/>
           <Route exact path='/Authentication' element={<Authentication/>}/>
           <Route exact path='/Problem/:id' element={<Problem />} />
+          <Route exact path='/AddProblem' element={<AddProblem/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>
