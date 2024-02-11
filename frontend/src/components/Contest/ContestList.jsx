@@ -2,6 +2,7 @@ import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import axios from 'axios';
 import { useEffect } from "react";
@@ -9,6 +10,8 @@ import Cookies from 'js-cookie';
 import { useRef } from "react";
 
 const ContestList = () =>{
+
+    const navigate = useNavigate();
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
@@ -50,6 +53,11 @@ const ContestList = () =>{
         }
     };
 
+    const joinContest = (contId) =>{
+        
+        navigate(`/Contest/${contId}`)
+    }
+
 
     return(
     <div className={`mx-40 ${colorState.textcolor} font-roboto`}>    
@@ -65,7 +73,7 @@ const ContestList = () =>{
                     <div className={`text-xl font-bold ${colorState.captioncolor}`}>{contest.title}</div>
                     <div className={`text-lg ml-32`}>{contest.users_count}</div>
                     <div className={`text-lg ml-32`}>{calculateTime(contest.start_time, contest.end_time)}</div>
-                    <div className={`text-lg ml-auto p-2 rounded-md ${colorState.box1color} hover:bg-gray-400`}>join</div>
+                    <div className={`text-lg ml-auto p-2 rounded-md ${colorState.box1color} hover:bg-gray-400`} onClick={()=>joinContest(contest.id)}>join</div>
                 </div>
             ))}
        
