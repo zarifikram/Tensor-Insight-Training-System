@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import { useEffect } from 'react'
 import './App.css'
 
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
@@ -14,15 +15,59 @@ import CustomMode from './components/CustomMode/CustomMode'
 import Authentication from './components/User/Authentication'
 import Problem from './components/ProblemSet/Problem'
 import ProblemSet from './components/ProblemSet/ProblemSet'
+import Cookies from 'js-cookie'
+import AddProblem from './components/AddProblem'
+import ContestList from './components/Contest/ContestList.jsx'
+import Contest from './components/Contest/Contest.jsx'
+import ContestProblem from './components/Contest/ContestProblem.jsx'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
 import { CSRFContext } from './components/helpers/CSRFContext'
+import axios from 'axios'
 
 import Home from './components/Home'
 
+axios.defaults.withCredentials= true;
 
 function App() {
+
+  const [authState,setAuthState ] = useState({
+    QuantityModeRunning:0,
+    timerModeRunning:0,
+    loggedIn:false,
+    id: -1, 
+    first_name: "response.data.first_name",
+    last_name: "response.data.last_name",
+    level: 5, 
+    xp: 5,
+    image: null,
+    username: "response.data.username",
+  })
+
+  useEffect(() => {
+    console.log("99999999999999999999999999999999999999999999999999999999")
+    const authUnparsed = Cookies.get('authState')
+    if(authUnparsed){
+      const authStateFromCookie = JSON.parse(authUnparsed);
+      console.log(authStateFromCookie)
+      setAuthState(authStateFromCookie);
+    }
+    
+
+    const csrfToken =  Cookies.get('csrf')
+    if (csrfToken) {
+      axios.defaults.headers.common['X-CSRFToken'] =csrfToken;
+    } else {
+      console.log("first time entry in the website");
+    }
+    
+  }, []);
+
+   useEffect(() => {console.log("change");
+   if(authState.id!=-1)
+      Cookies.set('authState', JSON.stringify(authState));
+  }, [authState]);
 
   const [colorState, setColorState] = useState({
     cp:2,
@@ -36,22 +81,16 @@ function App() {
     box3color:'bg-cp2-txt'
   });
 
-  const [authState,setAuthState ] = useState({
-    quantityModeRunning:false,
-    timerModeRunning:0,
-    loggedIn:false
-  })
-
   const [ csrfState, setCSRFState]=useState();
 
   return (
-    <div>{
+    <div className="font-roboto">{
       
       <ColorContext.Provider value={[ colorState, setColorState]}>
       <AuthContext.Provider value={[ authState, setAuthState]}>
       <CSRFContext.Provider value={[ csrfState, setCSRFState]}>
       
-      <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
+      <div className={`${colorState.bgcolor} h-screen flex flex-col`}>
       {
       // <div className='flex justify-center'> 
       //   <button className='bg-cp1-bg w-10% text-cp1-txt' onClick={handleThemeSwitch1}>solarized light</button>
@@ -69,19 +108,16 @@ function App() {
       <BrowserRouter>
         <Navbar/>
         <Routes>
-        <Route path='/' element={<Home />} />
+        <Route exact path='/' element={<Home />} />
           <Route exact path='/CustomMode' element={<CustomMode/>}/>
           <Route exact path='/TimeMode' element={<TimeMode/>}/>
           <Route exact path='/QuantityMode' element={<QuantityMode/>}/>
           <Route exact path='/Authentication' element={<Authentication/>}/>
-          {
-              <Route path='/Problem/:id' element={<Problem />} />
-               // <Route exact path='/ProblemSet' element={<ProblemSet/>}/>
-          }
-          
-          
-          
-          
+          <Route exact path='/Problem/:id' element={<Problem />} />
+          <Route exact path='/AddProblem' element={<AddProblem/>} />
+          <Route exact path='/ContestList' element={<ContestList/>} />
+          <Route exact path='/Contest/:id' element={<Contest/>} />
+          <Route exact path='/ContestProblem/:contestId/:problemId' element={<ContestProblem/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>
@@ -89,10 +125,7 @@ function App() {
       </CSRFContext.Provider>
       </AuthContext.Provider>
       </ColorContext.Provider>
-    
     }
-  
-   
     </div>
   )
 }

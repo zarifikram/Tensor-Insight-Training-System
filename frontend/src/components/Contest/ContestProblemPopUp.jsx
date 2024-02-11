@@ -12,7 +12,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 
 import { useState } from "react";
 
-const QuantityModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
+const ContestProblemPopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     const handleNavigation = (direction) => {
       if (direction === "prev") {
@@ -91,4 +91,4 @@ const QuantityModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,
   );
 };
 
-export default QuantityModePopUp;
+export default ContestProblemPopUp;

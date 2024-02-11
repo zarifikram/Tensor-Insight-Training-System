@@ -154,7 +154,7 @@ const Problem = () => {
             </div>
             
         </div>
-        <div className=" flex justify-center text-2xl font-bold py-5"> Discussions</div>
+        <div className=" flex justify-center text-2xl font-bold py-5"> Comments</div>
         <DiscussionList id={id}></DiscussionList>
         {
             <ProblemPopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} problem={problem}/>

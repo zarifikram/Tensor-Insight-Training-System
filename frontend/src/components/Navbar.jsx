@@ -6,12 +6,14 @@ import { IoTimeSharp } from "react-icons/io5";
 import { FaBoltLightning } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
 import { HiDotsHorizontal } from "react-icons/hi";//<HiDotsHorizontal />
-
+import { FaBolt } from "react-icons/fa";
+//const navigate = useNavigate();
 
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
 import ProblemSet from "./ProblemSet/ProblemSet";
 import React, { useContext } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 
@@ -25,7 +27,8 @@ const customModes = []
 const modesToOptions = {
     "quantity": quantityModes,
     "time": timeModes,
-    "custom": customModes
+    "custom": customModes,
+    "none": []
 }
 
 const defaultSettingOfMode = {
@@ -35,6 +38,9 @@ const defaultSettingOfMode = {
 }
 
 const Navbar = () => {
+    
+    const navigate = useNavigate();
+
     const [mode, setMode] = useState({ mode: "quantity", setting: 4 });
     const [colorState, setColorState] = useContext(ColorContext);
 
@@ -54,8 +60,8 @@ const Navbar = () => {
 
     const [isPopupOpen2, setPopupOpen2] = useState(false);
 
-    const openPopup2 = (page) => {
-        setMode("none");
+    const openPopup2 = () => {
+        //setMode("none");
         setPopupOpen2(true);
 
     };
@@ -65,15 +71,15 @@ const Navbar = () => {
     };
 
 
-
     return (
         <div className="w-screenwidth h-28 flex mx-40 py-10">
             <div className={`w-10% flex items-center font-saira text-3xl font-black ${colorState.captioncolor}`}>TensorITS</div>
             <div className={`w-15% flex justify-evenly`}>
                 <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={openPopup2}><FaCode /></div>
-                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}><AiOutlineGlobal /></div>
-                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}><FaCircleExclamation /></div>
-                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}>
+                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={()=>navigate('/')}><AiOutlineGlobal /></div>
+                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={()=>navigate('/AddProblem')}><FaCircleExclamation /></div>
+                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={()=>navigate('/ContestList')}><FaBolt  /></div>
+                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} >
                     {<button onClick={openPopup} className={`hover:text-gray-400`}><IoMdSettings /></button>}
                 </div>
             </div>
@@ -83,7 +89,6 @@ const Navbar = () => {
                         <NavBarItem navMode="custom" to="/CustomMode" tooltip="Customize your own problem set" icon={<AiOutlineSliders />} colorState={colorState} mode={mode} setMode={setMode} />
                         <NavBarItem navMode="time" to="/TimeMode" tooltip="Solve problems within a time limit" icon={<IoTimeSharp />} colorState={colorState} mode={mode} setMode={setMode} />
                         <NavBarItem navMode="quantity" to="/QuantityMode" tooltip="Solve as many problems as you can" icon={<FaBoltLightning />} colorState={colorState} mode={mode} setMode={setMode} />
-                        
                     </div>
                     <div className={`w-1.5 ${colorState.bgcolor} rounded mx-2`}></div>
                     <div className="w- flex justify-evenly items-center">
@@ -98,14 +103,13 @@ const Navbar = () => {
                 </div>
             </div>
             <div className={`w-5%`}></div>
-            <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication" onClick={() => { setMode("none"); }}><FaUser /></Link>
+            <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication" onClick={() => { setMode({...mode, mode:"none"}); }}><FaUser /></Link>
             {
                 <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup} />
             }
             {
                 <ProblemSet isOpen={isPopupOpen2} onClose={closePopup2} />
             }
-
         </div>
     );
 

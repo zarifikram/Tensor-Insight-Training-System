@@ -18,13 +18,13 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 import { FaStop } from "react-icons/fa6";
-axios.defaults.withCredentials= true;
+//axios.defaults.withCredentials= true;
 
 const QuantityMode = () =>{
-  useEffect(() => {
-    //set axios csrf header
-    axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
-  }, []);
+  // useEffect(() => {
+  //   //set axios csrf header
+  //   axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+  // }, []);
 
 
 
@@ -32,44 +32,47 @@ const QuantityMode = () =>{
     const [authState,setAuthState] = useContext(AuthContext);
     const codeRef = useRef();
 
-    const [pages,setPages] = useState([
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-      ])
+    const iniPage =[
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+    ]
+
+    const [pages,setPages] = useState(iniPage)
 
   
     //Popup--------------------------------------------
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(true);
     const [currentPage,setCurrentPage] = useState(0);
+    const [quantity, setQuantity] = useState(10);
     
 
     const openPopup = (page) => {
@@ -101,18 +104,43 @@ const QuantityMode = () =>{
         toast.success("seccessfully submited");
         const received_result = JSON.parse(response.data);
         console.log(received_result);
-        if(received_result.result[0].correct &&
+        if((received_result.result[0].correct &&
           received_result.result[1].correct &&
           received_result.result[2].correct &&
           received_result.result[3].correct &&
-          received_result.result[4].correct)
-          getProblem()
+          received_result.result[4].correct) || true){//Debug mode
+            console.log("success"+authState.QuantityModeRunning)
+            if(authState.QuantityModeRunning===quantity){
+              setPages(iniPage);
+              setAuthState(prevState => ({
+                ...prevState,
+                QuantityModeRunning: 0
+              }));
+            }else{
+              setAuthState(prevState => ({
+                ...prevState,
+                QuantityModeRunning: prevState.QuantityModeRunning + 1
+              }));
+              getProblem()
+            }
+              
+
+          }
+          
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
 
-      
+        if(authState.quantityModeRunning > quantity){
+          setAuthState(prevState => ({
+            ...prevState,
+            QuantityModeRunning: 0
+          }));
+
+          toast.success("Congraulations! You have completed "+(quantity-1)+" Problems");
+        }
+
     }
 
     const closeTimeSelectionPopup =  () => {
@@ -197,6 +225,12 @@ const QuantityMode = () =>{
     //-------------------------------------------------
 
     const forceEnd = () =>{
+      setAuthState(prevState => ({
+        ...prevState,
+        QuantityModeRunning: 0
+      }));
+
+        setPages(iniPage);
         submitAnswer();
 
       axios.post("http://127.0.0.1:8000/api/quantity-mode/force-end/")
@@ -213,7 +247,7 @@ const QuantityMode = () =>{
     return(
     <div className="mx-40">
         <div className=" h-24 flex justify-center py-4 items-center">
-        <div onClick={forceEnd} className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><FaStop /></div>
+        <div onClick={forceEnd} className={ `${(authState.QuantityModeRunning<1)?``:`hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}`}><FaStop className={`${(authState.QuantityModeRunning<1)?`hidden`:``}`} /></div>
             <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
                 <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
@@ -238,7 +272,7 @@ const QuantityMode = () =>{
             </div>
             <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
         </div>
-        <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.timerModeRunning}</div>
+        <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.QuantityModeRunning}</div>
         <CodePane  onCodeChange={handleCodeChange} />
         <div className={`flex justify-center`}>
           <div className={` flex items-center`}>
@@ -252,7 +286,7 @@ const QuantityMode = () =>{
             <TimeModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
         }
                 {
-            <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup}  />
+            <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup} quantity={quantity} setQuantity={setQuantity} />
         }
     </div>
     );

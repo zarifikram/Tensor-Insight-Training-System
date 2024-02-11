@@ -16,9 +16,9 @@ import { useState } from "react";
 
 axios.defaults.withCredentials= true;
 
-const QuantitySelectionPopUp = ({ isOpen, onClose, children }) => {
+const QuantitySelectionPopUp = ({ isOpen, onClose, quantity,setQuantity, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
-    const [quantity, setQuantity] = useState(10);
+    
     const [authState,setAuthState] = useContext(AuthContext);
 
     const handleQuantityChange = (event) => {
@@ -34,10 +34,10 @@ const QuantitySelectionPopUp = ({ isOpen, onClose, children }) => {
       .then((response) => {
         console.log(response.data);
         console.log("okay----")
-        setAuthState({
+        setAuthState(prevState => ({
           ...prevState,
-          QuantityrModeRunning:1
-        })
+          QuantityModeRunning:1
+        }));
         onClose();
       })
       .catch((error) => {
