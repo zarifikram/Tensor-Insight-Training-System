@@ -91,27 +91,83 @@ const ContestProblem = () =>{
       axios.get(`http://127.0.0.1:8000/api/contest/${contestId}/problem/${problemId}/`)
       .then((response) => {
       console.log(response.data);
-      //const test_cases = response.data.current_problem.test_cases;
-    //   for (let i = 0; i < test_cases.length; i++) {
-    //     //console.log(test_cases[i]);
-    //     let temp = pages;
-    //     temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
-    //     temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
-    //     temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
-    //     console.log(JSON.stringify(test_cases[i].input));
-    //     setPages(temp);
-    //   }
-      //console.log(pages);
+      const test_cases = response.data.test_cases;
+      for (let i = 0; i < test_cases.length; i++) {
+        //console.log(test_cases[i]);
+        let temp = pages;
+        temp[i].inputTensor=(JSON.stringify(test_cases[i].input));
+        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output));
+        temp[i].currentTensor=(JSON.stringify(test_cases[i].input));
+       // console.log(JSON.stringify(test_cases[i].input));
+        setPages(temp);
+      }
+      console.log(pages);
         })
         .catch((error) => {
             console.error("Error fetching data:", error);
         });
         }, []);
 
+
+
+        useEffect(() => {
+            const handleKeyPress = (event) => {
+              if (event.shiftKey && event.ctrlKey ) {
+                console.log("Shift + ctrlKey");
+                let test_cases=[];
+                for (let i = 0; i < pages.length; i++) {
+                  const input = pages[i].inputTensor;
+                  const output = pages[i].expectedTensor;
+                  const test_case_no = i + 1; // Adjust the logic based on your requirements
+                  // Create a JSON object and push it to the 'temp' array
+                  test_cases.push({
+                    input: input,
+                    output: output,
+                    test_case_no: test_case_no
+                  });
+                }
+                console.log(test_cases);
+                //o_tensor = torch.where(tensor == 2, 100, -1)
+                //tensor = o_tensor
+                //const singleStringCode = codeRef.current.replace(/\n/g, "\\n");
+                const singleStringCode = codeRef.current
+                console.log(singleStringCode);
+                 axios.post("http://127.0.0.1:8000/api/run-problem/",{
+                  test_cases:test_cases,code:singleStringCode
+                }).then((response) => {
+                  console.log("```")
+                  console.log(response.data);
+                  for (let i = 0; i < 5; i++) {
+                    console.log(response.data.result[i])
+                    let temp = pages;
+                    if(response.data.result[i].status=="success"){
+                      temp[i].currentTensor = response.data.result[i].output;
+                      temp[i].reached = response.data.result[i].correct
+                    }
+                    setPages(pages);
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error fetching data:", error);
+                });
+              }
+            };
+        
+            // Add the event listener when the component mounts
+            window.addEventListener("keydown", handleKeyPress);
+        
+            // Remove the event listener when the component unmounts
+            return () => {
+              window.removeEventListener("keydown", handleKeyPress);
+            };
+          }, []); // Empty dependency array ensures that this effect runs only once when the component mounts
+
+
+
     return(
     <div className="mx-40">
         <div className=" h-24 flex justify-center py-4 items-center">
-            {contestId+"  "+problemId}
+           
             {
            // <div onClick={forceEnd} className={ `${(authState.QuantityModeRunning<1)?``:`hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}`}><FaStop className={`${(authState.QuantityModeRunning<1)?`hidden`:``}`} /></div>
         
