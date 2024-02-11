@@ -9,9 +9,21 @@ import Cookies from 'js-cookie';
 import { useRef } from "react";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 import { FaAngry, FaHeart } from "react-icons/fa";
-import { FaKeyboard } from "react-icons/fa6";
+import { FaDownLong, FaKeyboard, FaUpLong } from "react-icons/fa6";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const testCaseSchema = {
+    "input": "",
+    "output": "",
+    "test_case_no": 1
+}
+
+// 100 testcases
+const testCases = []
+for (let i = 0; i < 100; i++) {
+    testCases.push(testCaseSchema);
+}
 
 const newProblemSchema = {
     "title": "",
@@ -19,13 +31,7 @@ const newProblemSchema = {
     "depth": 0,
     "num_cases": 0,
     "used_manipulator": { "unique": true },
-    "test_cases": [
-        {
-            "input": "",
-            "output": "",
-            "test_case_no": 1
-        }
-    ],
+    "test_cases": testCases,
     "solution": ""
 }
 
@@ -67,7 +73,7 @@ const AddProblem = () => {
         "solution": "o_tensor = torch.unique(tensor, dim=1)\ntensor = o_tensor\no_tensor = torch.unique(tensor, dim=0)\ntensor = o_tensor"
     }
 
-    
+
 
     // make the same problem 10 times
     const problems = []
@@ -84,6 +90,11 @@ const AddProblem = () => {
             if (event.key === 'n' && context.selectedProblem === -1) {
                 setContext({ ...context, "newProblem": true });
             }
+
+            if (event.shiftKey && event.key === 'Enter') {
+                setContext({ ...context, "newProblem": false });
+                // do your post request here
+              }
         };
 
         const handleKeyUp = () => {
@@ -95,7 +106,7 @@ const AddProblem = () => {
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);
         };
-    }, []);
+    }, [context]);
 
     return (
         <div className="h-5/6 flex flex-col">
@@ -118,6 +129,20 @@ const KeyBoardInstruction = ({ colorState }) => {
                 <div className={` flex items-center center h-full`}>
                     <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>n</div>
                     <p className={`${colorState.textcolor} text-sm`}>- Add New Contest</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+const KeyBoardInstructionNewProblem = ({ colorState }) => {
+    return (
+        <div className="flex justify-center h-8">
+            <div className="text-4xl font-roboto font-bold">
+                <div className={` flex items-center center h-full`}>
+                    <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>shift</div>
+                    <p className={`${colorState.textcolor} text-sm`}>+</p>
+                    <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>enter</div>
+                    <p className={`${colorState.textcolor} text-sm`}>- post editorial</p>
                 </div>
             </div>
         </div>
@@ -199,12 +224,12 @@ const ProblemPopUp = ({ colorState, context, setContext }) => {
     return (
         // make sure the popup is centered and there is translucent background
 
-        <div className="fixed top-0 left-0 w-screen bg-opacity-30 bg-black h-screen flex justify-center items-center" onClick={onClick}>
-            <div className={`${colorState.box3color} w-5/6 h-5/6 bg-opacity-100 rounded-md popup p-12 overflow-y-auto`}>
+        <div className="fixed top-0 left-0 w-screen bg-opacity-50 bg-black h-screen flex justify-center items-center" onClick={onClick}>
+            <div className={`${colorState.bgcolor} w-5/6 h-5/6 bg-opacity-100 rounded-md popup p-12 overflow-y-auto`}>
                 <div className="flex-col h-full">
                     <div className={`text-white font-roboto text-4xl font-bold w-5/6 h-fit`}> {problem.title}</div>
-                    <div className={`${colorState.textcolor3} font-roboto font-bold w-5/6 h-fit mb-8`}> {"problem_author"} : posted {31} mins ago</div>
-                    <div className={`${colorState.textcolor3} font-roboto font-bold h-fit text-lg mb-8`}> {problem.description}{problem.description}</div>
+                    <div className={`${colorState.textcolor} font-roboto font-bold w-5/6 h-fit mb-8`}> {"problem_author"} : posted {31} mins ago</div>
+                    <div className={`${colorState.textcolor} font-roboto font-bold h-fit text-lg mb-8`}> {problem.description}{problem.description}</div>
                     <TestCasePicker colorState={colorState} context={context} setContext={setContext} />
                     <VoteSolveReveal colorState={colorState} context={context} setContext={setContext} />
                     <div className="h-20" ></div>
@@ -239,9 +264,9 @@ const TestCasePicker = ({ colorState, context, setContext }) => {
 const TestCase = ({ colorState, test_case }) => {
     return (
         <div className="flex-col h-72 w-full mb-8 ">
-            <div className="text-white font-roboto text-2xl mb-4">Input Tensor</div>
-            <div className={`flex flex-col h-fit bg-white bg-opacity-20 rounded-lg text-white font-roboto text-2xl p-10`}><div className="bg-opacity-100">t = {test_case.input}</div></div>
-            <div className="text-white font-roboto text-2xl mb-4">Expected Tensor</div>
+            <div className="text-white font-roboto text-2xl mb-4 font-roboto">input tensor</div>
+            <div className={`flex flex-col h-fit bg-white bg-opacity-20 rounded-lg text-white font-roboto text-2xl p-10 mb-4`}><div className="bg-opacity-100">t = {test_case.input}</div></div>
+            <div className="text-white font-roboto text-2xl mb-4 font-roboto mb-4">expected tensor</div>
             <div className={`flex flex-col h-fit bg-white bg-opacity-20 rounded-lg text-white font-roboto text-2xl p-10`}><div className="bg-opacity-100">t = {test_case.output}</div></div>
         </div>
     );
@@ -280,22 +305,22 @@ const NewProblem = ({ colorState, context, setContext }) => {
     const onClick = (e) => {
         if (!e.target.closest('.popup')) {
             setContext({ ...context, "newProblem": false });
-            console.log(context.newProblemDetails)
         }
     }
-    console.log(context.newProblemDetails)
 
     return (
         // make sure the popup is centered and there is translucent background
 
-        <div className="fixed top-0 left-0 w-screen bg-opacity-30 bg-black h-screen flex justify-center items-center" onClick={onClick}>
-            <div className={`${colorState.box3color} w-5/6 h-5/6 bg-opacity-100 rounded-md popup p-12 overflow-y-auto`}>
+        <div className="fixed top-0 left-0 w-screen bg-opacity-50 bg-black h-screen flex justify-center items-center" onClick={onClick}>
+            <div className={`${colorState.bgcolor} w-5/6 h-5/6 bg-opacity-100 rounded-md popup p-12 overflow-y-auto`}>
                 <div className="flex-col h-full">
                     <div className={`text-white font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> add new editorial</div>
                     <CustomTextBox colorState={colorState} context={context} setContext={setContext} title="title" subtitle="pick a suitable title for the editorial" textboxStyle="text-2xl font-bold" target="title" />
                     <CustomTextBox colorState={colorState} context={context} setContext={setContext} title="description" subtitle="Limit the amount of character used to write the code. Use 0 for no limit" textboxStyle="" target="description" />
-                    <CustomTextBox colorState={colorState} context={context} setContext={setContext} title="number of cases" subtitle="test cases help the discussion and the reader to possibly solve the problem" textboxStyle="" target="num_cases" />
-                    {/* <TestCaseField/> */}
+                    <CustomTextBox colorState={colorState} context={context} setContext={setContext} title="number of cases" subtitle="test cases help the discussion and the reader to possibly solve the problem" textboxStyle="h-fit w-11/12" target="num_cases" />
+                    <TestCaseField colorState={colorState} context={context} setContext={setContext} />
+                    <KeyBoardInstructionNewProblem colorState={colorState} />
+                    <div className="h-20"></div>
                 </div>
             </div>
         </div>
@@ -306,26 +331,54 @@ const CustomTextBox = ({ colorState, context, setContext, title, subtitle, textb
     return (
         <div className="flex-col h-fit mb-8">
             <div className="font-roboto text-2xl text-white mb-2">{title}</div>
-            <div className={`font-roboto text-sm ${colorState.textcolor3} mb-2`}>{subtitle}</div>
-            <textarea className={`w-full h-40 rounded-lg p-4 bg-white font-roboto bg-opacity-10 text-white ${textboxStyle}`} value={context.newProblemDetails[target]} onChange={(e) => setContext({ ...context, "newProblemDetails": { ...context.newProblemDetails, [target]: e.target.value } })} />
+            <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>{subtitle}</div>
+            <textarea className={`w-full h-40 rounded-lg p-4 bg-white font-roboto bg-opacity-10 text-white  ${textboxStyle}`} value={context.newProblemDetails[target]} onChange={(e) => setContext({ ...context, "newProblemDetails": { ...context["newProblemDetails"], [target]: e.target.value } })} />
         </div>
     );
 }
 
-const TestCaseField = () => {
-    const [testCases, setTestCases] = useState([{ "input": "", "output": "" }]);
-    const addTestCase = () => {
-        setTestCases([...testCases, { "input": "", "output": "" }]);
+const TestCaseField = ({ colorState, context, setContext }) => {
+    // populate the context testcase with empty testcases (as many as num_cases)
+    const testCases = context.newProblemDetails.test_cases;
+    const [testCaseId, setTestCaseId] = useState(0);
+
+    const onChangeInput = (e) => {
+        testCases[testCaseId].input = e.target.value;
+        setContext({ ...context, "newProblemDetails": { ...context["newProblemDetails"], "test_cases": testCases } });
     }
+
+    const onChangeOutput = (e) => {
+        testCases[testCaseId].output = e.target.value;
+        setContext({ ...context, "newProblemDetails": { ...context["newProblemDetails"], "test_cases": testCases } });
+    }
+
     return (
-        <div className="flex-col h-fit mb-8">
-            <div className="font-roboto text-2xl text-white mb-2">test cases</div>
-            {testCases.map((testCase, index) => {
-                return <TestCaseInput key={index} index={index} testCases={testCases} setTestCases={setTestCases} />
-            })}
-            <div className="flex justify-center items-center cursor-pointer" onClick={addTestCase}>
-                <div className="flex w-12 h-12 rounded-full items-center justify-center bg-white bg-opacity-10 text-white">+</div>
-            </div>
-        </div>
+        context.newProblemDetails.num_cases > 0 ?
+            <div className="flex h-fit w-full items-center">
+                <div className="w-11/12 h-full">
+                <div className="flex-col h-fit mb-8">
+                        <div className="font-roboto text-2xl text-white mb-2">expected tensor</div>
+                        <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>the tensor to end up</div>
+                        <div className="flex w-full h-20 rounded-lg p-4 bg-white font-roboto bg-opacity-10">
+                        <div className="text-white w-1/12 ">t = </div>
+                        <textarea className={`w-full bg-transparent focus:outline-none ${colorState.textcolor3}`} value={testCases[testCaseId].input} onChange={onChangeInput} />
+                        </div>
+                    </div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className="font-roboto text-2xl text-white mb-2">expected tensor</div>
+                        <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>the tensor to end up</div>
+                        <div className="flex w-full h-20 rounded-lg p-4 bg-white font-roboto bg-opacity-10">
+                        <div className="text-white w-1/12 ">t = </div>
+                        <textarea className={`w-full bg-transparent focus:outline-none ${colorState.textcolor3}`} value={testCases[testCaseId].output} onChange={onChangeOutput} />
+                        </div>
+                    </div>
+                </div>
+                <div className="flex-col h-full w-1/12">
+                    <div className="flex items-center h-20 w-full justify-center w-20 cursor-pointer" onClick={() => setTestCaseId(testCaseId < context.newProblemDetails.num_cases - 1 ? testCaseId + 1 : testCaseId)}><FaUpLong className={`${colorState.textcolor} text-2xl`} /></div>
+                    <div className="text-white font-roboto text-2xl font-bold text-center">{testCaseId + 1} </div>
+                    <div className="flex items-center h-20 w-full justify-center w-20 cursor-pointer" onClick={() => setTestCaseId(testCaseId > 0 ? testCaseId - 1 : testCaseId)}><FaDownLong className={`${colorState.textcolor} text-2xl`} /></div>
+                </div>
+            </div> : <div />
     );
 }
