@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-from main.custom_azure import CustomAzureStorageStatic,CustomAzureStorageMedia
+from utils.custom_azure import CustomAzureStorageStatic,CustomAzureStorageMedia
 
 load_dotenv()
 
@@ -49,27 +49,40 @@ AZURE_STORAGE_CONNECTION_STRING = os.environ.get('AZURE_STORAGE_CONNECTION_STRIN
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
     'rest_framework',
     'drf_spectacular',
+    'problem',
+    'contest',
+    'user_app',
+    'quantity_mode',
+    'time_mode',
+    'custom_mode',
     'storages',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+
 
 ROOT_URLCONF = 'tits.urls'
 
@@ -97,7 +110,7 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'TensorITS',
 }
 
-AUTH_USER_MODEL = 'main.CustomUser'
+AUTH_USER_MODEL = 'user_app.CustomUser'
 
 
 WSGI_APPLICATION = 'tits.wsgi.application'
@@ -140,6 +153,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -155,6 +173,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
 AZURE_STORAGE_CONTAINER_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT')
 STATIC_URL = f'https://{AZURE_STORAGE_CONTAINER_NAME}.blob.core.windows.net/static/'
 STATICFILES_STORAGE = 'main.custom_azure.CustomAzureStorageStatic'
@@ -163,9 +182,11 @@ STATICFILES_STORAGE = 'main.custom_azure.CustomAzureStorageStatic'
 AZURE_MEDIA_URL = f'https://{AZURE_STORAGE_CONTAINER_NAME}.blob.core.windows.net/media/'
 DEFAULT_FILE_STORAGE = 'main.custom_azure.CustomAzureStorageMedia'
 
+# STATIC_URL = '/static/'
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
 # STATICFILES_DIRS = [BASE_DIR / 'static',]
 
+# MEDIA_URL = '/media/'
 # MEDIA_ROOT = BASE_DIR / 'uploads'
 
 # Default primary key field type
