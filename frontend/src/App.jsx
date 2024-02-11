@@ -17,6 +17,7 @@ import Problem from './components/ProblemSet/Problem'
 import ProblemSet from './components/ProblemSet/ProblemSet'
 import Cookies from 'js-cookie'
 import AddProblem from './components/AddProblem'
+import ContestList from './components/Contest/ContestList.jsx'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
@@ -112,6 +113,7 @@ function App() {
           <Route exact path='/Authentication' element={<Authentication/>}/>
           <Route exact path='/Problem/:id' element={<Problem />} />
           <Route exact path='/AddProblem' element={<AddProblem/>} />
+          <Route exact path='/ContestList' element={<ContestList/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>

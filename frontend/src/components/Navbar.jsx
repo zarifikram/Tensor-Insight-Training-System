@@ -6,6 +6,7 @@ import { IoTimeSharp } from "react-icons/io5";
 import { FaBoltLightning } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
 import { HiDotsHorizontal } from "react-icons/hi";//<HiDotsHorizontal />
+import { FaBolt } from "react-icons/fa";
 
 
 import { AuthContext } from "./helpers/AuthContext";
@@ -60,6 +61,7 @@ const Navbar = () =>{
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={openPopup2}><FaCode /></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => navigate('/')}><AiOutlineGlobal/></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() =>navigate('AddProblem')}><FaCircleExclamation /></div>
+            <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() =>navigate('ContestList')}><FaBolt /></div>
             <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`}>
                 {<button onClick={openPopup} className={`hover:text-gray-400`}><IoMdSettings /></button>}
             </div>
