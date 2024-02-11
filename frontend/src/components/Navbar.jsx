@@ -88,7 +88,6 @@ const Navbar = () => {
                         <NavBarItem navMode="custom" to="/CustomMode" tooltip="Customize your own problem set" icon={<AiOutlineSliders />} colorState={colorState} mode={mode} setMode={setMode} />
                         <NavBarItem navMode="time" to="/TimeMode" tooltip="Solve problems within a time limit" icon={<IoTimeSharp />} colorState={colorState} mode={mode} setMode={setMode} />
                         <NavBarItem navMode="quantity" to="/QuantityMode" tooltip="Solve as many problems as you can" icon={<FaBoltLightning />} colorState={colorState} mode={mode} setMode={setMode} />
-                        
                     </div>
                     <div className={`w-1.5 ${colorState.bgcolor} rounded mx-2`}></div>
                     <div className="w- flex justify-evenly items-center">
@@ -103,14 +102,13 @@ const Navbar = () => {
                 </div>
             </div>
             <div className={`w-5%`}></div>
-            <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication" onClick={() => { setMode("none"); }}><FaUser /></Link>
+            <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication" ><FaUser /></Link>
             {
                 <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup} />
             }
             {
                 <ProblemSet isOpen={isPopupOpen2} onClose={closePopup2} />
             }
-
         </div>
     );
 
