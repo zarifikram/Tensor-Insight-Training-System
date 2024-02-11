@@ -128,3 +128,6 @@ dist
 
 # django app dependencies
 venv/
+frontend/.DS_Store
+.DS_Store
+
