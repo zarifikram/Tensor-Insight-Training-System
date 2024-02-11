@@ -93,7 +93,7 @@ function App() {
       <AuthContext.Provider value={[ authState, setAuthState]}>
       <CSRFContext.Provider value={[ csrfState, setCSRFState]}>
       
-      <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
+      <div className={`${colorState.bgcolor} h-screen flex flex-col`}>
       {
       // <div className='flex justify-center'> 
       //   <button className='bg-cp1-bg w-10% text-cp1-txt' onClick={handleThemeSwitch1}>solarized light</button>
