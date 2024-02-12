@@ -85,9 +85,6 @@ const Contest = () =>{
         return () => clearInterval(intervalId);
     }, [problemList.start_time, problemList.end_time]);
 
-
-
-
     return(
     <div className={`mx-40 ${colorState.textcolor} font-roboto`}>    
             <div>
