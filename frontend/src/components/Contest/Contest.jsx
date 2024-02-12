@@ -107,7 +107,7 @@ const Contest = () =>{
             {problemList.problem_list.map((contest, index) => (
                 <div key={contest.id} className={`w-full p-2 flex items-center ${((index+1)%2==1)?`${colorState.box1color} rounded-md`:``}`}>
                     <div className={`text-xl font-bold ${colorState.captioncolor}`}>{index+1}</div>
-                    <div className={`text-lg ml-32`}>{contest.try_count}</div>
+                    <div className={`text-lg ml-32`}>{contest.solve_count}</div>
                     <div className={`text-lg ml-32`}>{contest.try_count}</div>
                     <div className={`text-lg ml-auto py-1 px-2 rounded-md ${((index+1)%2==0)?`${colorState.box1color} rounded-md`:`${colorState.bgcolor}`} hover:bg-gray-400`}
                     onClick={()=>navigate(`/ContestProblem/${id}/${contest.id}`)}>Go to Problem</div>

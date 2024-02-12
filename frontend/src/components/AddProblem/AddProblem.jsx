@@ -3,6 +3,9 @@ import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import AddProblemSettingsPopUp from "./AddProblemSettingsPopUp";
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import axios from 'axios';
 import { useEffect } from "react";
@@ -204,7 +207,7 @@ const Add = () =>{
 //editorial_image: editorial_image,
   axios.post(`http://127.0.0.1:8000/api/user/add-problem/`,problem).then((response) => {
       console.log(response.data);
-      
+      toast.success("Problem Created")
   }).catch((error) => {
       console.error("Error fetching data:", error);
   });
@@ -314,6 +317,7 @@ useEffect(() => {
       {
         <AddProblemSettingsPopUp isOpen={isPopupOpen} onClose={closePopup} settings={settings} setSettings={setSettings} />
       }
+      <ToastContainer />
     </div>
     );
     
