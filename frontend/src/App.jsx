@@ -62,6 +62,17 @@ function App() {
     if (csrfToken) {
       axios.defaults.headers.common['X-CSRFToken'] =csrfToken;
     } else {
+      axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+      .then(response => {
+      const csrfToken = response.data.csrftoken;
+      console.log(csrfToken);
+      axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
+      Cookies.set('csrf', csrfToken, { expires: 7 });
+  
+      })
+      .catch(error => {
+      console.error('Error fetching CSRF token:', error);
+      });
       console.log("first time entry in the website");
     }
     
