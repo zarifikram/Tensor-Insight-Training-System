@@ -46,16 +46,19 @@ function App() {
   })
 
   useEffect(() => {
-    console.log("99999999999999999999999999999999999999999999999999999999")
+   
     const authUnparsed = Cookies.get('authState')
+    console.log("t--------------------------")
+    console.log(authUnparsed)
     if(authUnparsed){
       const authStateFromCookie = JSON.parse(authUnparsed);
       console.log(authStateFromCookie)
       setAuthState(authStateFromCookie);
     }
     
-
     const csrfToken =  Cookies.get('csrf')
+    console.log(csrfToken)
+    console.log("b--------------------------")
     if (csrfToken) {
       axios.defaults.headers.common['X-CSRFToken'] =csrfToken;
     } else {

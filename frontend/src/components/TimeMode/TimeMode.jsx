@@ -26,8 +26,9 @@ const TimeMode = () =>{
     //set axios csrf header
     axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
     return () => {
-      submitAnswer();
-      complete();
+    //  submitAnswer();
+     // complete();
+     console.log("unmount")
     };
   }, []);
 
