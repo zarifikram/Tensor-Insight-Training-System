@@ -108,7 +108,7 @@ const QuantityMode = () =>{
           received_result.result[1].correct &&
           received_result.result[2].correct &&
           received_result.result[3].correct &&
-          received_result.result[4].correct) || true){//Debug mode
+          received_result.result[4].correct)){//Debug mode always true
             console.log("success"+authState.QuantityModeRunning)
             if(authState.QuantityModeRunning===quantity){
               setPages(iniPage);

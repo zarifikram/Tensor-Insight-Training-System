@@ -58,7 +58,7 @@ const AddProblem = () =>{
 
     const [title,setTitle] =useState("title")
     const [description,setDescription] =useState("description")
-    const [depth,setDepth] =useState(1)
+    const [depth,setDepth] =useState(-1)
     const [solution,setSolution] =useState("solution")
     const [editorial_image,setEditorial_image] =useState(null)
   //const [used_manipulator,setTitle] =useState("title")
@@ -199,44 +199,10 @@ const Add = () =>{
       }
     ],
     solution: solution,
-    editorial_image: editorial_image,
+    
   })
-
-  axios.post(`http://127.0.0.1:8000/api/user/add-problem/`,{
-    title: title,
-    description: description,
-    depth: depth,
-    used_manipulator: settings.manipulator,
-    test_cases: [
-      {
-        input: input1,
-        output: output1,
-        test_case_no: 1
-      },
-      {
-        input: input2,
-        output: output2,
-        test_case_no: 2
-      },
-      {
-        input: input3,
-        output: output3,
-        test_case_no: 3
-      },
-      {
-        input: input4,
-        output: output4,
-        test_case_no: 4
-      },
-      {
-        input: input5,
-        output: output5,
-        test_case_no: 5
-      }
-    ],
-    solution: solution,
-    editorial_image: editorial_image,
-  }).then((response) => {
+//editorial_image: editorial_image,
+  axios.post(`http://127.0.0.1:8000/api/user/add-problem/`,problem).then((response) => {
       console.log(response.data);
       
   }).catch((error) => {
@@ -271,11 +237,14 @@ useEffect(() => {
           <div className={`pr-2 mb-2 flex items-center font-bold`}>Solution:</div>
           <input value={solution} onChange={handleEditChange4} className={`${colorState.box1color} p-2 rounded-md mb-2`}  />
         </div>
-        <div className="flex justify-between">
-          <div className={`pr-2 mb-2 flex items-center font-bold`}>Editorial Image:</div>
-          <input type="file"
-        accept="image/*"  onChange={handleEditChange5} className={`${colorState.box1color} p-2 rounded-md mb-2`}  />
-        </div>
+        {/*
+                  <div className="flex justify-between">
+                  <div className={`pr-2 mb-2 flex items-center font-bold`}>Editorial Image:</div>
+                  <input type="file"
+                accept="image/*"  onChange={handleEditChange5} className={`${colorState.box1color} p-2 rounded-md mb-2`}  />
+                </div>
+    */}
+
         <div className="flex">
           <div className={`${colorState.box1color} p-2 rounded-md  hover:bg-gray-400`} onClick={() => setPopupOpen(prevState => !prevState)}> Select Manipulators </div>
         </div>

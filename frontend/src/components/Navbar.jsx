@@ -43,6 +43,7 @@ const Navbar = () => {
 
     const [mode, setMode] = useState({ mode: "quantity", setting: 4 });
     const [colorState, setColorState] = useContext(ColorContext);
+    const [authState,setAuthState] = useContext(AuthContext)
 
     //Popup--------------------------------------------
 
@@ -75,12 +76,12 @@ const Navbar = () => {
         <div className="w-screenwidth h-28 flex mx-40 py-10">
             <div className={`w-10% flex items-center font-saira text-3xl font-black ${colorState.captioncolor}`}>TensorITS</div>
             <div className={`w-15% flex justify-evenly`}>
-                
-                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={()=>navigate('/')}><FaHome /></div>
-                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={openPopup2}><FaCode /></div>
-                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={()=>navigate('/AddProblem')}><IoIosAddCircle /></div>
-                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={()=>navigate('/ContestList')}><FaBolt  /></div>
-                
+                <div className={`flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl  hover:text-gray-700 hover:underline transition duration-300`} onClick={()=>navigate('/')}>
+                    <FaHome/>
+                </div>
+                <div className={`flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={openPopup2}><FaCode/></div>
+                <div className={   `${(authState.loggedIn)?`flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`:`hidden`}`} onClick={()=>navigate('/AddProblem')}><IoIosAddCircle/></div>
+                <div className={   `${(authState.loggedIn)?`flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`:`hidden`}`} onClick={()=>navigate('/ContestList')}><FaBolt/></div>
                 <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} >
                     {<button onClick={openPopup} className={`hover:text-gray-400`}><IoMdSettings /></button>}
                 </div>
