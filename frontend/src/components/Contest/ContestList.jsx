@@ -3,6 +3,7 @@ import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import ContestLeaderboard from "./ContestLeaderboard";
 
 import axios from 'axios';
 import { useEffect } from "react";
@@ -257,6 +258,7 @@ const ContestList = () =>{
                     </div>
                 </div>
             ))}
+
 
 <ToastContainer />
        

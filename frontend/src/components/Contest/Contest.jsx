@@ -10,6 +10,8 @@ import { useRef } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 
+import ContestLeaderboard from "./ContestLeaderboard";
+
 const Contest = () =>{
     let {id} = useParams();
     const navigate = useNavigate();
@@ -113,7 +115,7 @@ const Contest = () =>{
                     onClick={()=>navigate(`/ContestProblem/${id}/${contest.id}`)}>Go to Problem</div>
                 </div>
             ))}
-       
+       <ContestLeaderboard id={id}></ContestLeaderboard>
     </div>
     );
     
