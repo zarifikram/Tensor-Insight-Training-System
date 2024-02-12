@@ -95,9 +95,9 @@ const ContestProblem = () =>{
       for (let i = 0; i < test_cases.length; i++) {
         //console.log(test_cases[i]);
         let temp = pages;
-        temp[i].inputTensor=(JSON.stringify(test_cases[i].input));
-        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output));
-        temp[i].currentTensor=(JSON.stringify(test_cases[i].input));
+        temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
+        temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
        // console.log(JSON.stringify(test_cases[i].input));
         setPages(temp);
       }
@@ -164,6 +164,31 @@ const ContestProblem = () =>{
 
 
 
+          const submitAnswer=()=>{
+            axios.post(`http://127.0.0.1:8000/api/contest/${contestId}/problem/${problemId}/submit/`,{
+              code:codeRef.current,
+              taken_time:2
+            }).then((response) => {
+              console.log(response.data)
+              //toast.success("seccessfully submited");
+              const received_result = JSON.parse(response.data);
+              console.log(received_result);
+              if((received_result.result[0].correct &&
+                received_result.result[1].correct &&
+                received_result.result[2].correct &&
+                received_result.result[3].correct &&
+                received_result.result[4].correct)){//Debug mode
+                  console.log("success")
+                }
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+             // toast.success("Congraulations! You have completed  Problems");
+              }
+      
+    
+
     return(
     <div className="mx-40">
         <div className=" h-24 flex justify-center py-4 items-center">
@@ -195,7 +220,7 @@ const ContestProblem = () =>{
                 </div>
             </div>
             {
-            //<div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
+            <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
         }
         </div>
         <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.QuantityModeRunning}</div>

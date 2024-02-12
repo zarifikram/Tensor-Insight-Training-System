@@ -45,6 +45,7 @@ const Navbar = ({ routeContext, setRouteContext }) => {
 
     const [mode, setMode] = useState({ mode: "quantity", setting: 4 });
     const [colorState, setColorState] = useContext(ColorContext);
+    const [authState,setAuthState] = useContext(AuthContext)
 
     //Popup--------------------------------------------
 

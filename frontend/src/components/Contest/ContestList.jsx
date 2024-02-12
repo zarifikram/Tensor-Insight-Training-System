@@ -3,11 +3,16 @@ import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import ContestLeaderboard from "./ContestLeaderboard";
 
 import axios from 'axios';
 import { useEffect } from "react";
 import Cookies from 'js-cookie';
 import { useRef } from "react";
+
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ContestList = () =>{
 
@@ -73,10 +78,8 @@ const ContestList = () =>{
                 navigate(`/Contest/${contId}`)
             }).catch((error) => {
                 console.error("Error fetching data:", error);
-            });
-            
-        }
-            
+            });         
+        }      
     }
 
 
@@ -113,7 +116,7 @@ const ContestList = () =>{
         setNumproblem(event.target.value);
     };
 
-    const createProblem = () =>{
+    const createContest = () =>{
         axios.post(`http://127.0.0.1:8000/api/create-contest/`,{
             contest: {
               title: title,
@@ -125,6 +128,7 @@ const ContestList = () =>{
             num_random_problem: numproblem
           }).then((response) => {
             console.log(response.data);
+            toast.success("Contest Created")
         }).catch((error) => {
             console.error("Error fetching data:", error);
         });
@@ -200,7 +204,7 @@ const ContestList = () =>{
         <div className={`flex`}>
             <div className={`pl-3`}>Number of problems: </div><input value={numproblem} type="number" onChange={handleEditChange8} className={`${colorState.bgcolor} p-1 mx-2 mb-2 rounded-md`} />
         </div>
-        <div className={`flex justify-end`}><div className={`m-2 px-2 ${colorState.box2color}  hover:bg-gray-400 w-30% rounded-md flex justify-center text-xl font-bold `} onClick={createProblem}>Create</div></div>
+        <div className={`flex justify-end`}><div className={`m-2 px-2 ${colorState.box2color}  hover:bg-gray-400 w-30% rounded-md flex justify-center text-xl font-bold `} onClick={createContest}>Create</div></div>
   </div>
   <div className={`w-full ${colorState.box1color} rounded-md flex flex-col mt-2`}>
         <div className={`text-xl ${colorState.textcolor2} p-3 `}>Search Custom Contest</div>
@@ -254,6 +258,9 @@ const ContestList = () =>{
                     </div>
                 </div>
             ))}
+
+
+<ToastContainer />
        
     </div>
     );

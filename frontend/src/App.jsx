@@ -16,7 +16,7 @@ import Authentication from './components/User/Authentication'
 import Problem from './components/ProblemSet/Problem'
 import ProblemSet from './components/ProblemSet/ProblemSet'
 import Cookies from 'js-cookie'
-import AddProblem from './components/AddProblem'
+import AddProblem from './components/AddProblem/AddProblem.jsx'
 import ContestList from './components/Contest/ContestList.jsx'
 import Contest from './components/Contest/Contest.jsx'
 import ContestProblem from './components/Contest/ContestProblem.jsx'
@@ -78,6 +78,17 @@ function App() {
     if (csrfToken) {
       axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
     } else {
+      axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+      .then(response => {
+      const csrfToken = response.data.csrftoken;
+      console.log(csrfToken);
+      axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
+      Cookies.set('csrf', csrfToken, { expires: 7 });
+  
+      })
+      .catch(error => {
+      console.error('Error fetching CSRF token:', error);
+      });
       console.log("first time entry in the website");
     }
 
