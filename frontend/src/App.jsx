@@ -113,9 +113,7 @@ function App() {
   });
 
   const [csrfState, setCSRFState] = useState();
-  const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 4 });
-
-  
+  const [routeContext, setRouteContext] = useState({ isPractice: false, navItemIndex: 4 });
 
   return (
     <div className="font-roboto" >
