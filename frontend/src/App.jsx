@@ -46,6 +46,7 @@ function App() {
   })
 
   useEffect(() => {
+    console.log("&&&---app.jsx");
 
     axios.get('http://127.0.0.1:8000/')
     .then(response => {
