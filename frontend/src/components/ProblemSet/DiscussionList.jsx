@@ -151,7 +151,7 @@ const DiscussionList = ({id}) => {
             .catch((error) => {
                 console.error("Error fetching data:", error);
             });
-    }, 100000); // Run every second (1000 milliseconds)
+    }, 1000); // Run every second (1000 milliseconds)
 
     // Clean up the interval when the component unmounts or when the dependency changes
     return () => clearInterval(interval);

@@ -8,6 +8,8 @@ import { MdRestartAlt } from "react-icons/md";
 import { CgArrowUpO } from "react-icons/cg";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -292,6 +294,7 @@ const CustomMode = () =>{
                 {
             <CustomSettingsPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeSettingsSelectionPopUp} settings={settings} setSettings={setSettings} />
         }
+         <ToastContainer />
     </div>
     );
     
