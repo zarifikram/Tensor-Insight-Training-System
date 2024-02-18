@@ -87,14 +87,11 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
       }, [problems]);
 
     const enterProblem =(id)=>{
+        navigate(`/Problem/${id}`);
         setCurrentProblem(id);
         onClose();
         
     }
-
-     useEffect(() => {
-        navigate(`/Problem/${currentProblem}`);
-   }, [currentProblem]);
 
     const goToPage=(page)=>{
         axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}`)

@@ -14,10 +14,30 @@ axios.defaults.withCredentials = true;
 
 const Authentication = () =>{
 
-    useEffect(() => {
-        console.log(Cookies.get('csrf'))
-      axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
-    }, []);
+    // useEffect(() => {
+    //     const csrfToken =  Cookies.get('csrf')
+    //     console.log(csrfToken)
+    //     console.log("authCookieTest")
+    //     if (csrfToken) {
+    //       axios.defaults.headers.common['X-CSRFToken'] =csrfToken;
+    //     } else {
+    //       axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+    //       .then(response => {
+    //       const csrfToken = response.data.csrftoken;
+    //       console.log(csrfToken);
+    //       axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
+    //       Cookies.set('csrf', csrfToken, { expires: 7 });
+      
+    //       })
+    //       .catch(error => {
+    //       console.error('Error fetching CSRF token:', error);
+    //       });
+    //       console.log("first time entry in the website");
+    //     }
+    // }, []);
+
+
+
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
     const  [ csrfState, setCSRFState]= useContext(CSRFContext);
