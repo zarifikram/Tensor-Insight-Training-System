@@ -16,7 +16,7 @@ import TimeModePopUp from "./TimeModePopUp";
 import TimeSelectionPopUp from "./TimeSelectionPopUp";
 import axios from 'axios';
 import { useEffect } from "react";
-import Cookies from 'js-cookie';
+//import Cookies from 'js-cookie';
 
 import { useRef } from "react";
 axios.defaults.withCredentials= true;
@@ -24,7 +24,7 @@ axios.defaults.withCredentials= true;
 const TimeMode = () =>{
   useEffect(() => {
     //set axios csrf header
-    axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+    //axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
     return () => {
     //  submitAnswer();
      // complete();

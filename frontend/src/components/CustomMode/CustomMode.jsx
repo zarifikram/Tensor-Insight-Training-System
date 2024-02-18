@@ -59,7 +59,7 @@ const CustomMode = () =>{
 })
   useEffect(() => {
     //set axios csrf header
-    axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+    //axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
     //setting page for previous settings
     if(ini){
       setIni(false);

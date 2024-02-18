@@ -122,9 +122,9 @@ const setCSRFToken = () => {
   axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
   .then(response => {
     const csrfToken = response.data.csrftoken;
-    console.log(csrfToken);
+    //console.log(csrfToken);
     axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
-    Cookies.set('csrf', csrfToken, { expires: 7 });
+    //Cookies.set('csrf', csrfToken, { expires: 7 });
 
   })
   .catch(error => {
