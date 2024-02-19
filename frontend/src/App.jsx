@@ -126,7 +126,6 @@ function App() {
 
               <div className={`${colorState.bgcolor} h-screen flex flex-col`}>
                 <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />
-
                 <CustomComponent routeContext={routeContext} />
                 <Footer />
               </div>
