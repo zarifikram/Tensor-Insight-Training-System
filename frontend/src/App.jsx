@@ -142,6 +142,7 @@ function App() {
           <Route exact path='/ContestList' element={<ContestList/>} />
           <Route exact path='/Contest/:id' element={<Contest/>} />
           <Route exact path='/ContestProblem/:contestId/:problemId' element={<ContestProblem/>} />
+          <Route exact path='/ProblemSet' element={<ProblemSet/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>
