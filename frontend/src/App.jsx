@@ -40,6 +40,7 @@ const idToRouteMap = {
   5: Discussion
 }
 
+axios.defaults.withCredentials= true;
 const idToRouteMapPractice = {
   0: Home,
   1: CustomMode,

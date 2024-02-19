@@ -5,8 +5,9 @@ import react,{ useContext } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import ProblemPopUp from "../../unused/ProblemPopUp";
+import ProblemSetProblemPopUp from "./ProblemSetProblemPopUp";
 import { useRef } from "react";
+import { CgArrowUpO } from "react-icons/cg";
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -14,11 +15,47 @@ import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 
 import { useState } from "react";
 import DiscussionList from "./DiscussionList";
+import { toast } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 axios.defaults.withCredentials= true;
 
 const Problem = () => {
   let {id} = useParams();
   const codeRef = useRef();
+
+  const iniPage =[
+    {
+      inputTensor: "",
+      expectedTensor: "",
+      currentTensor: "",
+      reached:false
+    },
+    {
+      inputTensor: "",
+      expectedTensor: "",
+      currentTensor: "",
+      reached:false
+    },
+    {
+      inputTensor: "",
+      expectedTensor: "",
+      currentTensor: "",
+      reached:false
+    },
+    {
+      inputTensor: "",
+      expectedTensor: "",
+      currentTensor: "",
+      reached:false
+    },
+    {
+      inputTensor: "",
+      expectedTensor: "",
+      currentTensor: "",
+      reached:false
+    },
+  ]
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
@@ -65,18 +102,7 @@ const Problem = () => {
         "is_user_added": false
     })
 
-    const [pages,setPages] = useState([  {
-      reached:false
-    }, {
-      reached:false
-    } ,{
-      reached:false
-    }, {
-      reached:false
-    }, {
-      reached:false
-    }
-  ])
+    const [pages,setPages] = useState(iniPage)
 
   const handleCodeChange = (newCode) => {
     codeRef.current = newCode;
@@ -102,12 +128,111 @@ const Problem = () => {
         .then((response) => {
         console.log(response.data);
         setProblem(response.data)
+          const test_cases = response.data.test_cases
+        for (let i = 0; i < test_cases.length; i++) {
+          //console.log(test_cases[i]);
+          let temp = pages;
+          temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+          temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
+          temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+          console.log(JSON.stringify(test_cases[i].input));
+          setPages(temp);
+        }
+
         }).catch((error) => {
             console.error("Error fetching data:", error);
         });
       }, [id]);
 
 
+
+      useEffect(() => {
+        const handleKeyPress = (event) => {
+          if (event.shiftKey && event.ctrlKey ) {
+            console.log("Shift + ctrlKey");
+            let test_cases=[];
+            for (let i = 0; i < pages.length; i++) {
+              const input = pages[i].inputTensor;
+              const output = pages[i].expectedTensor;
+              const test_case_no = i + 1; // Adjust the logic based on your requirements
+              // Create a JSON object and push it to the 'temp' array
+              test_cases.push({
+                input: input,
+                output: output,
+                test_case_no: test_case_no
+              });
+            }
+            console.log(test_cases);
+            //o_tensor = torch.where(tensor == 2, 100, -1)
+            //tensor = o_tensor
+            //const singleStringCode = codeRef.current.replace(/\n/g, "\\n");
+            const singleStringCode = codeRef.current
+            console.log(singleStringCode);
+             axios.post("http://127.0.0.1:8000/api/run-problem/",{
+              test_cases:test_cases,code:singleStringCode
+            }).then((response) => {
+              console.log("```")
+              console.log(response.data);
+              for (let i = 0; i < 5; i++) {
+                console.log(response.data.result[i])
+                let temp = pages;
+                if(response.data.result[i].status=="success"){
+                  temp[i].currentTensor = response.data.result[i].output;
+                  temp[i].reached = response.data.result[i].correct
+                }
+                setPages(pages);
+              }
+              
+              let isCorrect = true;
+              for (let i = 0; i < 5; i++) {
+                if(temp[i].reached===false)
+                  isCorrect=false
+              }
+
+              if(isCorrect){
+                toast.success("Problem Solved!")
+              }
+              
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+          }
+        };
+    
+        // Add the event listener when the component mounts
+        window.addEventListener("keydown", handleKeyPress);
+    
+        // Remove the event listener when the component unmounts
+        return () => {
+          window.removeEventListener("keydown", handleKeyPress);
+        };
+      }, []); // Empty dependency array ensures that this effect runs only once when the component mounts
+    
+      const submitAnswer=()=>{
+        axios.post(`http://127.0.0.1:8000/api/problem/${id}/submit/`,{
+          code:codeRef.current,
+          taken_time:2
+        }).then((response) => {
+          console.log(response.data)
+          console.log("toast time")
+          const received_result = JSON.parse(response.data);
+          console.log(received_result);
+          if((received_result.result[0].correct &&
+            received_result.result[1].correct &&
+            received_result.result[2].correct &&
+            received_result.result[3].correct &&
+            received_result.result[4].correct)){//Debug mode always true
+              toast.success("seccessfully submited");
+            }else{
+              toast.error("Some Test Cases Didn't Match")
+            }
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+
+      }
 
 
     return (
@@ -129,35 +254,40 @@ const Problem = () => {
         <div className={`py-2 px-3`}>
           <div>Test Cases:</div>
         </div>
-        <div className=" h-24 flex justify-start py-4 items-center">
-            <div className={` ${colorState.box1color}  w-40% rounded-md font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
-                <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(0)}>
+        <div className=" h-24 flex justify-center py-4 items-center">
+        <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
+                <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[0].reached?`hidden invisible`:``}`}>1</div>
+                  <div className={`${pages[0].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
-                <div className={`${pages[1].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(1)}>
+                <div className={`${pages[1].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(1)}>
                   <div className={`${pages[1].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[1].reached?`hidden invisible`:``}`}>2</div>
+                  <div className={`${pages[1].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
-                <div className={`${pages[2].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(2)}>
+                <div className={`${pages[2].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(2)}>
                   <div className={`${pages[2].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[2].reached?`hidden invisible`:``}`}>3</div>
+                  <div className={`${pages[2].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
-                <div className={`${pages[3].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(3)}>
+                <div className={`${pages[3].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(3)}>
                   <div className={`${pages[3].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[3].reached?`hidden invisible`:``}`}>4</div>
+                  <div className={`${pages[3].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
-                <div className={`${pages[4].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`${colorState.bgcolor} rounded-full hover:cursor-pointer w-8 h-8 flex justify-center items-center hover:text-gray-300`}`}  onClick={()=>openPopup(4)}>
+                <div className={`${pages[4].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(4)}>
                   <div className={`${pages[4].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
-                  <div className={`${pages[4].reached?`hidden invisible`:``}`}>5</div>
+                  <div className={`${pages[4].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
+
             </div>
-            
+            <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
         </div>
+        <CodePane  onCodeChange={handleCodeChange} />
         <div className=" flex justify-center text-2xl font-bold py-5"> Comments</div>
         <DiscussionList id={id}></DiscussionList>
         {
-            <ProblemPopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} problem={problem}/>
+            <ProblemSetProblemPopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} problem={problem}/>
+        }
+        {
+            <ToastContainer />
         }
     </div>
   );

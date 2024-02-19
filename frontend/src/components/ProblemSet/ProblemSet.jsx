@@ -14,20 +14,18 @@ axios.defaults.withCredentials= true;
 
 import { useRef } from "react";
 
-const ProblemSet = ({ isOpen, onClose,children }) =>{
+const ProblemSet = () =>{
 
     let navigate = useNavigate();
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
 
-    const handleClose = (e) => {
-        // Close the popup only if the overlay is clicked
-       
-            if (e.target.classList.contains('overlay')) {
-                onClose();
-            }
-        };
-   
+    //Filtering-----------------------------------------
+    const [is_user_added,setIs_user_added] = useState("");
+    const handleUserAddedFilterChange = (e) => {
+        const selectedOptionValue = e.target.value;
+        setIs_user_added(selectedOptionValue);
+    };
     //Problems------------------------------------------
     const [perPage, setPerPage] = useState('10');
     const [currentPage,setCurrentPage] =useState(1);
@@ -74,7 +72,7 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
     });
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page_size=${perPage}`)
+        axios.get(`http://127.0.0.1:8000/api/problem-set/?page_size=${perPage}&${is_user_added}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
@@ -88,7 +86,7 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
 
     const enterProblem =(id)=>{
         setCurrentProblem(id);
-        onClose();
+        
         
     }
 
@@ -97,7 +95,7 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
    }, [currentProblem]);
 
     const goToPage=(page)=>{
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}`)
+        axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}&${is_user_added}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
@@ -140,26 +138,26 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
     };
 
     return(
-        <>
-        <div
-          className={`fixed inset-0 overflow-y-auto transition-opacity duration-300 
-          ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-          onClick={handleClose} // Added onClick event for the entire popup
-          >
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="overlay fixed inset-0 bg-black opacity-50"></div>
-            <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-4 max-w-screen-lg w-85% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
-              <div>
-
-  
-              <div className={`mx-5 `}>
+        <div className={`mx-40 ${colorState.textcolor} font-roboto`}>
+              <div className={` `}>
                 <div className={`text-2xl ${colorState.captioncolor} font-bold pb-5`}>Problem Set</div>
+                <div className={`flex justify-end pb-5`}>
+                        <select className={`${colorState.box1color} py-2 rounded-md `}
+                            onChange={handleUserAddedFilterChange}
+                            value={is_user_added}
+                            >
+                                <option value="">All</option>
+                                <option value="true">User Added</option>
+                                <option value="false">Generated</option>
+                           
+                        </select>
+                    </div>
                 <div className={`flex w-100% justify-between pb-1`}>
-                    <div className={`flex w-50% justify-start`}>
+                    <div className={`flex w-50% justify-start ${colorState.textcolor2}`}>
                         <div className={`w-10% flex justify-center`}>id</div>
                         <div className={`pl-20`}>tags</div>
                     </div>
-                    <div className={`flex w-50% justify-between`}>
+                    <div className={`flex w-50% justify-between ${colorState.textcolor2}`}>
                         <div className={`w-25% flex justify-center`}>solved</div>
                         <div className={`w-25% flex justify-center`}>acceptance</div>
                         <div className={`w-25% flex justify-center`}>depth</div>
@@ -202,11 +200,7 @@ const ProblemSet = ({ isOpen, onClose,children }) =>{
                         </div>   
                     </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
+      </div>
     );
     
     };
