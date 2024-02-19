@@ -9,7 +9,8 @@ import { CgArrowUpO } from "react-icons/cg";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-
+import { MdLeaderboard } from "react-icons/md";
+import CustomModeLeaderBoardPopUp from "./CustomModeLeaderBoardPopUp";
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -25,7 +26,8 @@ axios.defaults.withCredentials = true;
 
 
 const CustomMode = () =>{
-  //page initialization
+
+
   const [ini,setIni] = useState(true)
   const [settings,setSettings] = useState({
     "depth": 2,
@@ -109,7 +111,16 @@ const CustomMode = () =>{
           reached:false
         },
       ])
+    //LeaderBoardPopUp-------------------------------
+    const [isLeaderBoardPopupOpen, setLeaderBoardPopupOpen] = useState(false);
 
+    const openLeaderBoardPopup = () => {
+      setLeaderBoardPopupOpen(true);
+    };
+    
+    const closeLeaderBoardPopup = () => {
+      setLeaderBoardPopupOpen(false);
+    };
   
     //Popup--------------------------------------------
     const [isPopupOpen, setPopupOpen] = useState(false);
@@ -171,12 +182,12 @@ const CustomMode = () =>{
         }else{
           axios.get("http://127.0.0.1:8000/api/custom-mode/")
           .then((response) => {
-          const test_cases = JSON.parse(response.data.test_cases);
+          const test_cases = response.data.test_cases;
           for (let i = 0; i < test_cases.length; i++) {
             let temp = pages;
-            temp[i].inputTensor=JSON.stringify(test_cases[i].input);
-            temp[i].expectedTensor=JSON.stringify(test_cases[i].output);
-            temp[i].currentTensor=JSON.stringify(test_cases[i].input);
+            temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+            temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
+            temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
             temp[i].reached=false;
             setPages(temp);
           }
@@ -277,6 +288,7 @@ const CustomMode = () =>{
                 </div>
             </div>
             <div onClick={openSettingsSelectionPopUp} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><IoMdSettings/></div>
+            <div onClick={openLeaderBoardPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><MdLeaderboard /></div>
         </div>
         <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}></div>
         <CodePane  onCodeChange={handleCodeChange} />
@@ -294,7 +306,12 @@ const CustomMode = () =>{
                 {
             <CustomSettingsPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeSettingsSelectionPopUp} settings={settings} setSettings={setSettings} />
         }
-         <ToastContainer />
+        { <CustomModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup} />
+
+        }{
+          <ToastContainer />
+        }
+         
     </div>
     );
     
