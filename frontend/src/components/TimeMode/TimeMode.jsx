@@ -7,10 +7,6 @@ import { AiFillPauseCircle } from "react-icons/ai";
 import { CgArrowUpO } from "react-icons/cg";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { MdLeaderboard } from "react-icons/md";
-import TimeModeLeaderBoardPopUp from "./TimeModeLeaderBoardPopUp";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -20,7 +16,7 @@ import TimeModePopUp from "./TimeModePopUp";
 import TimeSelectionPopUp from "./TimeSelectionPopUp";
 import axios from 'axios';
 import { useEffect } from "react";
-//import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 
 import { useRef } from "react";
 axios.defaults.withCredentials= true;
@@ -28,10 +24,10 @@ axios.defaults.withCredentials= true;
 const TimeMode = () =>{
   useEffect(() => {
     //set axios csrf header
-    //axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+    axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
     return () => {
-      submitAnswer();
-      complete();
+    //  submitAnswer();
+     // complete();
      console.log("unmount")
     };
   }, []);
@@ -47,8 +43,7 @@ const TimeMode = () =>{
       const intervalId = setInterval(() => {
         setTime(prevTime => {
           if(prevTime == sendTime){//sendTime
-            submitAnswer(true);
-            console.log("complete")
+            submitAnswer();
             complete();
             run();
           }
@@ -81,51 +76,38 @@ const TimeMode = () =>{
     const [authState,setAuthState] = useContext(AuthContext);
     const codeRef = useRef();
 
-    const iniPage =[
-      {
-        inputTensor: "",
-        expectedTensor: "",
-        currentTensor: "",
-        reached:false
-      },
-      {
-        inputTensor: "",
-        expectedTensor: "",
-        currentTensor: "",
-        reached:false
-      },
-      {
-        inputTensor: "",
-        expectedTensor: "",
-        currentTensor: "",
-        reached:false
-      },
-      {
-        inputTensor: "",
-        expectedTensor: "",
-        currentTensor: "",
-        reached:false
-      },
-      {
-        inputTensor: "",
-        expectedTensor: "",
-        currentTensor: "",
-        reached:false
-      },
-    ]
-
-    const [pages,setPages] = useState(iniPage);
-
-    //LeaderBoardPopUp-------------------------------
-    const [isLeaderBoardPopupOpen, setLeaderBoardPopupOpen] = useState(false);
-
-    const openLeaderBoardPopup = () => {
-      setLeaderBoardPopupOpen(true);
-    };
-    
-    const closeLeaderBoardPopup = () => {
-      setLeaderBoardPopupOpen(false);
-    };
+    const [pages,setPages] = useState([
+        {
+          inputTensor: "",
+          expectedTensor: "",
+          currentTensor: "",
+          reached:false
+        },
+        {
+          inputTensor: "",
+          expectedTensor: "",
+          currentTensor: "",
+          reached:false
+        },
+        {
+          inputTensor: "",
+          expectedTensor: "",
+          currentTensor: "",
+          reached:false
+        },
+        {
+          inputTensor: "",
+          expectedTensor: "",
+          currentTensor: "",
+          reached:false
+        },
+        {
+          inputTensor: "",
+          expectedTensor: "",
+          currentTensor: "",
+          reached:false
+        },
+      ])
 
   
     //Popup--------------------------------------------
@@ -162,11 +144,11 @@ const TimeMode = () =>{
       .then((response) => {
         console.log(response.data);
         console.log("okay----")
-        setAuthState(prevState => ({
+        setAuthState({
           ...prevState,
           timerModeRunning:1
-        }));
-        getProblem();
+        })
+        //onClose();
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -174,7 +156,7 @@ const TimeMode = () =>{
 
         //------------------
 
-        
+        getProblem();
 
     }
 
@@ -190,7 +172,6 @@ const TimeMode = () =>{
         temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
         temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
         console.log(JSON.stringify(test_cases[i].input));
-        temp[i].reached=false;
         setPages(temp);
       }
       console.log(pages);
@@ -261,12 +242,14 @@ const TimeMode = () =>{
 
     //-------------------------------------------------
 
-    const submitAnswer=(isComplete)=>{
+    const submitAnswer=()=>{
       axios.post("http://127.0.0.1:8000/api/time-mode/submit/",{
         code:codeRef.current,
         taken_time:time
       }).then((response) => {
-       // console.log(response.data)
+        console.log(response.data)
+        console.log("toast time")
+        toast.success("seccessfully submited");
         const received_result = JSON.parse(response.data);
         console.log(received_result);
 
@@ -274,19 +257,8 @@ const TimeMode = () =>{
           received_result.result[1].correct &&
           received_result.result[2].correct &&
           received_result.result[3].correct &&
-          received_result.result[4].correct){
-            if(!isComplete){
-              getProblem()
-              setAuthState(prevState => ({
-                ...prevState,
-                timerModeRunning: prevState.timerModeRunning + 1
-              }));
-            }
-            toast.success("Problem Accepted!")
-          }else{
-            toast.error("Problem not accepted")
-          }
-            
+          received_result.result[4].correct)
+            getProblem()
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -296,13 +268,6 @@ const TimeMode = () =>{
     }
 
     const complete = () =>{
-      setAuthState(prevState => ({
-        ...prevState,
-        timerModeRunning:0
-      }));
-
-      toast.success("Time mode completed")
-
       axios.post("http://127.0.0.1:8000/api/time-mode/complete/")
       .then((response) => {
         console.log(response.data)
@@ -310,7 +275,6 @@ const TimeMode = () =>{
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-      setPages(iniPage);
     }
 
     return(
@@ -342,10 +306,7 @@ const TimeMode = () =>{
                   <div className={`${pages[4].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
             </div>
-
-        <div onClick={() => submitAnswer(false)} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
-        <div onClick={openLeaderBoardPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><MdLeaderboard /></div>
-       
+        <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
         </div>
         <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.timerModeRunning}</div>
         <CodePane  onCodeChange={handleCodeChange} />
@@ -362,11 +323,6 @@ const TimeMode = () =>{
         }
                 {
             <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup}  setSendTime={setSendTime}/>
-        }
-        {
-          <TimeModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup}/>
-        }{
-          <ToastContainer />
         }
     </div>
     );

@@ -22,7 +22,7 @@ const DiscussionList = ({id}) => {
 
   useEffect(() => {
     //set axios csrf header
-  //  axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
+    axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
 
   }, []);
    

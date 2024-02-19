@@ -2,8 +2,6 @@ import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
-import QuantityModeLeaderBoardPopUp from "./QuantityModeLeaderBoardPopUp";
-import { MdLeaderboard } from "react-icons/md";
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -68,17 +66,6 @@ const QuantityMode = () =>{
     ]
 
     const [pages,setPages] = useState(iniPage)
-        //LeaderBoardPopUp-------------------------------
-        const [isLeaderBoardPopupOpen, setLeaderBoardPopupOpen] = useState(false);
-
-        const openLeaderBoardPopup = () => {
-          setLeaderBoardPopupOpen(true);
-        };
-        
-        const closeLeaderBoardPopup = () => {
-          setLeaderBoardPopupOpen(false);
-        };
-      
 
   
     //Popup--------------------------------------------
@@ -284,7 +271,6 @@ const QuantityMode = () =>{
                 </div>
             </div>
             <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
-            <div onClick={openLeaderBoardPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><MdLeaderboard /></div>
         </div>
         <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.QuantityModeRunning}</div>
         <CodePane  onCodeChange={handleCodeChange} />
@@ -301,9 +287,6 @@ const QuantityMode = () =>{
         }
                 {
             <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup} quantity={quantity} setQuantity={setQuantity} />
-        }
-        {
-          <QuantityModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup}/>
         }
     </div>
     );

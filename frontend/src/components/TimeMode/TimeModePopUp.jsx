@@ -43,15 +43,15 @@ const TimeModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,chil
             <div className={`mx-16 font-roboto `} >
               <div>
                 <div className={` h-16 flex items-end text-2xl font-bold pb-2.5`}>Input Tensor</div>
-                <div className={`${colorState.box1color} py-3 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].inputTensor}</div>
+                <div className={`${colorState.box1color} h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].inputTensor}</div>
               </div>
               <div>
                 <div className={` h-20 flex items-end text-2xl font-bold pb-2.5`}>Expected Tensor</div>
-                <div className={`${colorState.box1color} py-3 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].expectedTensor}</div>
+                <div className={`${colorState.box1color} h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].expectedTensor}</div>
               </div>
               <div >
                 <div className={` h-14 flex items-end text-2xl font-bold pb-2.5 `}>Current Tensor <IoIosCloseCircle className={`text-red-600 ${pages[currentPage].reached? `hidden`:``}`}/><IoIosCheckmarkCircle className={`text-green-600 ${pages[currentPage].reached? ``:`hidden`}`}/>  </div>
-                <div className={`${colorState.box1color} py-3 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].currentTensor}</div>
+                <div className={`${colorState.box1color} h-16 flex justify-start items-center text-base font-extrabold pl-9 rounded-lg`}>t1 = {pages[currentPage].currentTensor}</div>
               </div>
             </div>
             <div className={`mx-16 flex justify-center items-end h-16 py-1`}>
