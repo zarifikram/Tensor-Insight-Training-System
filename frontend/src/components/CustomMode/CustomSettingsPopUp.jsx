@@ -38,6 +38,14 @@ const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children })
     console.log(settings)
     }
 
+    const [depth,setDepth] = useState(1);
+    const handleDepthChange = (event) => {
+      setDepth(event.target.value);
+      setSettings(prevSettings => ({
+        ...prevSettings,
+        depth: event.target.value // Replace newValue with the desired value for depth
+      }));
+    };
 
     return (
     <>
@@ -188,37 +196,16 @@ const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children })
                 </div>
             </div>
                 <div className={`text-2xl mt-9 mx-1  ${colorState.captioncolor}`}>
-                Puzzle Generation Iteration
+                Puzzle Generation Depth
                 </div>
                 <div className={`mt-4 mx-1 font-bold`}>
-                More iteration adds more layer to the puzzle, increasing difficulty
+                More Depth adds more layer to the puzzle, increasing difficulty
                 </div>
-                <input type="number" className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold`} >
-                    
-                </input>
-                <div className={`text-2xl mt-9 mx-1  ${colorState.captioncolor}`}>
-                Maximum Character Limit
-                </div>
-                <div className={`mt-4 mx-1 font-bold`}>
-                Limit the amount of character used to write the code. Use 0 for no limit
-                </div>
-                <input type="number" className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold`} >
-                    
-                </input>
-                <div className={` text-2xl mt-9 mx-1  ${colorState.captioncolor}`}>
-                Maximum Line Limit
-                </div>
-                <div className={`mt-4 mx-1 font-bold`}>
-                Limit the amount of lines used to write the code. We count newlines. Use 0 for no limit
-                </div>
-                <input type="number" className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold`} >
-                    
+                <input type="number" value={depth} onChange={handleDepthChange} className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold px-2`} >
                 </input>
                 <div className={`${colorState.box1color} h-9 mt-9 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-100% font-semibold`} onClick={onClose}>
                     ok
                 </div>
-            
-                
           </div>
         </div>
       </div>

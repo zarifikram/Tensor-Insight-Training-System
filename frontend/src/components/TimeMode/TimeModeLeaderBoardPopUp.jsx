@@ -91,7 +91,6 @@ const TimeModeLeaderBoardPopUp = ({ isOpen, onClose ,times}) => {
               className={`${colorState.box1color} rounded-md py-1 px-3`}
               onChange={(e) => handleTimeChange(e.target.value)}
             >
-              <option value="120">2 minutes</option>
               <option value="600">10 minutes</option>
               <option value="1800">30 minutes</option>
               <option value="3600">1 hour</option>
