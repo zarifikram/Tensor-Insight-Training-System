@@ -40,6 +40,7 @@ const idToRouteMap = {
   5: Discussion
 }
 
+axios.defaults.withCredentials= true;
 const idToRouteMapPractice = {
   0: Home,
   1: CustomMode,
@@ -62,43 +63,52 @@ function App() {
   })
 
   useEffect(() => {
+   // console.log("&&&---app.jsx");
 
-    const authUnparsed = Cookies.get('authState')
-    console.log("t--------------------------")
-    console.log(authUnparsed)
-    if (authUnparsed) {
-      const authStateFromCookie = JSON.parse(authUnparsed);
-      console.log(authStateFromCookie)
-      setAuthState(authStateFromCookie);
-    }
+    axios.get('http://127.0.0.1:8000/')
+    .then(response => {
+      console.log(response.data)
+    })
+    .catch(error => {
+    console.error( error);
+    });
 
-    const csrfToken = Cookies.get('csrf')
-    console.log(csrfToken)
-    console.log("b--------------------------")
-    if (csrfToken) {
-      axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
-    } else {
+    // const authUnparsed = Cookies.get('authState')
+    // console.log("t--------------------------")
+    // console.log(authUnparsed)
+    // if(authUnparsed){
+    //   const authStateFromCookie = JSON.parse(authUnparsed);
+    //   console.log(authStateFromCookie)
+    //   setAuthState(authStateFromCookie);
+    // }
+    
+    // const csrfToken =  Cookies.get('csrf')
+    // console.log(csrfToken)
+    // console.log("b--------------------------")
+    // if (typeof csrfToken != 'undefined') {
+    //   axios.defaults.headers.common['X-CSRFToken'] =csrfToken;
+    //   console.log("cookie was already there");
+    // } else {
       axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
       .then(response => {
+      console.log("cookie received:"+response.data.csrftoken)
       const csrfToken = response.data.csrftoken;
-      console.log(csrfToken);
+      //console.log(csrfToken);
       axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
-      Cookies.set('csrf', csrfToken, { expires: 7 });
-  
+      //Cookies.set('csrf', csrfToken, { expires: 7 });
       })
       .catch(error => {
       console.error('Error fetching CSRF token:', error);
       });
       console.log("first time entry in the website");
-    }
-
+  //  }
+    
   }, []);
 
-  useEffect(() => {
-    console.log("change");
-    if (authState.id != -1)
-      Cookies.set('authState', JSON.stringify(authState));
-  }, [authState]);
+  //  useEffect(() => {console.log("change");
+  //  if(authState.id!=-1)
+  //     Cookies.set('authState', JSON.stringify(authState));
+  // }, [authState]);
 
   const [colorState, setColorState] = useState({
     cp: 2,
@@ -126,7 +136,6 @@ function App() {
 
               <div className={`${colorState.bgcolor} h-screen flex flex-col`}>
                 <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />
-
                 <CustomComponent routeContext={routeContext} />
                 <Footer />
               </div>

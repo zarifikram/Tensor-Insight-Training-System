@@ -59,20 +59,6 @@ const Navbar = ({ routeContext, setRouteContext }) => {
         console.log("close")
         setPopupOpen(false);
     };
-    //-------------------------------------------------
-
-    const [isPopupOpen2, setPopupOpen2] = useState(false);
-
-    const openPopup2 = () => {
-        //setMode("none");
-        setPopupOpen2(true);
-
-    };
-
-    const closePopup2 = () => {
-        setPopupOpen2(false);
-    };
-
 
     return (
         <div className="w-screenwidth h-28 flex mx-40 py-10">
@@ -80,7 +66,7 @@ const Navbar = ({ routeContext, setRouteContext }) => {
             <div className={`w-15% flex justify-evenly`}>
 
                 <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => setRouteContext({isPractice:false, navItemIndex:4})}><FaHome /></div>
-                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={openPopup2}><FaCode /></div>
+                <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} ><FaCode /></div>
                 <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => navigate('/AddProblem')}><IoIosAddCircle /></div>
                 <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => navigate('/ContestList')}><FaBolt /></div>
 
@@ -107,9 +93,6 @@ const Navbar = ({ routeContext, setRouteContext }) => {
             <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`} to="/Authentication" onClick={() => { setMode({ ...mode, mode: "none" }); }}><FaUser /></Link>
             {
                 <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup} />
-            }
-            {
-                <ProblemSet isOpen={isPopupOpen2} onClose={closePopup2} />
             }
         </div>
     );

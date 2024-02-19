@@ -12,7 +12,8 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 
 import { useState } from "react";
 
-const TimeModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
+
+const ProblemSetProblemPopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     const handleNavigation = (direction) => {
       if (direction === "prev") {
@@ -91,4 +92,4 @@ const TimeModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,chil
   );
 };
 
-export default TimeModePopUp;
+export default ProblemSetProblemPopUp;
