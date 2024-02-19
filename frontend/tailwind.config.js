@@ -74,14 +74,14 @@ export default {
         'cp6-bg':'#0D1C1C',
         'cp6-cap':'#FFFFFF',
         'cp6-txt':'#FF6600',
-        'cp6-box1':'#9C9191',
+        'cp6-box1':'#565454',
         'cp6-box2':'#F0E800',
 
         'cp7-bg':'#EAE4CF',
         'cp7-cap':'#646669',
-        'cp7-txt':'#ADA998',
+        'cp7-txt':'#797153',
         'cp7-box1':'#DED9C9',
-        'cp7-box2':'#9ABBCD',
+        'cp7-box2':'#7d9fb2',
 
         'cp8-bg':'#F35588',
         'cp8-cap':'#F0E9EC',
