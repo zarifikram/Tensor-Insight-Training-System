@@ -1,5 +1,5 @@
-import { AuthContext } from "./helpers/AuthContext";
-import { ColorContext } from "./helpers/ColorContext";
+import { AuthContext } from ".././helpers/AuthContext";
+import { ColorContext } from ".././helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 
@@ -35,7 +35,7 @@ const newProblemSchema = {
     "solution": ""
 }
 
-const AddProblem = () => {
+const Discussion = () => {
 
     const options = ["newest", "unsolved"]
     const problem = {
@@ -120,7 +120,7 @@ const AddProblem = () => {
 
 };
 
-export default AddProblem;
+export default Discussion;
 
 const KeyBoardInstruction = ({ colorState }) => {
     return (

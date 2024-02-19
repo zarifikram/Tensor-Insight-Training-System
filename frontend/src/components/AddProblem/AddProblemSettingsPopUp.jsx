@@ -14,7 +14,7 @@ import axios from 'axios';
 
 import { useState } from "react";
 
-const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children }) => {
+const AddProblemSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children }) => {
   
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
@@ -38,14 +38,6 @@ const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children })
     console.log(settings)
     }
 
-    const [depth,setDepth] = useState(1);
-    const handleDepthChange = (event) => {
-      setDepth(event.target.value);
-      setSettings(prevSettings => ({
-        ...prevSettings,
-        depth: event.target.value // Replace newValue with the desired value for depth
-      }));
-    };
 
     return (
     <>
@@ -56,8 +48,8 @@ const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children })
         >
         <div className="flex items-center justify-center min-h-screen">
           <div className="overlay fixed inset-0 bg-black opacity-50"></div>
-          <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-9 max-w-screen-lg w-50% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
-  
+          <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-9 max-w-screen-lg w-60% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
+            {/*
             <div className={`text-2xl mt-1 mx-1  ${colorState.captioncolor}`}>
             initiator
             </div>
@@ -82,7 +74,7 @@ const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children })
                  onClick={() => settingsToggle('initiator','arange')}>
                 torch.arange
                 </div>
-              </div>
+              </div>*/}
             <div className={`text-2xl mt-4 mx-1  ${colorState.captioncolor}`}>
             manipulator
             </div>
@@ -195,17 +187,12 @@ const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children })
                     </div>
                 </div>
             </div>
-                <div className={`text-2xl mt-9 mx-1  ${colorState.captioncolor}`}>
-                Puzzle Generation Depth
-                </div>
-                <div className={`mt-4 mx-1 font-bold`}>
-                More Depth adds more layer to the puzzle, increasing difficulty
-                </div>
-                <input type="number" value={depth} onChange={handleDepthChange} className={`${colorState.box1color} h-9 mt-1 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-1/2 font-semibold px-2`} >
-                </input>
+               
                 <div className={`${colorState.box1color} h-9 mt-9 mx-1 rounded-md flex justify-center items-center hover:bg-gray-400 w-100% font-semibold`} onClick={onClose}>
                     ok
                 </div>
+            
+                
           </div>
         </div>
       </div>
@@ -213,4 +200,4 @@ const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children })
   );
 };
 
-export default CustomSettingsPopUp;
+export default AddProblemSettingsPopUp;
