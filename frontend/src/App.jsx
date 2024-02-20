@@ -35,17 +35,19 @@ const idToRouteMap = {
   0: Home,
   1: TimeMode,
   2: OneVOne,
-  3: Contest,
+  3: ContestList,
   4: AddProblem,
-  5: Discussion
+  5: Discussion,
+  6: ProblemSet,
+  7: Authentication
 }
 
 axios.defaults.withCredentials= true;
 const idToRouteMapPractice = {
   0: Home,
   1: CustomMode,
-  2: QuantityMode,
-  3: TimeMode,
+  2: TimeMode,
+  3: QuantityMode,
 }
 function App() {
 
@@ -125,8 +127,6 @@ function App() {
   const [csrfState, setCSRFState] = useState();
   const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 4 });
 
-  
-
   return (
     <div className="font-roboto" >
       < ColorContext.Provider value={[colorState, setColorState]} >
@@ -134,7 +134,7 @@ function App() {
           <CSRFContext.Provider value={[csrfState, setCSRFState]}>
             <BrowserRouter>
 
-              <div className={`${colorState.bgcolor} h-screen flex flex-col`}>
+              <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
                 <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />
                 <CustomComponent routeContext={routeContext} />
                 <Footer />
