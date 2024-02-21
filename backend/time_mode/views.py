@@ -123,6 +123,8 @@ class TimeModeSubmitView(APIView):
 
                 problem_dict = ModeProblemSerializer(problem).data
                 result = evaluate_code(code, problem_dict)
+                if result['status'] == 'error':
+                    return Response(json.dumps(result),status=status.HTTP_400_BAD_REQUEST)
                 num_test_cases=result['num_test_cases']
                 num_test_cases_passed=result['num_test_cases_passed']
 
@@ -185,6 +187,8 @@ class TimeModeSubmitView(APIView):
 
             problem_dict = ModeProblemSerializer(problem).data
             result = evaluate_code(code, problem_dict)
+            if result['status'] == 'error':
+                return Response(json.dumps(result),status=status.HTTP_400_BAD_REQUEST)
             num_test_cases=result['num_test_cases']
             num_test_cases_passed=result['num_test_cases_passed']
 

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import generics,status
 from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
-from problem.serializers import ProblemSubmitSerializer, ModeProblemSerializer
+from problem.serializers import ProblemSubmitSerializer, ModeProblemSerializer, ProblemDetailsSerializer, ProblemSubmissionListSerializer
 import json
 from math import log2
 from .serializers import (
@@ -14,7 +14,7 @@ from .serializers import (
     AddProblemToContestSerializer,
     AddUserToContestSerializer
 )
-from problem.models import Submission, Problem, TestCase
+from problem.models import Submission, Problem, TestCase, UserProblem
 from .models import (
     Contest,
     ContestProblem,
@@ -89,13 +89,16 @@ class ContestView(generics.RetrieveAPIView):
     serializer_class = ContestSerializer
 
     def get_queryset(self):
-        return Contest.objects.filter(pk=self.kwargs['pk'])
+        contest = Contest.objects.filter(pk=self.kwargs['pk'])
+        return contest
     
 class ContestListView(generics.ListAPIView):
     serializer_class = ContestListSerializer
 
     def get_queryset(self):
-        contests = Contest.objects.all()
+        contests = Contest.objects.filter(is_user_added=False).order_by('-start_time')
+        if len(contests) > 20:
+            contests = contests[:20]
         data = []
         for contest in contests:
             users_count = ContestUser.objects.filter(contest=contest).count()
@@ -103,8 +106,26 @@ class ContestListView(generics.ListAPIView):
                 'id': contest.id,
                 'title': contest.title,
                 'users_count': users_count,
+                'is_user_added': contest.is_user_added,
+                'start_time': contest.start_time,
+                'end_time': contest.end_time
             })
         return data
+
+# Contest Problem View:
+class ContestProblemView(APIView):
+    serializer_class = ProblemDetailsSerializer
+    
+    def get(self, request, cid, pid):
+        problem = ContestProblem.objects.filter(contest__id=cid, problem__id=pid).first()
+        if problem == None:
+            return Response({"message": "Contest problem does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            problem = problem.problem
+        serializer = ProblemDetailsSerializer(problem)
+        if ContestUser.objects.filter(user=request.user, contest__id=cid).count() == 0:
+            return Response({"message": "You are not a participant of this contest."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ContestProblemSubmissionView(generics.CreateAPIView):
     serializer_class = ProblemSubmitSerializer
@@ -112,7 +133,17 @@ class ContestProblemSubmissionView(generics.CreateAPIView):
 
     def create(self, request, cid, pid, *args, **kwargs):
         user = request.user
-        contest_problem = ContestProblem.objects.get(contest__id=cid, problem__id=pid)
+        if Contest.objects.filter(id=cid).first().start_time > timezone.now():
+            return Response({"message": "Contest has not started yet."}, status=status.HTTP_400_BAD_REQUEST)
+        elif Contest.objects.filter(id=cid).first().end_time < timezone.now():
+            return Response({"message": "Contest has ended."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if ContestUser.objects.filter(user=user, contest__id=cid).count() == 0:
+            return Response({"message": "You are not a participant of this contest."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        contest_problem = ContestProblem.objects.filter(contest__id=cid, problem__id=pid).first()
+        if contest_problem == None:
+            return Response({"message": "Contest problem does not exist."}, status=status.HTTP_400_BAD_REQUEST)
         problem = contest_problem.problem
         code = request.data.get('code')
         taken_time = request.data.get('taken_time')
@@ -130,6 +161,8 @@ class ContestProblemSubmissionView(generics.CreateAPIView):
 
         problem_dict = ModeProblemSerializer(problem).data
         result = evaluate_code(code, problem_dict)
+        if result['status'] == 'error':
+            return Response(json.dumps(result),status=status.HTTP_400_BAD_REQUEST)
         num_test_cases=result['num_test_cases']
         num_test_cases_passed=result['num_test_cases_passed']
 
@@ -155,28 +188,22 @@ class ContestProblemSubmissionView(generics.CreateAPIView):
         else:
             problem.try_count += 1
             problem.save()
-        
-        contest_user, created = ContestUser.objects.get_or_create(user=user, contest=contest_problem.contest)
 
-        # Check if the contest is still ongoing
-        if self.is_contest_ongoing(contest_problem.contest):
-            # Creating a ContestSubmission instance
-            contest_submission = ContestSubmission.objects.create(
+        contest_submission = ContestSubmission.objects.create(
                 submission=submission,
                 contest_problem=contest_problem
             )
-
-            return Response(json.dumps(result), status=status.HTTP_201_CREATED)
-        else:
-            return Response({"message": "Contest time is over. Submissions are not allowed."}, status=status.HTTP_400_BAD_REQUEST)
-
-    def is_contest_ongoing(self, contest):
-        return contest.start_time <= timezone.now() <= contest.end_time
+        return Response(json.dumps(result), status=status.HTTP_201_CREATED)
 
 # Contest Problem List View:
 class ContestProblemListView(APIView):
     serializer_class = ContestProblemSerializer
     def get(self, request, pk):
+        contest = Contest.objects.filter(id=pk).first()
+        if contest == None:
+            return Response({"message": "Contest does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        elif contest.start_time > timezone.now():
+            return Response({"message": "Contest has not started yet."}, status=status.HTTP_400_BAD_REQUEST)
         contest_problems = ContestProblem.objects.filter(contest_id=pk)
         serializer = ContestProblemSerializer(contest_problems, many=True)
         return Response(serializer.data)
@@ -252,12 +279,20 @@ class CreateContestView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        title = request.data.get('title')
-        start_time = request.data.get('start_time')
-        end_time = request.data.get('end_time')
-        c_id = request.data.get('c_id')
-        password = request.data.get('password')
-        num_random_problem = request.data.get('num_random_problem')
+        serialized_data = CreateContestSerializer(data=request.data)
+        serialized_data.is_valid(raise_exception=True)
+        serialized_data = serialized_data.validated_data
+        print(serialized_data)
+
+        contest_data = serialized_data.get('contest', {})
+        title = contest_data.get('title')
+        start_time = contest_data.get('start_time')
+        end_time = contest_data.get('end_time')
+        c_id = serialized_data.get('c_id')
+        passkey = serialized_data.get('passkey')
+        num_random_problem = serialized_data.get('num_random_problem')
+
+        print(title, start_time, end_time, c_id, passkey, num_random_problem)
 
         contest = Contest.objects.create(
             title=title,
@@ -270,7 +305,7 @@ class CreateContestView(generics.CreateAPIView):
             user=request.user,
             contest=contest,
             c_id=c_id,
-            password=password,
+            passkey=passkey,
             num_random_problem=num_random_problem
         )
 
@@ -285,6 +320,12 @@ class AddProblemToContestView(APIView):
         contest = Contest.objects.get(pk=pk)
         if contest == None:
             return Response({"message": "Contest does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if contest.start_time < timezone.now():
+            if contest.end_time < timezone.now():
+                return Response({"message": "Contest has ended."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Contest has already started."}, status=status.HTTP_400_BAD_REQUEST)
+        
         if contest.is_user_added == False:
             return Response({"message": "This contest is not a custom contest."}, status=status.HTTP_400_BAD_REQUEST)
         contest = UserContest.objects.get(user=request.user, contest=contest)
@@ -314,12 +355,53 @@ class AddProblemToContestView(APIView):
         problem_number = serializer.validated_data.pop('problem_number')
 
         contest_problem = ContestProblem.objects.create(
-            contest=contest,
+            contest=contest.contest,
             problem=problem,
             problem_number=problem_number
         )
 
+        # create user problem
+        user_problem = UserProblem.objects.create(user=request.user, problem=problem)
+
         return Response({"message": "Problem added to contest successfully."}, status=status.HTTP_201_CREATED)
+    
+# {
+#   "problem": {
+#     "title": "test contest Problem",
+#     "description": "No description",
+#     "depth": 1,
+#     "used_manipulator": {"where": true},
+#        "test_cases": [
+#         {
+#             "input": "[0]",
+#             "output": "[-1]",
+#             "test_case_no": 1
+#         },
+#         {
+#             "input": "[1]",
+#             "output": "[-1]",
+#             "test_case_no": 2
+#         },
+#         {
+#             "input": "[0]",
+#             "output": "[-1]",
+#             "test_case_no": 3
+#         },
+#         {
+#             "input": "[-3]",
+#             "output": "[-1]",
+#             "test_case_no": 4
+#         },
+#         {
+#             "input": "[7]",
+#             "output": "[-1]",
+#             "test_case_no": 5
+#         }
+#     ],
+#     "solution": "o_tensor = torch.where(tensor == 2, 100, -1)\ntensor = o_tensor"
+#   },
+#   "problem_number": 6
+# }
 
 class AddUserToContestView(APIView):
     permission_classes = [IsAuthenticated]
@@ -327,16 +409,64 @@ class AddUserToContestView(APIView):
     def post(self, request, pk):
         contest = Contest.objects.get(pk=pk)
         user = request.user
-        c_id = request.data.get('c_id')
-        password = request.data.get('password')
 
-        user_contest = UserContest.objects.get(contest=contest, c_id=c_id, password=password)
-        if user_contest == None:
-            return Response({"message": "Invalid contest id or password."}, status=status.HTTP_400_BAD_REQUEST)
+        if contest.end_time < timezone.now():
+            return Response({"message": "Contest has ended."}, status=status.HTTP_400_BAD_REQUEST)
 
-        contest_user = ContestUser.objects.create(
+        if contest.is_user_added == True:
+            c_id = request.data.get('c_id')
+            passkey = request.data.get('passkey')
+
+            user_contest = UserContest.objects.get(contest=contest, c_id=c_id, passkey=passkey)
+            if user_contest == None:
+                return Response({"message": "Invalid contest id or passkey."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        contest_user = ContestUser.objects.get_or_create(
             contest=contest,
             user=user
         )
 
         return Response({"message": "User added to contest successfully."}, status=status.HTTP_201_CREATED)
+    
+class SearchContestView(APIView):
+    def get(self, request):
+        c_id = request.query_params.get('cid')
+        if c_id == None:
+            return Response({"message": "Search keyword required."}, status=status.HTTP_400_BAD_REQUEST)
+        contest = UserContest.objects.filter(c_id=c_id).first()
+        if contest == None:
+            contest = Contest.objects.filter(title__icontains=c_id).first()
+            if contest == None:
+                return Response({"message": "Contest does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            contest = contest.contest
+        
+        users_count = ContestUser.objects.filter(contest=contest).count()
+        data = { 'id': contest.id, 'title': contest.title, 'users_count': users_count, 'start_time':contest.start_time, 'end_time':contest.end_time, 'is_user_added': contest.is_user_added }
+        return Response(data, status=status.HTTP_200_OK)
+    
+class ContestSubmissionListView(APIView):
+    serializer_class = ProblemSubmissionListSerializer
+
+    def get(self, request, pk):
+        contest = Contest.objects.filter(id=pk).first()
+        if contest == None:
+            return Response({"message": "Contest does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        elif contest.start_time > timezone.now():
+            return Response({"message": "Contest has not started yet."}, status=status.HTTP_400_BAD_REQUEST)
+        contest_submissions = ContestSubmission.objects.filter(contest_problem__contest_id=pk).order_by('-submission__timestamp')
+        data = []
+        for contest_submission in contest_submissions:
+            submission = contest_submission.submission
+            data.append({
+                'id': submission.id,
+                'user': {'id': submission.user.id, 'username': submission.user.username},
+                'problem': contest_submission.contest_problem.problem.title,
+                'code': submission.code,
+                'test_case_verdict': submission.test_case_verdict,
+                'num_test_cases': submission.num_test_cases,
+                'num_test_cases_passed': submission.num_test_cases_passed,
+                'taken_time': submission.taken_time,
+                'timestamp': submission.timestamp
+            })
+        return Response(data, status=status.HTTP_200_OK)

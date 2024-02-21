@@ -65,8 +65,15 @@ class Command(BaseCommand):
             
             ContestProblem.objects.create(contest=contest, problem=problem, problem_number=i+1)
         
-        twenty_four_hours_ago = timezone.now() - timezone.timedelta(hours=24)
-        # Update show_code for Problems created more than 24 hours ago
-        Problem.objects.filter(addedAt__lte=twenty_four_hours_ago).update(show_code=True)
+       # Get contests that have ended
+        ended_contests = Contest.objects.filter(end_time__lt=timezone.now())
+
+        for contest in ended_contests:
+            # Get problems associated with the ended contest
+            contest_problems = ContestProblem.objects.filter(contest=contest)
+            problem_ids = contest_problems.values_list('problem_id', flat=True)
+
+            # Update show_code for the associated problems
+            Problem.objects.filter(id__in=problem_ids).update(show_code=True)
         
         self.stdout.write(self.style.SUCCESS('Successfully generated and inserted a problem.'))

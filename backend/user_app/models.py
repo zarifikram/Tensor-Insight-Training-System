@@ -15,6 +15,8 @@ class Achievement(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     xp = models.IntegerField(default=0)
+    condition = models.CharField(max_length=255,default="None")
+    serial = models.IntegerField(default=0)
     image = models.ImageField(upload_to='achievement_images/',null=True, blank=True)
 
 class UserAchievement(models.Model):

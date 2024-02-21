@@ -26,6 +26,8 @@ urlpatterns = [
     path('', include('time_mode.urls')),
     path('', include('quantity_mode.urls')),
     path('', include('custom_mode.urls')),
+    path('', include('oneVone.urls')),
+    path('', include('discussion_forum.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
 ]

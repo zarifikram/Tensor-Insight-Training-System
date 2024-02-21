@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 import json
 from .models import CustomUser, Achievement, UserAchievement
-from problem.models import Problem, TestCase, Submission, UserProblem
+from problem.models import Problem,  Submission, UserProblem
 from problem.serializers import TestCaseSerializer
 from custom_mode.serializers import ManipulatorChoiceSerializer
 
@@ -80,10 +80,24 @@ class UserAchievementSerializer(serializers.ModelSerializer):
         fields = ['achievement']
 
 # userProblem Serializer
-class userProblemSerializer(serializers.ModelSerializer):
+class UserProblemSerializer(serializers.ModelSerializer):
+    problem = serializers.SerializerMethodField()
     class Meta:
         model = UserProblem
-        fields = '__all__'
+        fields = ['id','problem']
+    def get_problem(self, obj):
+        problem = obj.problem
+        data = {
+            'id': problem.id,
+            'title': problem.title,
+            'description': problem.description,
+            'depth': problem.depth,
+            'used_manipulator': problem.used_manipulator,
+            'solve_count': problem.solve_count, 
+            'try_count': problem.try_count,
+            'addedAt': problem.addedAt
+        }
+        return data
 
 class UserAddProblemSerializer(serializers.ModelSerializer):
     used_manipulator = ManipulatorChoiceSerializer(required=False, default={})
@@ -97,3 +111,8 @@ class UserAddProblemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Problem
         fields = ['title', 'description', 'depth', 'used_manipulator', 'test_cases', 'solution', 'editorial_image']
+
+class EditProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email','username','image']

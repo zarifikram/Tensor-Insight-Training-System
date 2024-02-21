@@ -16,7 +16,7 @@ class UserContest(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     c_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
-    password = models.CharField(max_length=15, null=True, blank=True)
+    passkey = models.CharField(max_length=15, null=True, blank=True)
     num_random_problem = models.IntegerField(default=0)
 
 
