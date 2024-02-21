@@ -256,10 +256,10 @@ const CustomMode = () =>{
 
     return(
     <div className="mx-40">
-        <div className=" h-24 flex justify-center py-4 items-center">
-          <div onClick={submitAnswer} className={ `${authState.loggedIn?`hover:bg-gray-400 mr-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`:`invisible`}   `}><CgArrowUpO /></div>
-        <div onClick={closeSettingsSelectionPopUp} className={`hover:bg-gray-400 mr-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><MdRestartAlt /></div>
-            <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
+        <div className={` h-24 flex justify-center py-4 items-center ${colorState.textcolor}`}>
+        <div onClick={openSettingsSelectionPopUp} className={`hover:bg-gray-400 mr-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex   justify-center items-center`}><IoMdSettings/></div>
+        <div onClick={closeSettingsSelectionPopUp} className={`hover:bg-gray-400 mr-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex   justify-center items-center`}><MdRestartAlt /></div>
+            <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5  ${colorState.textcolor3}`}>
                 <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
                   <div className={`${pages[0].reached?`hidden invisible`:``}`}><RxCross2/></div>
@@ -281,8 +281,8 @@ const CustomMode = () =>{
                   <div className={`${pages[4].reached?`hidden invisible`:``}`}><RxCross2/></div>
                 </div>
             </div>
-            <div onClick={openSettingsSelectionPopUp} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><IoMdSettings/></div>
-            <div onClick={openLeaderBoardPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><MdLeaderboard /></div>
+            <div onClick={submitAnswer} className={ `${authState.loggedIn?`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex   justify-center items-center`:`invisible`}   `}><CgArrowUpO /></div>
+            <div onClick={openLeaderBoardPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex   justify-center items-center`}><MdLeaderboard /></div>
         </div>
         <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}></div>
         <CodePane  onCodeChange={handleCodeChange} />

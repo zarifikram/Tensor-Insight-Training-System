@@ -149,7 +149,9 @@ const Normal = ({ routeContext, setRouteContext, colorState }) => {
             <NormalNavBarItem to={1} navMode="Practice" tooltip="practice to your heart's content" icon={<MdMonitor />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
             <NormalNavBarItem to={2} navMode="OneVOne" tooltip="challenge a friend" icon={<FaGamepad />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
             <NormalNavBarItem to={3} navMode="Contest" tooltip="compete with others" icon={<MdPunchClock />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
-            <NormalNavBarItem to={4} navMode="Editorial" tooltip="contribute to the problem set" icon={<FaNewspaper />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
+            {
+            //<NormalNavBarItem to={4} navMode="Editorial" tooltip="contribute to the problem set" icon={<FaNewspaper />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
+            }
             <NormalNavBarItem to={5} navMode="Discussion" tooltip="discuss problems" icon={<FaWalkieTalkie />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
         </div>
     );

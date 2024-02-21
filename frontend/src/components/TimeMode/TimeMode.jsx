@@ -84,6 +84,7 @@ const TimeMode = () =>{
   //*Time Counter:--------------------------------------------------------------------------
   const delay = 1000
   const [time, setTime] = useState(0);
+  const [sendTime,setSendTime] = useState("600") //default time
   const [running,setRunning] = useState(false);
   
   useEffect(() => {
@@ -91,7 +92,7 @@ const TimeMode = () =>{
     if(running){
       const intervalId = setInterval(() => {
         setTime(prevTime => {
-          if(prevTime == 120){
+          if(prevTime == sendTime){
             complete();
             run();
           }
@@ -102,9 +103,9 @@ const TimeMode = () =>{
     }
   }, [running]); 
 
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
-  const seconds = time % 60;
+  const hours = Math.floor((sendTime-time) / 3600);
+  const minutes = Math.floor(((sendTime-time) % 3600) / 60);
+  const seconds = (sendTime-time) % 60;
 
   const run = () => {
     if(!running){
@@ -140,7 +141,6 @@ const TimeMode = () =>{
 
   //*Time Selection Popup-----------------------------------------------------------------
   const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(true);
-  const [sendTime,setSendTime] = useState("600") //default time
 
   const openTimeSelectionPopup = () => {
     setTimeSelecetionPopupOpen(true);
@@ -273,12 +273,12 @@ const TimeMode = () =>{
 
   return(
   <div className="mx-40">
-      <div className=" h-24 flex justify-center py-4 items-center">
-      <div className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} px-5  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}>{hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}</div>
+      <div className={` h-24 flex justify-center py-4 items-center ${colorState.textcolor}`}>
+      <div className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} px-5  h-16 rounded-full font-bold text-2xl flex  justify-center items-center`}>{hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}</div>
       <div className={`${running?`hidden`:``}`}>
-      <div onClick={run} className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><AiFillCaretRight  /></div>
+      <div onClick={run} className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  justify-center items-center`}><AiFillCaretRight  /></div>
       </div>
-          <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
+          <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 ${colorState.textcolor3}`}>
               <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                 <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
                 <div className={`${pages[0].reached?`hidden invisible`:``}`}><RxCross2/></div>
@@ -301,8 +301,8 @@ const TimeMode = () =>{
               </div>
           </div>
 
-      <div onClick={() => submitAnswer(false)} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
-      <div onClick={openLeaderBoardPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><MdLeaderboard /></div>
+      <div onClick={() => submitAnswer(false)} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex justify-center items-center`}><CgArrowUpO /></div>
+      <div onClick={openLeaderBoardPopup} className={`hover:bg-gray-400 ml-3 ${colorState.box1color}  w-16 h-16 rounded-full font-bold text-2xl flex  justify-center items-center`}><MdLeaderboard /></div>
       
       </div>
       <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.timerModeRunning}</div>
