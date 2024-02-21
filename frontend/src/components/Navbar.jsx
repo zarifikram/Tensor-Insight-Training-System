@@ -91,6 +91,7 @@ const Navbar = ({ routeContext, setRouteContext }) => {
                 </div>
             </div>
             <div className={`w-5%`}></div>
+
             <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`}  onClick={() => { setMode({ ...mode, mode: "none" }); setRouteContext({isPractice:false, navItemIndex:7})  }}><FaUser /></Link>
             {
                 <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup} />

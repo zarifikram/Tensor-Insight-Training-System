@@ -24,13 +24,73 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/contest/{contest_id}/:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Achievement'
+          description: ''
+  /api/contest-list/:
+    get:
+      operationId: api_contest_list_list
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContestList'
+          description: ''
+  /api/contest/{cid}/problem/{pid}/submit/:
+    post:
+      operationId: api_contest_problem_submit_create
+      parameters:
+      - in: path
+        name: cid
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: pid
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemSubmit'
+          description: ''
+  /api/contest/{id}/:
     get:
       operationId: api_contest_retrieve
       parameters:
       - in: path
-        name: contest_id
+        name: id
         schema:
           type: integer
         required: true
@@ -42,13 +102,17 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/contest/{contest_id}/problem-list/:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contest'
+          description: ''
+  /api/contest/{id}/problem-list/:
     get:
       operationId: api_contest_problem_list_retrieve
       parameters:
       - in: path
-        name: contest_id
+        name: id
         schema:
           type: integer
         required: true
@@ -60,13 +124,17 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/contest/{contest_id}/rank-list/:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestProblem'
+          description: ''
+  /api/contest/{id}/rank-list/:
     get:
       operationId: api_contest_rank_list_retrieve
       parameters:
       - in: path
-        name: contest_id
+        name: id
         schema:
           type: integer
         required: true
@@ -90,72 +158,14 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/custom-mode/setting/:
-    post:
-      operationId: api_custom_mode_setting_create
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          description: No response body
-  /api/custom-mode/submit/:
-    post:
-      operationId: api_custom_mode_submit_create
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          description: No response body
-  /api/discussion/{comment_id}/downvote/:
-    post:
-      operationId: api_discussion_downvote_create
-      parameters:
-      - in: path
-        name: comment_id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          description: No response body
-  /api/discussion/{comment_id}/upvote/:
-    post:
-      operationId: api_discussion_upvote_create
-      parameters:
-      - in: path
-        name: comment_id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          description: No response body
-  /api/editorial/{editorial_id}/:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModeProblem'
+          description: ''
+  /api/custom-mode/leaderboard/:
     get:
-      operationId: api_editorial_retrieve
-      parameters:
-      - in: path
-        name: editorial_id
-        schema:
-          type: integer
-        required: true
+      operationId: api_custom_mode_leaderboard_retrieve
       tags:
       - api
       security:
@@ -164,13 +174,105 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/editorial/{editorial_id}/addcomment/:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomModeLeaderboard'
+          description: ''
+  /api/custom-mode/setting/:
+    get:
+      operationId: api_custom_mode_setting_retrieve
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomModeSetting'
+          description: ''
     post:
-      operationId: api_editorial_addcomment_create
+      operationId: api_custom_mode_setting_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomModeSetting'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomModeSetting'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomModeSetting'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomModeSetting'
+          description: ''
+  /api/custom-mode/submit/:
+    post:
+      operationId: api_custom_mode_submit_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemSubmit'
+          description: ''
+  /api/discussion/{id}/delete/:
+    delete:
+      operationId: api_discussion_delete_destroy
       parameters:
       - in: path
-        name: editorial_id
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/discussion/{id}/downvote/:
+    post:
+      operationId: api_discussion_downvote_create
+      parameters:
+      - in: path
+        name: id
         schema:
           type: integer
         required: true
@@ -182,63 +284,109 @@ paths:
       responses:
         '200':
           description: No response body
-  /api/editorial/{editorial_id}/downvote/:
-    post:
-      operationId: api_editorial_downvote_create
+  /api/discussion/{id}/edit/:
+    put:
+      operationId: api_discussion_edit_update
       parameters:
       - in: path
-        name: editorial_id
+        name: id
         schema:
           type: integer
         required: true
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
       responses:
         '200':
-          description: No response body
-  /api/editorial/{editorial_id}/upvote/:
-    post:
-      operationId: api_editorial_upvote_create
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddDiscussion'
+          description: ''
+    patch:
+      operationId: api_discussion_edit_partial_update
       parameters:
       - in: path
-        name: editorial_id
+        name: id
         schema:
           type: integer
         required: true
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAddDiscussion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAddDiscussion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAddDiscussion'
       security:
       - cookieAuth: []
       - basicAuth: []
       responses:
         '200':
-          description: No response body
-  /api/editorial/comment/{comment_id}/downvote/:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddDiscussion'
+          description: ''
+  /api/discussion/{id}/reply/:
     post:
-      operationId: api_editorial_comment_downvote_create
+      operationId: api_discussion_reply_create
       parameters:
       - in: path
-        name: comment_id
+        name: id
         schema:
           type: integer
         required: true
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
       responses:
-        '200':
-          description: No response body
-  /api/editorial/comment/{comment_id}/upvote/:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddDiscussion'
+          description: ''
+  /api/discussion/{id}/upvote/:
     post:
-      operationId: api_editorial_comment_upvote_create
+      operationId: api_discussion_upvote_create
       parameters:
       - in: path
-        name: comment_id
+        name: id
         schema:
           type: integer
         required: true
@@ -252,7 +400,7 @@ paths:
           description: No response body
   /api/problem-set/:
     get:
-      operationId: api_problem_set_retrieve
+      operationId: api_problem_set_list
       tags:
       - api
       security:
@@ -261,13 +409,19 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/problem/{problem_id}/:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProblemSet'
+          description: ''
+  /api/problem/{id}/:
     get:
       operationId: api_problem_retrieve
       parameters:
       - in: path
-        name: problem_id
+        name: id
         schema:
           type: integer
         required: true
@@ -279,47 +433,50 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/problem/{problem_id}/add-discussion/:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: ''
+  /api/problem/{id}/add-discussion/:
     post:
       operationId: api_problem_add_discussion_create
       parameters:
       - in: path
-        name: problem_id
+        name: id
         schema:
           type: integer
         required: true
       tags:
       - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          description: No response body
-  /api/problem/{problem_id}/add-editorial/:
-    post:
-      operationId: api_problem_add_editorial_create
-      parameters:
-      - in: path
-        name: problem_id
-        schema:
-          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddDiscussion'
         required: true
-      tags:
-      - api
       security:
       - cookieAuth: []
       - basicAuth: []
       responses:
-        '200':
-          description: No response body
-  /api/problem/{problem_id}/discussion-list/:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddDiscussion'
+          description: ''
+  /api/problem/{id}/discussion-list/:
     get:
-      operationId: api_problem_discussion_list_retrieve
+      operationId: api_problem_discussion_list_list
       parameters:
       - in: path
-        name: problem_id
+        name: id
         schema:
           type: integer
         required: true
@@ -331,13 +488,19 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/problem/{problem_id}/editorial-list/:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Discussion'
+          description: ''
+  /api/problem/{id}/submission-list/:
     get:
-      operationId: api_problem_editorial_list_retrieve
+      operationId: api_problem_submission_list_list
       parameters:
       - in: path
-        name: problem_id
+        name: id
         schema:
           type: integer
         required: true
@@ -349,42 +512,47 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/problem/{problem_id}/submission-list/:
-    get:
-      operationId: api_problem_submission_list_retrieve
-      parameters:
-      - in: path
-        name: problem_id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
-  /api/problem/{problem_id}/submit/:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProblemSubmissionList'
+          description: ''
+  /api/problem/{id}/submit/:
     post:
       operationId: api_problem_submit_create
       parameters:
       - in: path
-        name: problem_id
+        name: id
         schema:
           type: integer
         required: true
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
+      - {}
       responses:
-        '200':
-          description: No response body
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemSubmit'
+          description: ''
   /api/quantity-mode/:
     get:
       operationId: api_quantity_mode_retrieve
@@ -396,7 +564,39 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuantityMode'
+          description: ''
+  /api/quantity-mode/create/:
+    post:
+      operationId: api_quantity_mode_create_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuantityModeCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QuantityModeCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/QuantityModeCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuantityModeCreate'
+          description: ''
   /api/quantity-mode/force-end/:
     post:
       operationId: api_quantity_mode_force_end_create
@@ -405,6 +605,19 @@ paths:
       security:
       - cookieAuth: []
       - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/quantity-mode/leaderboard/:
+    get:
+      operationId: api_quantity_mode_leaderboard_retrieve
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           description: No response body
@@ -413,12 +626,57 @@ paths:
       operationId: api_quantity_mode_submit_create
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
+      - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemSubmit'
+          description: ''
+  /api/run-problem/:
+    post:
+      operationId: api_run_problem_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunProblem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RunProblem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RunProblem'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunProblem'
+          description: ''
   /api/schema/:
     get:
       operationId: api_schema_retrieve
@@ -532,6 +790,7 @@ paths:
           - tr
           - tt
           - udm
+          - ug
           - uk
           - ur
           - uz
@@ -569,13 +828,29 @@ paths:
       operationId: api_signin_with_email_password_create
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
   /api/signin-with-google/:
     post:
       operationId: api_signin_with_google_create
@@ -604,19 +879,35 @@ paths:
       operationId: api_signup_create
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
       - {}
       responses:
-        '200':
-          description: No response body
-  /api/submission/{submission_id}/:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUp'
+          description: ''
+  /api/submission/{id}/:
     get:
       operationId: api_submission_retrieve
       parameters:
       - in: path
-        name: submission_id
+        name: id
         schema:
           type: integer
         required: true
@@ -628,7 +919,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+          description: ''
   /api/time-mode/:
     get:
       operationId: api_time_mode_retrieve
@@ -640,7 +935,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeMode'
+          description: ''
   /api/time-mode/complete/:
     post:
       operationId: api_time_mode_complete_create
@@ -649,6 +948,53 @@ paths:
       security:
       - cookieAuth: []
       - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/time-mode/create/:
+    post:
+      operationId: api_time_mode_create_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeModeCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TimeModeCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TimeModeCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeModeCreate'
+          description: ''
+  /api/time-mode/leaderboard/{time}/:
+    get:
+      operationId: api_time_mode_leaderboard_retrieve
+      parameters:
+      - in: path
+        name: time
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
       responses:
         '200':
           description: No response body
@@ -657,18 +1003,35 @@ paths:
       operationId: api_time_mode_submit_create
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProblemSubmit'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
+      - {}
       responses:
         '200':
-          description: No response body
-  /api/user/{user_id}/:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemSubmit'
+          description: ''
+  /api/user/{id}/:
     get:
       operationId: api_user_retrieve
       parameters:
       - in: path
-        name: user_id
+        name: id
         schema:
           type: integer
         required: true
@@ -680,7 +1043,81 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/user/{id}/contest-list/:
+    get:
+      operationId: api_user_contest_list_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContestList'
+          description: ''
+  /api/user/{id}/problem-list/:
+    get:
+      operationId: api_user_problem_list_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemSet'
+          description: ''
+  /api/user/{id}/submission/:
+    get:
+      operationId: api_user_submission_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSubmissionList'
+          description: ''
   /api/user/{user_id}/achievement/:
     get:
       operationId: api_user_achievement_retrieve
@@ -698,25 +1135,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/user/{user_id}/contest-list/:
-    get:
-      operationId: api_user_contest_list_retrieve
-      parameters:
-      - in: path
-        name: user_id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAchievement'
+          description: ''
   /api/user/{user_id}/custom-mode/:
     get:
       operationId: api_user_custom_mode_retrieve
@@ -734,25 +1157,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/user/{user_id}/problem-list/:
-    get:
-      operationId: api_user_problem_list_retrieve
-      parameters:
-      - in: path
-        name: user_id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSubmissionList'
+          description: ''
   /api/user/{user_id}/quantity-mode/:
     get:
       operationId: api_user_quantity_mode_retrieve
@@ -770,25 +1179,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
-  /api/user/{user_id}/submission/:
-    get:
-      operationId: api_user_submission_retrieve
-      parameters:
-      - in: path
-        name: user_id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSubmissionList'
+          description: ''
   /api/user/{user_id}/time-mode/:
     get:
       operationId: api_user_time_mode_retrieve
@@ -806,8 +1201,697 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSubmissionList'
+          description: ''
+  /api/user/add-problem/:
+    post:
+      operationId: api_user_add_problem_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAddProblem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAddProblem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAddProblem'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAddProblem'
+          description: ''
 components:
+  schemas:
+    Achievement:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        xp:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        image:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - description
+      - id
+      - title
+    AddDiscussion:
+      type: object
+      properties:
+        comment:
+          type: string
+      required:
+      - comment
+    Contest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 15
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        problem_list:
+          type: string
+          readOnly: true
+      required:
+      - problem_list
+    ContestList:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        users_count:
+          type: integer
+      required:
+      - id
+      - title
+      - users_count
+    ContestProblem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        problem_number:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        contest:
+          type: integer
+        problem:
+          type: integer
+      required:
+      - contest
+      - id
+      - problem
+      - problem_number
+    CustomModeLeaderboard:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        solved_problems:
+          type: integer
+      required:
+      - id
+      - solved_problems
+      - username
+    CustomModeSetting:
+      type: object
+      properties:
+        depth:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        initiator:
+          $ref: '#/components/schemas/InitiatorChoice'
+        manipulator:
+          $ref: '#/components/schemas/ManipulatorChoice'
+      required:
+      - initiator
+      - manipulator
+    Discussion:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/UserSerializer2'
+        comment:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        vote:
+          type: string
+          readOnly: true
+        replies:
+          type: string
+          readOnly: true
+      required:
+      - comment
+      - id
+      - replies
+      - timestamp
+      - user
+      - vote
+    InitiatorChoice:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        randint:
+          type: boolean
+        zeros:
+          type: boolean
+        ones:
+          type: boolean
+        arange:
+          type: boolean
+      required:
+      - id
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    ManipulatorChoice:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        argwhere:
+          type: boolean
+        tensor_split:
+          type: boolean
+        gather:
+          type: boolean
+        masked_select:
+          type: boolean
+        movedim:
+          type: boolean
+        splicing:
+          type: boolean
+        t:
+          type: boolean
+        take:
+          type: boolean
+        tile:
+          type: boolean
+        unsqueeze:
+          type: boolean
+        negative:
+          type: boolean
+        positive:
+          type: boolean
+        where:
+          type: boolean
+        remainder:
+          type: boolean
+        clip:
+          type: boolean
+        argmax:
+          type: boolean
+        argmin:
+          type: boolean
+        sum:
+          type: boolean
+        unique:
+          type: boolean
+      required:
+      - id
+    ModeProblem:
+      type: object
+      properties:
+        test_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestCase'
+          readOnly: true
+        used_manipulator:
+          nullable: true
+      required:
+      - test_cases
+    PatchedAddDiscussion:
+      type: object
+      properties:
+        comment:
+          type: string
+    ProblemDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        difficulty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,2})?$
+          nullable: true
+        used_manipulator:
+          nullable: true
+        solve_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        try_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        addedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        test_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestCase'
+          readOnly: true
+        solution:
+          type: string
+          nullable: true
+        editorial_image:
+          type: string
+          format: uri
+          nullable: true
+        show_code:
+          type: boolean
+        depth:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        is_user_added:
+          type: boolean
+      required:
+      - addedAt
+      - id
+      - test_cases
+    ProblemSet:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        difficulty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,2})?$
+          nullable: true
+        used_manipulator:
+          nullable: true
+        solve_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        try_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        depth:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        is_user_added:
+          type: boolean
+        addedAt:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - addedAt
+      - id
+    ProblemSubmissionList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+        num_test_cases:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        num_test_cases_passed:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        taken_time:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - timestamp
+      - user
+    ProblemSubmit:
+      type: object
+      properties:
+        code:
+          type: string
+        taken_time:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+      required:
+      - code
+    QuantityMode:
+      type: object
+      properties:
+        current_problem_num:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        number_of_problems:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        current_problem:
+          $ref: '#/components/schemas/ModeProblem'
+      required:
+      - current_problem
+    QuantityModeCreate:
+      type: object
+      properties:
+        number_of_problems:
+          type: integer
+      required:
+      - number_of_problems
+    RunProblem:
+      type: object
+      properties:
+        test_cases: {}
+        code:
+          type: string
+      required:
+      - code
+      - test_cases
+    SignUp:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 30
+        password:
+          type: string
+          writeOnly: true
+        confirm_password:
+          type: string
+          writeOnly: true
+      required:
+      - confirm_password
+      - email
+      - first_name
+      - last_name
+      - password
+      - username
+    Submission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+        problem:
+          type: string
+          readOnly: true
+        num_test_cases:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        num_test_cases_passed:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        taken_time:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        code:
+          type: string
+        test_case_verdict:
+          nullable: true
+      required:
+      - code
+      - id
+      - problem
+      - timestamp
+      - user
+    TestCase:
+      type: object
+      properties:
+        input:
+          nullable: true
+        output:
+          nullable: true
+        test_case_no:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+    TimeEnum:
+      enum:
+      - '600'
+      - '1800'
+      - '3600'
+      type: string
+      description: |-
+        * `600` - 600
+        * `1800` - 1800
+        * `3600` - 3600
+    TimeMode:
+      type: object
+      properties:
+        current_problem_num:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        time:
+          $ref: '#/components/schemas/TimeEnum'
+        current_problem:
+          $ref: '#/components/schemas/ModeProblem'
+      required:
+      - current_problem
+      - time
+    TimeModeCreate:
+      type: object
+      properties:
+        time:
+          $ref: '#/components/schemas/TimeEnum'
+      required:
+      - time
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        level:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        xp:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        image:
+          type: string
+          format: uri
+          nullable: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+      required:
+      - id
+      - username
+    UserAchievement:
+      type: object
+      properties:
+        achievement:
+          type: array
+          items:
+            $ref: '#/components/schemas/Achievement'
+      required:
+      - achievement
+    UserAddProblem:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        depth:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        used_manipulator:
+          $ref: '#/components/schemas/ManipulatorChoice'
+        test_cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestCase'
+        solution:
+          type: string
+          nullable: true
+        editorial_image:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - test_cases
+      - used_manipulator
+    UserSerializer2:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        level:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        xp:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        image:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - id
+    UserSubmissionList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        problem:
+          type: string
+          readOnly: true
+        num_test_cases:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        num_test_cases_passed:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        taken_time:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - problem
+      - timestamp
   securitySchemes:
     basicAuth:
       type: http
