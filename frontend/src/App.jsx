@@ -75,14 +75,14 @@ function App() {
     console.error( error);
     });
 
-    // const authUnparsed = Cookies.get('authState')
-    // console.log("t--------------------------")
-    // console.log(authUnparsed)
-    // if(authUnparsed){
-    //   const authStateFromCookie = JSON.parse(authUnparsed);
-    //   console.log(authStateFromCookie)
-    //   setAuthState(authStateFromCookie);
-    // }
+    const authUnparsed = Cookies.get('authState')
+    console.log("t--------------------------")
+    console.log(authUnparsed)
+    if(authUnparsed){
+      const authStateFromCookie = JSON.parse(authUnparsed);
+      console.log(authStateFromCookie)
+      setAuthState(authStateFromCookie);
+    }
     
     // const csrfToken =  Cookies.get('csrf')
     // console.log(csrfToken)
@@ -107,10 +107,10 @@ function App() {
     
   }, []);
 
-  //  useEffect(() => {console.log("change");
-  //  if(authState.id!=-1)
-  //     Cookies.set('authState', JSON.stringify(authState));
-  // }, [authState]);
+   useEffect(() => {console.log("change");
+   if(authState.id!=-1)
+      Cookies.set('authState', JSON.stringify(authState));
+  }, [authState]);
 
   const [colorState, setColorState] = useState({
     cp: 2,
