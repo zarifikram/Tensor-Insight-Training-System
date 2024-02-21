@@ -24,11 +24,8 @@ import Cookies from 'js-cookie';
 import { useRef } from "react";
 axios.defaults.withCredentials = true;
 
-
 const CustomMode = () =>{
-
-
-  const [ini,setIni] = useState(true)
+  //*Initialization Settings:---------------------------------------------------------------
   const [settings,setSettings] = useState({
     "depth": 2,
     "initiator": {
@@ -58,154 +55,109 @@ const CustomMode = () =>{
         "sum": false,
         "unique": false
     }
-})
+  })
+
   useEffect(() => {
-    //set axios csrf header
-    //axios.defaults.headers.common['X-CSRFToken'] = Cookies.get('csrf');
-    //setting page for previous settings
-    if(ini){
-      setIni(false);
-      
-      axios.get("http://127.0.0.1:8000/api/custom-mode/setting/")
-      .then((response) => {
-      setSettings(response.data)
-      }).catch((error) => {
-      console.error("Error fetching data:", error);
-      });
-    }
+    axios.get("http://127.0.0.1:8000/api/custom-mode/setting/")
+    .then((response) => {
+    setSettings(response.data)
+    getProblem();
+    }).catch((error) => {
+    console.error("Error fetching data:", error);
+    });
   }, []);
 
-    const [colorState,setColorState]= useContext(ColorContext);
-    const [authState,setAuthState] = useContext(AuthContext);
-    const codeRef = useRef();
+  //*Initialization useStates:---------------------------------------------------------------
+  const [colorState,setColorState]= useContext(ColorContext);
+  const [authState,setAuthState] = useContext(AuthContext);
+  const codeRef = useRef();
 
-    const [pages,setPages] = useState([
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-        {
-          inputTensor: "",
-          expectedTensor: "",
-          currentTensor: "",
-          reached:false
-        },
-      ])
-    //LeaderBoardPopUp-------------------------------
-    const [isLeaderBoardPopupOpen, setLeaderBoardPopupOpen] = useState(false);
+  const handleCodeChange = (newCode) => {
+    codeRef.current = newCode;
+  };
 
-    const openLeaderBoardPopup = () => {
-      setLeaderBoardPopupOpen(true);
-    };
-    
-    const closeLeaderBoardPopup = () => {
-      setLeaderBoardPopupOpen(false);
-    };
+  const [pages,setPages] = useState([
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+      {
+        inputTensor: "",
+        expectedTensor: "",
+        currentTensor: "",
+        reached:false
+      },
+  ])
+
+  //*Leaderboard Popup----------------------------------------------------------------------
+  const [isLeaderBoardPopupOpen, setLeaderBoardPopupOpen] = useState(false);
+  const openLeaderBoardPopup = () => {
+    setLeaderBoardPopupOpen(true);
+  };
+  const closeLeaderBoardPopup = () => {
+    setLeaderBoardPopupOpen(false);
+  };
   
-    //Popup--------------------------------------------
-    const [isPopupOpen, setPopupOpen] = useState(false);
-    const [isTimeSelecetionPopupOpen, setSettingsSelectionPopUpOpen] = useState(false);
-    const [currentPage,setCurrentPage] = useState(0);
-    
+  //*Problem PopUp--------------------------------------------------------------------------
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [currentPage,setCurrentPage] = useState(0);
+  
+  const openPopup = (page) => {
+      setPopupOpen(true);
+      setCurrentPage(page);
+  };
+  
+  const closePopup = () => {
+      setPopupOpen(false);
+  };
 
-    const openPopup = (page) => {
-        setPopupOpen(true);
-        setCurrentPage(page);
-    };
-    
-    const closePopup = () => {
-        setPopupOpen(false);
-    };
+  //*Settings Selection PopUp--------------------------------------------------------------------------
+  const [isSettingsSelectionPopUpOpen, setSettingsSelectionPopUpOpen] = useState(false);
 
-    const openSettingsSelectionPopUp = () => {
-        setSettingsSelectionPopUpOpen(true);
-    };
+  const openSettingsSelectionPopUp = () => {
+      setSettingsSelectionPopUpOpen(true);
+  };
 
-    const handleCodeChange = (newCode) => {
-      codeRef.current = newCode;
-    };
+  const closeSettingsSelectionPopUp =  () => {
+    setSettingsSelectionPopUpOpen(false);
+    axios.post("http://127.0.0.1:8000/api/custom-mode/setting/",{
+      depth:settings.depth,
+      initiator:settings.initiator,
+      manipulator:settings.manipulator
+    }).then((response) => {
+      console.log("settings set up")
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
 
-    const closeSettingsSelectionPopUp =  () => {
-      console.log("=================================================")
-      console.log(authState.loggedIn);
-        setSettingsSelectionPopUpOpen(false);
+    getProblem();
+  }
 
-        axios.post("http://127.0.0.1:8000/api/custom-mode/setting/",{
-          depth:settings.depth,
-          initiator:settings.initiator,
-          manipulator:settings.manipulator
-        }).then((response) => {
-          console.log("settings set up")
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-
-
-        console.log(authState.loggedIn);
-        if(authState.loggedIn){
-            axios.get("http://127.0.0.1:8000/api/custom-mode/")
-            .then((response) => {
-              console.log(response.data)
-            const test_cases = response.data.test_cases;
-            for (let i = 0; i < test_cases.length; i++) {
-              let temp = pages;
-              temp[i].inputTensor=test_cases[i].input;
-              temp[i].expectedTensor=test_cases[i].output;
-              temp[i].currentTensor=test_cases[i].input;
-              setPages(temp);
-            }
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-        }else{
-          axios.get("http://127.0.0.1:8000/api/custom-mode/")
-          .then((response) => {
-          const test_cases = response.data.test_cases;
-          for (let i = 0; i < test_cases.length; i++) {
-            let temp = pages;
-            temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
-            temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
-            temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
-            temp[i].reached=false;
-            setPages(temp);
-          }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-        }
-
-        console.log(pages)
-
-    };
-
-     useEffect(() => {
+  //*Code Runner-------------------------------------------------------------------------
+  useEffect(() => {
     const handleKeyPress = (event) => {
-
       if (event.shiftKey && event.ctrlKey ) {
-        console.log("Shift + ctrlKey");
         let test_cases=[];
         for (let i = 0; i < pages.length; i++) {
           const input = pages[i].inputTensor;
@@ -217,9 +169,8 @@ const CustomMode = () =>{
             test_case_no: test_case_no
           });
         }
-        
         const singleStringCode = codeRef.current
-         axios.post("http://127.0.0.1:8000/api/run-problem/",{
+          axios.post("http://127.0.0.1:8000/api/run-problem/",{
           test_cases:test_cases,code:singleStringCode
         }).then((response) => {
           for (let i = 0; i < 5; i++) {
@@ -237,27 +188,70 @@ const CustomMode = () =>{
         });
       }
     };
-
     window.addEventListener("keydown", handleKeyPress);
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, []); 
 
-  //Custom-Settings--------------------------------------
-  
+  //*Functions--------------------------------------------------------------------------- 
   const submitAnswer=()=>{
     axios.post("http://127.0.0.1:8000/api/custom-mode/submit/",{
       code:codeRef.current,
       taken_time:2
     }).then((response) => {
-      console.log(response.data)
-      console.log("toast time")
-      toast.success("seccessfully submited");
+      const received_result = JSON.parse(response.data);
+      console.log(received_result);
+      if((received_result.result[0].correct &&
+        received_result.result[1].correct &&
+        received_result.result[2].correct &&
+        received_result.result[3].correct &&
+        received_result.result[4].correct)){
+          toast.success("All Test Cases Matched!")
+        }else{
+          toast.error("Some Test Cases Did Not Match")
+        }
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
+    getProblem();
+  }
+
+  const getProblem = ()=>{
+    if(authState.loggedIn){
+      axios.get("http://127.0.0.1:8000/api/custom-mode/")
+      .then((response) => {
+        console.log(response.data)
+      const test_cases = response.data.test_cases;
+      for (let i = 0; i < test_cases.length; i++) {
+        let temp = pages;
+        temp[i].inputTensor=test_cases[i].input;
+        temp[i].expectedTensor=test_cases[i].output;
+        temp[i].currentTensor=test_cases[i].input;
+        setPages(temp);
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+    }else{
+      axios.get("http://127.0.0.1:8000/api/custom-mode/")
+      .then((response) => {
+      const test_cases = response.data.test_cases;
+      for (let i = 0; i < test_cases.length; i++) {
+        let temp = pages;
+        temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
+        temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+        temp[i].reached=false;
+        setPages(temp);
+      }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    }
   }
 
     return(
@@ -301,14 +295,15 @@ const CustomMode = () =>{
           </div>
         </div>
         {
-            <CustomModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
+          <CustomModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
         }
-                {
-            <CustomSettingsPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeSettingsSelectionPopUp} settings={settings} setSettings={setSettings} />
+        {
+          <CustomSettingsPopUp isOpen={isSettingsSelectionPopUpOpen} onClose={closeSettingsSelectionPopUp} settings={settings} setSettings={setSettings} />
         }
-        { <CustomModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup} />
-
-        }{
+        { 
+          <CustomModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup} />
+        }
+        {
           <ToastContainer />
         }
          

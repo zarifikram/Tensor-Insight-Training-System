@@ -113,15 +113,15 @@ function App() {
   }, [authState]);
 
   const [colorState, setColorState] = useState({
-    cp: 2,
-    bgcolor: 'bg-cp2-bg',
-    captioncolor: 'text-cp2-cap',
-    textcolor: 'text-cp2-txt',
-    textcolor2: 'text-cp2-box2',
-    textcolor3: 'text-cp2-bg',
-    box1color: 'bg-cp2-box1',
-    box2color: 'bg-cp2-box2',
-    box3color: 'bg-cp2-txt'
+    cp: 4,
+    bgcolor: 'bg-cp4-bg',
+    captioncolor: 'text-cp4-cap',
+    textcolor: 'text-cp4-txt',
+    textcolor2: 'text-cp4-box2',
+    textcolor3: 'text-cp4-bg',
+    box1color: 'bg-cp4-box1',
+    box2color: 'bg-cp4-box2',
+    box3color: 'bg-cp4-txt'
   });
 
   const [csrfState, setCSRFState] = useState();

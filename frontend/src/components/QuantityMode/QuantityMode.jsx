@@ -9,7 +9,7 @@ import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 
-import TimeModePopUp from "./QuantityModePopUp";
+import QuantityModePopUp from "./QuantityModePopUp";
 import QuantitySelectionPopUp from "./QuantitySelectionPopUp";
 import axios from 'axios';
 import { useEffect } from "react";
@@ -21,7 +21,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { FaStop } from "react-icons/fa6";
-//axios.defaults.withCredentials= true;
 
 const QuantityMode = () =>{
   //*Initialization useStates:---------------------------------------------------------------
@@ -258,7 +257,7 @@ const QuantityMode = () =>{
           </div>
         </div>
         {
-          <TimeModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
+          <QuantityModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
         }
         {
           <QuantitySelectionPopUp isOpen={isQuantitySelecetionPopupOpen} onClose={closeQuantitySelectionPopUp} quantity={quantity} setQuantity={setQuantity} />
