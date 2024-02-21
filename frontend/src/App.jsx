@@ -125,7 +125,7 @@ function App() {
   });
 
   const [csrfState, setCSRFState] = useState();
-  const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 4 });
+  const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 0 });
 
   return (
     <div className="font-roboto" >
@@ -136,7 +136,7 @@ function App() {
 
               <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
                 <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />
-                <CustomComponent routeContext={routeContext} />
+                <CustomComponent routeContext={routeContext} setRouteContext={setRouteContext}/>
                 <Footer />
               </div>
             </BrowserRouter>
@@ -152,12 +152,12 @@ function App() {
 
 export default App
 
-const CustomComponent = ({ routeContext }) => {
+const CustomComponent = ({ routeContext,setRouteContext }) => {
   const Component = routeContext.isPractice ? idToRouteMapPractice[routeContext.navItemIndex] : idToRouteMap[routeContext.navItemIndex]
 
   if (!Component) {
     return <div>No component found for this number</div>;
   }
 
-  return <Component />;
+  return <Component routeContext={routeContext} setRouteContext={setRouteContext}/>;
 };
