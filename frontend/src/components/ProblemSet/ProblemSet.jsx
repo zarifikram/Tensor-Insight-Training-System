@@ -14,7 +14,7 @@ axios.defaults.withCredentials= true;
 
 import { useRef } from "react";
 
-const ProblemSet = () =>{
+const ProblemSet = ({ routeContext, setRouteContext }) =>{
 
     let navigate = useNavigate();
     const [colorState,setColorState]= useContext(ColorContext);
@@ -139,6 +139,7 @@ const ProblemSet = () =>{
               <div className={` `}>
                 <div className={`text-2xl ${colorState.captioncolor} font-bold pb-5`}>Problem Set</div>
                 <div className={`flex justify-end pb-5`}>
+                        <div className={`${colorState.box1color} flex justify-center items-center px-3 mx-3 rounded-md hover:bg-gray-400`} onClick={() => setRouteContext({isPractice:false, navItemIndex:4})}>Add Problem</div>
                         <select className={`${colorState.box1color} py-2 rounded-md `}
                             onChange={handleUserAddedFilterChange}
                             value={is_user_added}

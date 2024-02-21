@@ -35,17 +35,19 @@ const idToRouteMap = {
   0: Home,
   1: TimeMode,
   2: OneVOne,
-  3: Contest,
+  3: ContestList,
   4: AddProblem,
-  5: Discussion
+  5: Discussion,
+  6: ProblemSet,
+  7: Authentication
 }
 
 axios.defaults.withCredentials= true;
 const idToRouteMapPractice = {
   0: Home,
   1: CustomMode,
-  2: QuantityMode,
-  3: TimeMode,
+  2: TimeMode,
+  3: QuantityMode,
 }
 function App() {
 
@@ -73,14 +75,14 @@ function App() {
     console.error( error);
     });
 
-    // const authUnparsed = Cookies.get('authState')
-    // console.log("t--------------------------")
-    // console.log(authUnparsed)
-    // if(authUnparsed){
-    //   const authStateFromCookie = JSON.parse(authUnparsed);
-    //   console.log(authStateFromCookie)
-    //   setAuthState(authStateFromCookie);
-    // }
+    const authUnparsed = Cookies.get('authState')
+    console.log("t--------------------------")
+    console.log(authUnparsed)
+    if(authUnparsed){
+      const authStateFromCookie = JSON.parse(authUnparsed);
+      console.log(authStateFromCookie)
+      setAuthState(authStateFromCookie);
+    }
     
     // const csrfToken =  Cookies.get('csrf')
     // console.log(csrfToken)
@@ -105,27 +107,25 @@ function App() {
     
   }, []);
 
-  //  useEffect(() => {console.log("change");
-  //  if(authState.id!=-1)
-  //     Cookies.set('authState', JSON.stringify(authState));
-  // }, [authState]);
+   useEffect(() => {console.log("change");
+   if(authState.id!=-1)
+      Cookies.set('authState', JSON.stringify(authState));
+  }, [authState]);
 
   const [colorState, setColorState] = useState({
-    cp: 2,
-    bgcolor: 'bg-cp2-bg',
-    captioncolor: 'text-cp2-cap',
-    textcolor: 'text-cp2-txt',
-    textcolor2: 'text-cp2-box2',
-    textcolor3: 'text-cp2-bg',
-    box1color: 'bg-cp2-box1',
-    box2color: 'bg-cp2-box2',
-    box3color: 'bg-cp2-txt'
+    cp: 4,
+    bgcolor: 'bg-cp4-bg',
+    captioncolor: 'text-cp4-cap',
+    textcolor: 'text-cp4-txt',
+    textcolor2: 'text-cp4-box2',
+    textcolor3: 'text-cp4-bg',
+    box1color: 'bg-cp4-box1',
+    box2color: 'bg-cp4-box2',
+    box3color: 'bg-cp4-txt'
   });
 
   const [csrfState, setCSRFState] = useState();
-  const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 4 });
-
-  
+  const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 0 });
 
   return (
     <div className="font-roboto" >
@@ -134,9 +134,9 @@ function App() {
           <CSRFContext.Provider value={[csrfState, setCSRFState]}>
             <BrowserRouter>
 
-              <div className={`${colorState.bgcolor} h-screen flex flex-col`}>
+              <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
                 <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />
-                <CustomComponent routeContext={routeContext} />
+                <CustomComponent routeContext={routeContext} setRouteContext={setRouteContext}/>
                 <Footer />
               </div>
             </BrowserRouter>
@@ -152,12 +152,12 @@ function App() {
 
 export default App
 
-const CustomComponent = ({ routeContext }) => {
+const CustomComponent = ({ routeContext,setRouteContext }) => {
   const Component = routeContext.isPractice ? idToRouteMapPractice[routeContext.navItemIndex] : idToRouteMap[routeContext.navItemIndex]
 
   if (!Component) {
     return <div>No component found for this number</div>;
   }
 
-  return <Component />;
+  return <Component routeContext={routeContext} setRouteContext={setRouteContext}/>;
 };
