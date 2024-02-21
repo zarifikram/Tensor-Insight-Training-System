@@ -15,6 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
+import LoadingScreen from "../Utility/LoadingScreen";
 
 import TimeModePopUp from "./TimeModePopUp";
 import TimeSelectionPopUp from "./TimeSelectionPopUp";
@@ -26,6 +27,8 @@ import { useRef } from "react";
 axios.defaults.withCredentials= true;
 
 const TimeMode = () =>{
+  //*Loading Screen--------------------------------------------------------------------------
+  const [isLoading,setIsLoading] = useState(false);
 
   //*Initialization useStates:---------------------------------------------------------------
   const [colorState,setColorState]= useContext(ColorContext); //theme selection state
@@ -70,7 +73,6 @@ const TimeMode = () =>{
   //*Initialization and Return Call:---------------------------------------------------------
   useEffect(() => {
     return () => {
-      submitAnswer()
       complete();
       setAuthState(prevState => ({
         ...prevState,
@@ -89,8 +91,7 @@ const TimeMode = () =>{
     if(running){
       const intervalId = setInterval(() => {
         setTime(prevTime => {
-          if(prevTime == sendTime){
-            submitAnswer();
+          if(prevTime == 120){
             complete();
             run();
           }
@@ -124,7 +125,7 @@ const TimeMode = () =>{
     setLeaderBoardPopupOpen(false);
   };
 
-  //*Problem PopUp-------------------------------------------------------------------
+  //*Problem PopUp--------------------------------------------------------------------------
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [currentPage,setCurrentPage] = useState(0);
   
@@ -137,7 +138,7 @@ const TimeMode = () =>{
       setPopupOpen(false);
   };
 
-  //*Time Selection Popup----------------------------------------------------------
+  //*Time Selection Popup-----------------------------------------------------------------
   const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(true);
   const [sendTime,setSendTime] = useState("600") //default time
 
@@ -153,7 +154,7 @@ const TimeMode = () =>{
     codeRef.current = newCode;
   };
 
-  //*Create Time Mode-------------------------------------------------------------
+  //*Create Time Mode---------------------------------------------------------------------
   const initializeTimeMode = () =>{ 
     axios.post("http://127.0.0.1:8000/api/time-mode/create/",{time:sendTime})
     .then((response) => {
@@ -169,7 +170,7 @@ const TimeMode = () =>{
     });
   }
 
-  //*Functions--------------------------------------------------------------------
+  //*Functions--------------------------------------------------------------------------
   const getProblem = () =>{
     axios.get("http://127.0.0.1:8000/api/time-mode/")
     .then((response) => {
@@ -231,11 +232,10 @@ const TimeMode = () =>{
     setPages(iniPage);
   }
 
-  //*Code Runner---------------------------------------------------------------
+  //*Code Runner-------------------------------------------------------------------------
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.shiftKey && event.ctrlKey ) {
-        console.log("Shift + ctrlKey");
         let test_cases=[];
         for (let i = 0; i < pages.length; i++) {
           const input = pages[i].inputTensor;
@@ -248,7 +248,6 @@ const TimeMode = () =>{
           });
         }
         const singleStringCode = codeRef.current
-        console.log(singleStringCode);
         axios.post("http://127.0.0.1:8000/api/run-problem/",{
           test_cases:test_cases,code:singleStringCode
         }).then((response) => {
@@ -317,15 +316,19 @@ const TimeMode = () =>{
         </div>
       </div>
       {
-          <TimeModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
+        <TimeModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
       }
-              {
-          <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup}  setSendTime={setSendTime}/>
+      {
+        <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup}  setSendTime={setSendTime}/>
       }
       {
         <TimeModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup}/>
-      }{
+      }
+      {
         <ToastContainer />
+      }
+      {
+        <LoadingScreen isLoading={isLoading} />
       }
   </div>
   );
