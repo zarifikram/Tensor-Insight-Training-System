@@ -28,7 +28,7 @@ import axios from 'axios'
 
 import Home from './components/Home'
 import OneVOne from './components/OneVOne/OneVOne.jsx'
-import Discussion from './components/Discussion/Discussion.jsx'
+import DiscussionList from './components/Discussion/DiscussionList.jsx'
 
 axios.defaults.withCredentials = true;
 const idToRouteMap = {
@@ -37,7 +37,7 @@ const idToRouteMap = {
   2: OneVOne,
   3: ContestList,
   4: AddProblem,
-  5: Discussion,
+  5: DiscussionList,
   6: ProblemSet,
   7: Authentication
 }
@@ -135,8 +135,24 @@ function App() {
             <BrowserRouter>
 
               <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
-                <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />
-                <CustomComponent routeContext={routeContext} setRouteContext={setRouteContext}/>
+                <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />{
+                   // <CustomComponent routeContext={routeContext} setRouteContext={setRouteContext}/>
+                }
+                <Routes>
+                  <Route exact path='/' element={<Home />} />
+                  <Route exact path='/CustomMode' element={<CustomMode/>}/>
+                  <Route exact path='/TimeMode' element={<TimeMode/>}/>
+                  <Route exact path='/QuantityMode' element={<QuantityMode/>}/>
+                  <Route exact path='/Authentication' element={<Authentication/>}/>
+                  <Route exact path='/Problem/:id' element={<Problem />} />
+                  <Route exact path='/AddProblem' element={<AddProblem/>} />
+                  <Route exact path='/ContestList' element={<ContestList/>} />
+                  <Route exact path='/Contest/:id' element={<Contest/>} />
+                  <Route exact path='/ContestProblem/:contestId/:problemId' element={<ContestProblem/>} />
+                  <Route exact path='/ProblemSet' element={<ProblemSet/>} />
+                  <Route exact path='/OneVOne' element={<OneVOne/>} />
+                  <Route exact path='/DiscussionList' element={<DiscussionList/>} />
+                </Routes>
                 <Footer />
               </div>
             </BrowserRouter>

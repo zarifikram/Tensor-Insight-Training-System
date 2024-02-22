@@ -1,5 +1,5 @@
-import { AuthContext } from ".././helpers/AuthContext";
-import { ColorContext } from ".././helpers/ColorContext";
+import { AuthContext } from "../components/helpers/AuthContext";
+import { ColorContext } from "../components/helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 

@@ -65,19 +65,19 @@ const Navbar = ({ routeContext, setRouteContext }) => {
             <div className={`w-10% flex items-center font-saira text-3xl font-black ${colorState.captioncolor}`}>TensorITS</div>
             <div className={`w-15% flex justify-start`}>
 
-                <div className={` pl-5 flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => setRouteContext({isPractice:false, navItemIndex:0})} ><FaHome /></div>
-                <div className={` pl-3  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => setRouteContext({isPractice:false, navItemIndex:6})} ><FaCode /></div>
+                <div className={` pl-5 flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => {navigate(`./`);setRouteContext({ "isPractice": false, "navItemIndex": 1 }); }} ><FaHome /></div>
+                <div className={` pl-3  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => navigate(`./ProblemSet`)} ><FaCode /></div>
                 {/*
                 <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => navigate('/AddProblem')}><IoIosAddCircle /></div>
                 <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} onClick={() => navigate('/ContestList')}><FaBolt /></div>
 
                 <div className={`  flex items-center justify-center py-2 font-saira ${colorState.textcolor} font-bold text-xl`} >
                     {<button onClick={openPopup} className={`hover:text-gray-400`}><IoMdSettings /></button>}
-    </div>*/}
+                </div>*/}
             </div>
             <div className="w-65% flex align-middle justify-end items-center px-2">
                 <div className={`w-auto ${colorState.box1color}  rounded-md flex justify-evenly py-1 font-saira ${colorState.textcolor} font-thin text-lg transition-all duration-2500`}>
-                    {routeContext.isPractice ? <Practice colorState={colorState} mode={mode} setMode={setMode} setRouteContext={setRouteContext} /> : <Normal routeContext={routeContext} setRouteContext={setRouteContext} colorState={colorState} />}
+                    {routeContext.isPractice ? <Practice  mode={mode} setMode={setMode} setRouteContext={setRouteContext} /> : <Normal routeContext={routeContext} setRouteContext={setRouteContext}  />}
                     <div className={`w-1.5 ${colorState.bgcolor} rounded mx-2`}></div>
                     <div className="w- flex justify-evenly items-center">
                         {/* use mode to option to display the list items one by one */}
@@ -91,7 +91,7 @@ const Navbar = ({ routeContext, setRouteContext }) => {
                 </div>
             </div>
             <div className={`w-5%`}></div>
-            <Link className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`}  onClick={() => { setMode({ ...mode, mode: "none" }); setRouteContext({isPractice:false, navItemIndex:7})  }}><FaUser /></Link>
+            <div className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`}  onClick={() => { setMode({ ...mode, mode: "none" }); setRouteContext({isPractice:false, navItemIndex:7}); navigate("./Authentication");}}><FaUser /></div>
             {
                 <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup} />
             }
@@ -100,59 +100,62 @@ const Navbar = ({ routeContext, setRouteContext }) => {
 
 };
 
-const NavBarItem = ({ navMode, to, tooltip, icon, colorState, mode, setMode, setRouteContext }) => {
+const NavBarItem = ({ navMode, to, tooltip, icon,  mode, setMode, setRouteContext,route }) => {
+    const navigate = useNavigate();
+    const [colorState, setColorState] = useContext(ColorContext);
     return (
-        <Link className={`${mode.mode === navMode ? `flex items-center justify-center mx-2 ${colorState.textcolor2}` : `flex  items-center justify-center mx-2`}`}  onClick={() => { setMode({ mode: navMode, setting: defaultSettingOfMode[navMode] })
-        setRouteContext({ "isPractice": true, "navItemIndex": to });
+        <div className={`${mode.mode === navMode ? `flex items-center justify-center mx-2 ${colorState.textcolor2}` : `flex  items-center justify-center mx-2`}`}  onClick={() => { setMode({ mode: navMode, setting: defaultSettingOfMode[navMode] })
+        navigate(route)
         }}>
             {icon}
             <HoverText tooltip={tooltip}>
                 <div>{navMode}</div>
             </HoverText>
-        </Link>
+        </div>
     );
 };
 
-const NormalNavBarItem = ({ to, tooltip, navMode, icon, colorState, routeContext, setRouteContext }) => {
+const NormalNavBarItem = ({ to, tooltip, navMode, icon,  routeContext, setRouteContext ,route}) => {
+    const [colorState, setColorState] = useContext(ColorContext);
+    const navigate = useNavigate();
     const onClick = () => {
+        navigate(route)
         if (to === 1) setRouteContext({ "isPractice": true, "navItemIndex": 1 });
         else setRouteContext({ "isPractice": false, "navItemIndex": to });
     }
     return (
-        <Link className={`${routeContext.navItemIndex === to ? `flex items-center justify-center mx-2 ${colorState.textcolor2}` : `flex  items-center justify-center mx-2`}`} onClick={onClick}>
+        <div className={`${routeContext.navItemIndex === to ? `flex items-center justify-center mx-2 ${colorState.textcolor2}` : `flex  items-center justify-center mx-2`}`} onClick={onClick}>
             <div className="mr-2">
-
             {icon}
             </div>
             <HoverText tooltip={tooltip}>
                 <div>{navMode}</div>
             </HoverText>
-        </Link>
+        </div>
     );
 }
 
 export default Navbar;
 
-const Practice = ({ colorState, mode, setMode,setRouteContext }) => {
+const Practice = ({  mode, setMode,setRouteContext }) => {
+    const [colorState, setColorState] = useContext(ColorContext);
     return (
         <div className="flex w-auto  justify-around mx-2.5">
-            <NavBarItem navMode="custom" to={1} tooltip="Customize your own problem set" icon={<AiOutlineSliders />} colorState={colorState} mode={mode} setMode={setMode} setRouteContext={setRouteContext} />
-            <NavBarItem navMode="time" to={2} tooltip="Solve problems within a time limit" icon={<IoTimeSharp />} colorState={colorState} mode={mode} setMode={setMode} setRouteContext={setRouteContext} />
-            <NavBarItem navMode="quantity" to={3} tooltip="Solve as many problems as you can" icon={<FaBoltLightning />} colorState={colorState} mode={mode} setMode={setMode} setRouteContext={setRouteContext} />
+            <NavBarItem navMode="custom" to={1} tooltip="Customize your own problem set" icon={<AiOutlineSliders />}  mode={mode} setMode={setMode} setRouteContext={setRouteContext} route="./CustomMode" />
+            <NavBarItem navMode="time" to={2} tooltip="Solve problems within a time limit" icon={<IoTimeSharp />}  mode={mode} setMode={setMode} setRouteContext={setRouteContext} route="./TimeMode" />
+            <NavBarItem navMode="quantity" to={3} tooltip="Solve as many problems as you can" icon={<FaBoltLightning />}  mode={mode} setMode={setMode} setRouteContext={setRouteContext} route="./QuantityMode" />
         </div>
     );
 }
 
-const Normal = ({ routeContext, setRouteContext, colorState }) => {
+const Normal = ({ routeContext, setRouteContext}) => {
+    const [colorState, setColorState] = useContext(ColorContext);
     return (
         <div className="flex w-auto  justify-around mx-2.5">
-            <NormalNavBarItem to={1} navMode="Practice" tooltip="practice to your heart's content" icon={<MdMonitor />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
-            <NormalNavBarItem to={2} navMode="OneVOne" tooltip="challenge a friend" icon={<FaGamepad />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
-            <NormalNavBarItem to={3} navMode="Contest" tooltip="compete with others" icon={<MdPunchClock />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
-            {
-            //<NormalNavBarItem to={4} navMode="Editorial" tooltip="contribute to the problem set" icon={<FaNewspaper />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
-            }
-            <NormalNavBarItem to={5} navMode="Discussion" tooltip="discuss problems" icon={<FaWalkieTalkie />} colorState={colorState} routeContext={routeContext} setRouteContext={setRouteContext} />
+            <NormalNavBarItem to={1} navMode="Practice" tooltip="practice to your heart's content" icon={<MdMonitor />}  routeContext={routeContext} setRouteContext={setRouteContext} route="./CustomMode" />
+            <NormalNavBarItem to={2} navMode="OneVOne" tooltip="challenge a friend" icon={<FaGamepad />}  routeContext={routeContext} setRouteContext={setRouteContext} route="./OneVOne" />
+            <NormalNavBarItem to={3} navMode="Contest" tooltip="compete with others" icon={<MdPunchClock />}  routeContext={routeContext} setRouteContext={setRouteContext} route="./ContestList"/>
+            <NormalNavBarItem to={5} navMode="Discussion" tooltip="discuss problems" icon={<FaWalkieTalkie />}  routeContext={routeContext} setRouteContext={setRouteContext} route="./DiscussionList" />
         </div>
     );
 }
