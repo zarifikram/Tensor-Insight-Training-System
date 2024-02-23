@@ -6,6 +6,7 @@ import './App.css'
 
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
 
+import User from './components/User/User'
 import QuantityMode from './components/QuantityMode/QuantityMode'
 import TimeMode from './components/TimeMode/TimeMode'
 import Navbar from './components/Navbar'
@@ -72,7 +73,7 @@ function App() {
     //   axios.defaults.headers.common['X-CSRFToken'] =csrfToken;
     //   console.log("cookie was already there");
     // } else {
-      axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+      axios.get('http://127.0.0.1:8000/api/get-csrftoken /')
       .then(response => {
       console.log("cookie received:"+response.data.csrftoken)
       const csrfToken = response.data.csrftoken;
@@ -137,6 +138,7 @@ function App() {
                   <Route exact path='/TimeMode' element={<TimeMode mode={mode} setMode={setMode} isTimeSelecetionPopupOpen={isTimeSelecetionPopupOpen} setTimeSelecetionPopupOpen={setTimeSelecetionPopupOpen} sendTime={sendTime} setSendTime={setSendTime} />} />
                   <Route exact path='/QuantityMode' element={<QuantityMode mode={mode} setMode={setMode} isQuantitySelecetionPopupOpen={isQuantitySelecetionPopupOpen} setQuantitySelecetionPopupOpen={setQuantitySelecetionPopupOpen} quantity={quantity} setQuantity={setQuantity}  />} />
                   <Route exact path='/Authentication' element={<Authentication/>}/>
+                  <Route exact path='/User' element={<User/>}/>
                   <Route exact path='/Problem/:id' element={<Problem />} />
                   <Route exact path='/AddProblem' element={<AddProblem/>} />
                   <Route exact path='/ContestList' element={<ContestList/>} />
