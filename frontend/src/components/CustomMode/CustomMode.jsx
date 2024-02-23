@@ -24,7 +24,7 @@ import Cookies from 'js-cookie';
 import { useRef } from "react";
 axios.defaults.withCredentials = true;
 
-const CustomMode = () =>{
+const CustomMode = ({ mode, setMode }) =>{
   //*Initialization Settings:---------------------------------------------------------------
   const [settings,setSettings] = useState({
     "depth": 2,

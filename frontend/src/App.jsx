@@ -6,7 +6,6 @@ import './App.css'
 
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
 
-
 import QuantityMode from './components/QuantityMode/QuantityMode'
 import TimeMode from './components/TimeMode/TimeMode'
 import Navbar from './components/Navbar'
@@ -31,24 +30,6 @@ import OneVOne from './components/OneVOne/OneVOne.jsx'
 import DiscussionList from './components/Discussion/DiscussionList.jsx'
 
 axios.defaults.withCredentials = true;
-const idToRouteMap = {
-  0: Home,
-  1: TimeMode,
-  2: OneVOne,
-  3: ContestList,
-  4: AddProblem,
-  5: DiscussionList,
-  6: ProblemSet,
-  7: Authentication
-}
-
-axios.defaults.withCredentials= true;
-const idToRouteMapPractice = {
-  0: Home,
-  1: CustomMode,
-  2: TimeMode,
-  3: QuantityMode,
-}
 function App() {
 
   const [authState, setAuthState] = useState({
@@ -125,8 +106,11 @@ function App() {
   });
 
   const [csrfState, setCSRFState] = useState();
-  const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 0 });
-
+  const [mode, setMode] = useState({ mode: "custom", setting: 1 });
+  //*Time Selection PopUp----------------------------------------------------
+  const [sendTime,setSendTime] = useState("600") //default time
+  const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(true);
+  
   return (
     <div className="font-roboto" >
       < ColorContext.Provider value={[colorState, setColorState]} >
@@ -135,14 +119,14 @@ function App() {
             <BrowserRouter>
 
               <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
-                <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />{
-                   // <CustomComponent routeContext={routeContext} setRouteContext={setRouteContext}/>
-                }
+                <Navbar mode={mode} setMode={setMode}
+                isTimeSelecetionPopupOpen={isTimeSelecetionPopupOpen} setTimeSelecetionPopupOpen={setTimeSelecetionPopupOpen} sendTime={sendTime} setSendTime={setSendTime}
+                />
                 <Routes>
                   <Route exact path='/' element={<Home />} />
-                  <Route exact path='/CustomMode' element={<CustomMode/>}/>
-                  <Route exact path='/TimeMode' element={<TimeMode/>}/>
-                  <Route exact path='/QuantityMode' element={<QuantityMode/>}/>
+                  <Route exact path='/CustomMode' element={<CustomMode mode={mode} setMode={setMode} />} />
+                  <Route exact path='/TimeMode' element={<TimeMode mode={mode} setMode={setMode} isTimeSelecetionPopupOpen={isTimeSelecetionPopupOpen} setTimeSelecetionPopupOpen={setTimeSelecetionPopupOpen} sendTime={sendTime} setSendTime={setSendTime} />} />
+                  <Route exact path='/QuantityMode' element={<QuantityMode mode={mode} setMode={setMode} />} />
                   <Route exact path='/Authentication' element={<Authentication/>}/>
                   <Route exact path='/Problem/:id' element={<Problem />} />
                   <Route exact path='/AddProblem' element={<AddProblem/>} />
@@ -164,16 +148,6 @@ function App() {
   )
 }
 
-
-
 export default App
 
-const CustomComponent = ({ routeContext,setRouteContext }) => {
-  const Component = routeContext.isPractice ? idToRouteMapPractice[routeContext.navItemIndex] : idToRouteMap[routeContext.navItemIndex]
 
-  if (!Component) {
-    return <div>No component found for this number</div>;
-  }
-
-  return <Component routeContext={routeContext} setRouteContext={setRouteContext}/>;
-};

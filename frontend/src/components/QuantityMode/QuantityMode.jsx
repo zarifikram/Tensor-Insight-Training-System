@@ -22,7 +22,7 @@ import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { FaStop } from "react-icons/fa6";
 
-const QuantityMode = () =>{
+const QuantityMode = ({ mode, setMode }) =>{
   //*Initialization useStates:---------------------------------------------------------------
   const [colorState,setColorState]= useContext(ColorContext);
   const [authState,setAuthState] = useContext(AuthContext);
@@ -219,6 +219,9 @@ const QuantityMode = () =>{
 
     return(
     <div className="mx-40">
+            <div className="bg-red-400">{
+        mode.setting
+      }</div>
         <div className={` h-24 flex justify-center py-4 items-center ${colorState.textcolor}`}>
         <div onClick={forceEnd} className={ `${(authState.QuantityModeRunning<1)?``:`hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex justify-center items-center`}`}><FaStop className={`${(authState.QuantityModeRunning<1)?`hidden`:``}`} /></div>
             <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 ${colorState.textcolor3}`}>
