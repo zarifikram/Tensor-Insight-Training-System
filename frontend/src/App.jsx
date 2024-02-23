@@ -110,6 +110,13 @@ function App() {
   //*Time Selection PopUp----------------------------------------------------
   const [sendTime,setSendTime] = useState("600") //default time
   const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(true);
+
+  //*Settings Selection PopUp--------------------------------------------------------------------------
+  const [isSettingsSelectionPopUpOpen, setSettingsSelectionPopUpOpen] = useState(false);
+
+    //*Quantity Selection Popup-----------------------------------------------------------------
+    const [quantity,setQuantity] = useState(2);
+    const [isQuantitySelecetionPopupOpen,setQuantitySelecetionPopupOpen] = useState(true);
   
   return (
     <div className="font-roboto" >
@@ -121,12 +128,14 @@ function App() {
               <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
                 <Navbar mode={mode} setMode={setMode}
                 isTimeSelecetionPopupOpen={isTimeSelecetionPopupOpen} setTimeSelecetionPopupOpen={setTimeSelecetionPopupOpen} sendTime={sendTime} setSendTime={setSendTime}
+                isSettingsSelectionPopUpOpen={isSettingsSelectionPopUpOpen} setSettingsSelectionPopUpOpen={setSettingsSelectionPopUpOpen}
+                isQuantitySelecetionPopupOpen={isQuantitySelecetionPopupOpen} setQuantitySelecetionPopupOpen={setQuantitySelecetionPopupOpen} quantity={quantity} setQuantity={setQuantity}
                 />
                 <Routes>
                   <Route exact path='/' element={<Home />} />
-                  <Route exact path='/CustomMode' element={<CustomMode mode={mode} setMode={setMode} />} />
+                  <Route exact path='/CustomMode' element={<CustomMode mode={mode} setMode={setMode} isSettingsSelectionPopUpOpen={isSettingsSelectionPopUpOpen} setSettingsSelectionPopUpOpen={setSettingsSelectionPopUpOpen}  />} />
                   <Route exact path='/TimeMode' element={<TimeMode mode={mode} setMode={setMode} isTimeSelecetionPopupOpen={isTimeSelecetionPopupOpen} setTimeSelecetionPopupOpen={setTimeSelecetionPopupOpen} sendTime={sendTime} setSendTime={setSendTime} />} />
-                  <Route exact path='/QuantityMode' element={<QuantityMode mode={mode} setMode={setMode} />} />
+                  <Route exact path='/QuantityMode' element={<QuantityMode mode={mode} setMode={setMode} isQuantitySelecetionPopupOpen={isQuantitySelecetionPopupOpen} setQuantitySelecetionPopupOpen={setQuantitySelecetionPopupOpen} quantity={quantity} setQuantity={setQuantity}  />} />
                   <Route exact path='/Authentication' element={<Authentication/>}/>
                   <Route exact path='/Problem/:id' element={<Problem />} />
                   <Route exact path='/AddProblem' element={<AddProblem/>} />

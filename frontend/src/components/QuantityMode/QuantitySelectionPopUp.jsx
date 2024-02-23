@@ -16,7 +16,7 @@ import { useState } from "react";
 
 axios.defaults.withCredentials= true;
 
-const QuantitySelectionPopUp = ({ isOpen, onClose, quantity,setQuantity, children }) => {
+const QuantitySelectionPopUp = ({ isOpen, onClose, quantity,setQuantity,mode, setMode, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     
     const [authState,setAuthState] = useContext(AuthContext);
@@ -25,6 +25,10 @@ const QuantitySelectionPopUp = ({ isOpen, onClose, quantity,setQuantity, childre
         // Parse the input value as an integer
         const newQuantity = parseInt(event.target.value, 10);
         // Update the quantity state
+        setMode(prevState => ({
+          ...prevState,
+          setting:newQuantity
+        }));
         setQuantity(newQuantity);
       };
 

@@ -39,7 +39,10 @@ const defaultSettingOfMode = {
     "custom": 0
 }
 
-const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOpen,sendTime,setSendTime}) => {
+const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOpen,sendTime,setSendTime,
+    isSettingsSelectionPopUpOpen, setSettingsSelectionPopUpOpen,
+    isQuantitySelecetionPopupOpen,setQuantitySelecetionPopupOpen,quantity,setQuantity}) => {
+
     const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 0 });
     const navigate = useNavigate();
 
@@ -61,9 +64,9 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
     };
 
     const  openSettingsPopUp = () =>{
-        if(mode.mode==="custom");
+        if(mode.mode==="custom")setSettingsSelectionPopUpOpen(true);
         else if(mode.mode==="time")setTimeSelecetionPopupOpen(true);
-        else if(mode.mode==="quantity");
+        else if(mode.mode==="quantity")setQuantitySelecetionPopupOpen(true);
     }
     return (
         <div className="w-screenwidth h-28 flex mx-40 py-10">
@@ -88,7 +91,7 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
                         {/* use mode to option to display the list items one by one */}
                         {modesToOptions[mode.mode].map((option, index) => {
                             return (
-                                <div key={index} className={`mx-2 flex items-center justify-center ${mode.setting === option ? colorState.textcolor2 : colorState.textcolor1} cursor-pointer`} onClick={() => {setMode({ ...mode, setting: option });  if(mode.mode==="time")setSendTime(option.toString());} }>{option}</div>
+                                <div key={index} className={`mx-2 flex items-center justify-center ${mode.setting === option ? colorState.textcolor2 : colorState.textcolor1} cursor-pointer`} onClick={() => {setMode({ ...mode, setting: option });  if(mode.mode==="time")setSendTime(option.toString()); if(mode.mode==="quantity")setQuantity(option);  } }>{option}</div>
                             );
                         })}
                         <div className="mx-2" onClick={openSettingsPopUp}><HiDotsHorizontal /></div>
