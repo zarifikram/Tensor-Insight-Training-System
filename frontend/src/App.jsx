@@ -20,10 +20,12 @@ import AddProblem from './components/AddProblem/AddProblem.jsx'
 import ContestList from './components/Contest/ContestList.jsx'
 import Contest from './components/Contest/Contest.jsx'
 import ContestProblem from './components/Contest/ContestProblem.jsx'
+import Discussion from './components/Discussion/Discusssion.jsx'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
 import { CSRFContext } from './components/helpers/CSRFContext'
+
 import axios from 'axios'
 
 import Home from './components/Home'
@@ -133,6 +135,7 @@ function App() {
                   <Route exact path='/ProblemSet' element={<ProblemSet/>} />
                   <Route exact path='/OneVOne' element={<OneVOne/>} />
                   <Route exact path='/DiscussionList' element={<DiscussionList/>} />
+                  <Route exact path='/Discussion/:id' element={<Discussion/>} />
                 </Routes>
                 <Footer />
               </div>

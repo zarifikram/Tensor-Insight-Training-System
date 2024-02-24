@@ -14,11 +14,15 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 const DiscussionList = () => {
-
+    const navigate = useNavigate();
   
-    const discussions = [
+    const discussionIni = [
         {
             "id": 1,
             "title": "Is there a way in @pytorch of getting two sorted tensors of size Land generating in O(L) the sorted merged tensor?",
@@ -63,6 +67,16 @@ const DiscussionList = () => {
         },
     ]
 
+    const [discussions,setDiscussions]=useState(discussionIni)
+
+    useEffect(() => {
+        axios.get(`http://127.0.0.1:8000/api/discussion-forum/`)
+            .then((response) => {
+                setDiscussions(response.data);
+            }).catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }, []); 
 
     const [colorState, setColorState] = useContext(ColorContext);
     const [authState, setAuthState] = useContext(AuthContext);
@@ -74,7 +88,8 @@ const DiscussionList = () => {
     }
 
     const OpenPopUp = () =>{
-        setIsOpen(true);;
+        if(authState.loggedIn)
+        setIsOpen(true);
     }
 
     useEffect(() => {
@@ -90,11 +105,15 @@ const DiscussionList = () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [isOpen]);
+
+    const GoToDiscussion = (id) =>{
+        navigate(`/Discussion/${id}`);
+    }
  
     return (
         <div className="  h-5/6 flex flex-col">
             {
-                            <KeyBoardInstruction colorState={colorState} />
+                (authState.loggedIn)&& <KeyBoardInstruction colorState={colorState} OpenPopUp={OpenPopUp} />
                          //   <OptionBar colorState={colorState} context={context} setContext={setContext} options={options} />
             }
 
@@ -102,16 +121,16 @@ const DiscussionList = () => {
             <div className="h-fit flex flex-col items-center ">
 
             {discussions.map((discussion, index) => (
-    <div className="flex h-36 w-5/6 mb-8 cursor-pointer" key={index}>
+    <div className="flex h-36 w-5/6 mb-8 cursor-pointer" key={index} onClick={()=>{GoToDiscussion(discussion.id)}}>
         <div className="w-4/5">
-            <div className="flex flex-col h-3/5 text-white font-roboto text-2xl">{discussion.title}</div>
+            <div className={`flex flex-col h-3/5 ${colorState.textcolor2} font-roboto text-2xl`}>{discussion.title}</div>
             {/* make sure the text does not overflow */}
             <div className={`flex flex-col h-2/5 ${colorState.textcolor} align-top`}>{discussion.description.length > 200 ? discussion.description.substring(0, 200) + "..." : discussion.description}</div>
         </div>
         <div className="w-1/5">
             <div className="flex-col h-5/6 ">
                 {/* TO_DO make sure these come from backend */}
-                <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>{discussion.vote} votes</div>
+                <div className={`flex justify-end items-center  ${colorState.captioncolor}`}>{discussion.vote} votes</div>
                 {
                     (discussion.is_resolved )? (
                         <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>
@@ -145,11 +164,11 @@ const DiscussionList = () => {
 
 export default DiscussionList;
 
-const KeyBoardInstruction = ({ colorState }) => {
+const KeyBoardInstruction = ({ colorState,OpenPopUp }) => {
     return (
         <div className="flex justify-center h-8">
             <div className="text-4xl font-roboto font-bold">
-                <div className={` flex items-center center h-full`}>
+                <div className={` flex items-center center h-full hover:bg-gray-400 p-1 rounded-md`} onClick={OpenPopUp}>
                     <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>n</div>
                     <p className={`${colorState.textcolor} text-sm`}>- Add New Contest</p>
                 </div>
@@ -190,9 +209,32 @@ const NewProblem = ({ colorState,onClose,isOpen }) => {
         }
     }
 
-    if (!isOpen) {
-        return null; // If isOpen is false, don't render anything
-    }
+    const [title, setTitle] = useState('');
+
+    const handleChange1 = (event) => {
+        setTitle(event.target.value);
+    };
+
+    const [description, setDescription] = useState('');
+
+    const handleChange2 = (event) => {
+        setDescription(event.target.value);
+    };
+
+
+const Submit = () =>{
+    axios.post(`http://127.0.0.1:8000/api/add-discussion/`,{
+        title:title,
+        description:description
+      }).then((response) => {
+        toast.success("Discussion Created")
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+
+    onClose();
+}
+
 
     return (
         <>
@@ -203,23 +245,27 @@ const NewProblem = ({ colorState,onClose,isOpen }) => {
             >
             <div className="flex items-center justify-center min-h-screen">
               <div className="overlay fixed inset-0 bg-black opacity-50"></div>
-              <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-4 max-w-screen-lg w-90% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
+              <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-10 max-w-screen-lg w-90% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
               
-              <div className={`${colorState.captioncolor} font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> Add New Discussion</div>
+              <div className={`${colorState.captioncolor} font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> add new discussion</div>
 
                     <div className="flex-col h-fit mb-8">
                         <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>title</div>
                         <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>pick a suitable title for the discussion</div>
-                        <textarea className={`w-full h-40 rounded-lg p-4  font-roboto bg-opacity-10 ${colorState.textcolor}  text-2xl font-bold`}  />
+                        <textarea className={`w-full h-40 rounded-lg p-4 ${colorState.box1color} font-roboto  ${colorState.textcolor}  text-2xl `}  
+                         value={title}
+                         onChange={handleChange1} />
                     </div>
 
                     <div className="flex-col h-fit mb-8">
                         <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>description</div>
                         <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>Limit the amount of character used to write the code. Use 0 for no limit</div>
-                        <textarea className={`w-full h-40 rounded-lg p-4  font-roboto bg-opacity-10 ${colorState.textcolor}  text-2xl font-bold`}  />
+                        <textarea className={`w-full h-40 rounded-lg p-4 ${colorState.box1color}  font-roboto  ${colorState.textcolor}  text-2xl `}
+                        value={description}
+                        onChange={handleChange2}  />
                     </div>
-                    <div>
-                     <div className={`${colorState.box1color} `}> Submit New Discussion</div>
+                    <div className={`flex justify-center`}>
+                     <div className={`${colorState.box1color} ${colorState.textcolor} py-2 px-3 rounded-md hover:bg-gray-400`} onClick={Submit}> Submit New Discussion</div>
                     </div>
                     
     
@@ -227,6 +273,7 @@ const NewProblem = ({ colorState,onClose,isOpen }) => {
                </div>
             </div>
           </div>
+          <ToastContainer />
         </>
       );
 }
