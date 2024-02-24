@@ -16,7 +16,7 @@ import { useState } from "react";
 
 axios.defaults.withCredentials= true;
 
-const TimeSelectionPopUp = ({ isOpen, onClose,setSendTime, children }) => {
+const TimeSelectionPopUp = ({ isOpen, onClose,setSendTime,mode,setMode, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
     const [times, setTimes] = useState([600, 1800, 3600]);
     const [selectedTime, setSelectedTime] = useState(0);
@@ -33,8 +33,6 @@ const TimeSelectionPopUp = ({ isOpen, onClose,setSendTime, children }) => {
         if(selectedTime>0)
             setSelectedTime(selectedTime - 1);
     }
-
-
   
     useEffect(() => {
         // This effect runs whenever selectedTime changes
@@ -53,6 +51,10 @@ const TimeSelectionPopUp = ({ isOpen, onClose,setSendTime, children }) => {
     };
 
     const closeSetTime =()=>{
+      setMode(prevMode => ({
+        ...prevMode,
+        setting: times[selectedTime]
+      }));
       setSendTime(times[selectedTime].toString())
       onClose();
     }

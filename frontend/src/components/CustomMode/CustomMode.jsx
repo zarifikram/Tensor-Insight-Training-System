@@ -24,7 +24,7 @@ import Cookies from 'js-cookie';
 import { useRef } from "react";
 axios.defaults.withCredentials = true;
 
-const CustomMode = () =>{
+const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSelectionPopUpOpen }) =>{
   //*Initialization Settings:---------------------------------------------------------------
   const [settings,setSettings] = useState({
     "depth": 2,
@@ -132,7 +132,6 @@ const CustomMode = () =>{
   };
 
   //*Settings Selection PopUp--------------------------------------------------------------------------
-  const [isSettingsSelectionPopUpOpen, setSettingsSelectionPopUpOpen] = useState(false);
 
   const openSettingsSelectionPopUp = () => {
       setSettingsSelectionPopUpOpen(true);

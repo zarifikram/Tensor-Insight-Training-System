@@ -6,7 +6,7 @@ import './App.css'
 
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
 
-
+import User from './components/User/User'
 import QuantityMode from './components/QuantityMode/QuantityMode'
 import TimeMode from './components/TimeMode/TimeMode'
 import Navbar from './components/Navbar'
@@ -28,27 +28,9 @@ import axios from 'axios'
 
 import Home from './components/Home'
 import OneVOne from './components/OneVOne/OneVOne.jsx'
-import Discussion from './components/Discussion/Discussion.jsx'
+import DiscussionList from './components/Discussion/DiscussionList.jsx'
 
 axios.defaults.withCredentials = true;
-const idToRouteMap = {
-  0: Home,
-  1: TimeMode,
-  2: OneVOne,
-  3: ContestList,
-  4: AddProblem,
-  5: Discussion,
-  6: ProblemSet,
-  7: Authentication
-}
-
-axios.defaults.withCredentials= true;
-const idToRouteMapPractice = {
-  0: Home,
-  1: CustomMode,
-  2: TimeMode,
-  3: QuantityMode,
-}
 function App() {
 
   const [authState, setAuthState] = useState({
@@ -91,7 +73,7 @@ function App() {
     //   axios.defaults.headers.common['X-CSRFToken'] =csrfToken;
     //   console.log("cookie was already there");
     // } else {
-      axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+      axios.get('http://127.0.0.1:8000/api/get-csrftoken /')
       .then(response => {
       console.log("cookie received:"+response.data.csrftoken)
       const csrfToken = response.data.csrftoken;
@@ -125,8 +107,18 @@ function App() {
   });
 
   const [csrfState, setCSRFState] = useState();
-  const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 0 });
+  const [mode, setMode] = useState({ mode: "custom", setting: 1 });
+  //*Time Selection PopUp----------------------------------------------------
+  const [sendTime,setSendTime] = useState("600") //default time
+  const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(true);
 
+  //*Settings Selection PopUp--------------------------------------------------------------------------
+  const [isSettingsSelectionPopUpOpen, setSettingsSelectionPopUpOpen] = useState(false);
+
+    //*Quantity Selection Popup-----------------------------------------------------------------
+    const [quantity,setQuantity] = useState(2);
+    const [isQuantitySelecetionPopupOpen,setQuantitySelecetionPopupOpen] = useState(true);
+  
   return (
     <div className="font-roboto" >
       < ColorContext.Provider value={[colorState, setColorState]} >
@@ -135,8 +127,27 @@ function App() {
             <BrowserRouter>
 
               <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
-                <Navbar routeContext={routeContext} setRouteContext={setRouteContext} />
-                <CustomComponent routeContext={routeContext} setRouteContext={setRouteContext}/>
+                <Navbar mode={mode} setMode={setMode}
+                isTimeSelecetionPopupOpen={isTimeSelecetionPopupOpen} setTimeSelecetionPopupOpen={setTimeSelecetionPopupOpen} sendTime={sendTime} setSendTime={setSendTime}
+                isSettingsSelectionPopUpOpen={isSettingsSelectionPopUpOpen} setSettingsSelectionPopUpOpen={setSettingsSelectionPopUpOpen}
+                isQuantitySelecetionPopupOpen={isQuantitySelecetionPopupOpen} setQuantitySelecetionPopupOpen={setQuantitySelecetionPopupOpen} quantity={quantity} setQuantity={setQuantity}
+                />
+                <Routes>
+                  <Route exact path='/' element={<Home />} />
+                  <Route exact path='/CustomMode' element={<CustomMode mode={mode} setMode={setMode} isSettingsSelectionPopUpOpen={isSettingsSelectionPopUpOpen} setSettingsSelectionPopUpOpen={setSettingsSelectionPopUpOpen}  />} />
+                  <Route exact path='/TimeMode' element={<TimeMode mode={mode} setMode={setMode} isTimeSelecetionPopupOpen={isTimeSelecetionPopupOpen} setTimeSelecetionPopupOpen={setTimeSelecetionPopupOpen} sendTime={sendTime} setSendTime={setSendTime} />} />
+                  <Route exact path='/QuantityMode' element={<QuantityMode mode={mode} setMode={setMode} isQuantitySelecetionPopupOpen={isQuantitySelecetionPopupOpen} setQuantitySelecetionPopupOpen={setQuantitySelecetionPopupOpen} quantity={quantity} setQuantity={setQuantity}  />} />
+                  <Route exact path='/Authentication' element={<Authentication/>}/>
+                  <Route exact path='/User' element={<User/>}/>
+                  <Route exact path='/Problem/:id' element={<Problem />} />
+                  <Route exact path='/AddProblem' element={<AddProblem/>} />
+                  <Route exact path='/ContestList' element={<ContestList/>} />
+                  <Route exact path='/Contest/:id' element={<Contest/>} />
+                  <Route exact path='/ContestProblem/:contestId/:problemId' element={<ContestProblem/>} />
+                  <Route exact path='/ProblemSet' element={<ProblemSet/>} />
+                  <Route exact path='/OneVOne' element={<OneVOne/>} />
+                  <Route exact path='/DiscussionList' element={<DiscussionList/>} />
+                </Routes>
                 <Footer />
               </div>
             </BrowserRouter>
@@ -148,16 +159,6 @@ function App() {
   )
 }
 
-
-
 export default App
 
-const CustomComponent = ({ routeContext,setRouteContext }) => {
-  const Component = routeContext.isPractice ? idToRouteMapPractice[routeContext.navItemIndex] : idToRouteMap[routeContext.navItemIndex]
 
-  if (!Component) {
-    return <div>No component found for this number</div>;
-  }
-
-  return <Component routeContext={routeContext} setRouteContext={setRouteContext}/>;
-};

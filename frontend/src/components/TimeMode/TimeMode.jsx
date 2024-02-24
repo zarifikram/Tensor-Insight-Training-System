@@ -26,7 +26,7 @@ import { useEffect } from "react";
 import { useRef } from "react";
 axios.defaults.withCredentials= true;
 
-const TimeMode = () =>{
+const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOpen,sendTime,setSendTime }) =>{
   //*Loading Screen--------------------------------------------------------------------------
   const [isLoading,setIsLoading] = useState(false);
 
@@ -84,7 +84,6 @@ const TimeMode = () =>{
   //*Time Counter:--------------------------------------------------------------------------
   const delay = 1000
   const [time, setTime] = useState(0);
-  const [sendTime,setSendTime] = useState("600") //default time
   const [running,setRunning] = useState(false);
   
   useEffect(() => {
@@ -140,7 +139,6 @@ const TimeMode = () =>{
   };
 
   //*Time Selection Popup-----------------------------------------------------------------
-  const [isTimeSelecetionPopupOpen, setTimeSelecetionPopupOpen] = useState(true);
 
   const openTimeSelectionPopup = () => {
     setTimeSelecetionPopupOpen(true);
@@ -319,7 +317,7 @@ const TimeMode = () =>{
         <TimeModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
       }
       {
-        <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup}  setSendTime={setSendTime}/>
+        <TimeSelectionPopUp isOpen={isTimeSelecetionPopupOpen} onClose={closeTimeSelectionPopup}  setSendTime={setSendTime}   mode={mode} setMode={setMode} />
       }
       {
         <TimeModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup}/>

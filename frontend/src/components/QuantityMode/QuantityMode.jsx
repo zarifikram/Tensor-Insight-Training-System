@@ -22,7 +22,7 @@ import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { FaStop } from "react-icons/fa6";
 
-const QuantityMode = () =>{
+const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantitySelecetionPopupOpen,quantity,setQuantity}) =>{
   //*Initialization useStates:---------------------------------------------------------------
   const [colorState,setColorState]= useContext(ColorContext);
   const [authState,setAuthState] = useContext(AuthContext);
@@ -86,8 +86,6 @@ const QuantityMode = () =>{
   };
 
   //*Quantity Selection Popup-----------------------------------------------------------------
-  const [quantity,setQuantity] = useState(10);
-  const [isQuantitySelecetionPopupOpen,setQuantitySelecetionPopupOpen] = useState(true);
 
   const openTimeSelectionPopup = () => {;
     setQuantitySelecetionPopupOpen(true);
@@ -260,7 +258,7 @@ const QuantityMode = () =>{
           <QuantityModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
         }
         {
-          <QuantitySelectionPopUp isOpen={isQuantitySelecetionPopupOpen} onClose={closeQuantitySelectionPopUp} quantity={quantity} setQuantity={setQuantity} />
+          <QuantitySelectionPopUp isOpen={isQuantitySelecetionPopupOpen} onClose={closeQuantitySelectionPopUp} quantity={quantity} setQuantity={setQuantity} mode={mode} setMode={setMode} />
         }
         {
           <QuantityModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup}/>
