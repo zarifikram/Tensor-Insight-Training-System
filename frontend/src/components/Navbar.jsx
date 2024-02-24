@@ -9,12 +9,16 @@ import { HiDotsHorizontal } from "react-icons/hi";//<HiDotsHorizontal />
 import { FaBolt } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import { FaHome } from "react-icons/fa";
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
 import ProblemSet from "./ProblemSet/ProblemSet";
 import React, { useContext } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import { useState } from "react";
 
@@ -68,6 +72,36 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
         else if(mode.mode==="time")setTimeSelecetionPopupOpen(true);
         else if(mode.mode==="quantity")setQuantitySelecetionPopupOpen(true);
     }
+
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+
+    const handleDropdownClick = () => {
+        setRouteContext({ isPractice: false, navItemIndex: 7 });
+        setMode({ mode: 'none', setting: 1 });
+        if (authState.loggedIn) navigate('./User');
+        else navigate('./Authentication');
+    };
+
+    const handleDropdownAction = () => {
+            axios.post(`http://127.0.0.1:8000/api/signout/`
+            ).then((response) => {
+                    console.log("You Have Successfully Logged Out");
+                    toast.success("Successfully Logged Out");
+                    setAuthState(prevState => ({
+                        ...prevState,
+                        loggedIn: false // or false to change the state to logged out
+                      }));
+                      
+                      navigate("/Authentication")
+                }).catch((error) => {
+                    console.log("error");
+                    console.error("Error fetching data:", error);
+                    toast.error("Couldn't log Out");
+                }).finally(() => {
+                    
+                });
+    };
+
     return (
         <div className="w-screenwidth h-28 flex mx-40 py-10">
             <div className={`w-10% flex items-center font-saira text-3xl font-black ${colorState.captioncolor}`}>TensorITS</div>
@@ -100,10 +134,37 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
                 </div>
             </div>
             <div className={`w-5%`}></div>
-            <div className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`}  onClick={() => {  setRouteContext({isPractice:false, navItemIndex:7}); navigate("./Authentication"); setMode({ mode: "none", setting: 1 });}}><FaUser /></div>
+
+            <div
+            className="relative"
+            onMouseEnter={() => setDropdownVisible(true)}
+            onMouseLeave={() => setDropdownVisible(false)}
+            >
+            <div
+                className={ `w-9 h-9 rounded-full flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl hover:bg-gray-400`}
+                onClick={handleDropdownClick}
+            >
+                <FaUser/>
+            </div>
+            {dropdownVisible && authState.loggedIn &&(
+                <div
+                className="absolute left-1/2 transform -translate-x-1/2 top-full "
+                >
+                    <button
+                        className={` ${colorState.box1color} ${colorState.textcolor2} block w-full text-left px-4 py-2  hover:bg-gray-400 mt-2  shadow-md rounded-md`}
+                        onClick={handleDropdownAction}
+                    >
+                        Signout
+                    </button>
+                </div>
+            )}
+        </div>
 
             {
                 <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup} />
+            }
+            {
+                <ToastContainer />
             }
         </div>
     );
