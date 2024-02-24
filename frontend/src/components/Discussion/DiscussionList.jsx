@@ -12,6 +12,8 @@ import { FaAngry, FaHeart } from "react-icons/fa";
 import { FaDownLong, FaKeyboard, FaUpLong } from "react-icons/fa6";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
+import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 
 const DiscussionList = () => {
 
@@ -62,37 +64,37 @@ const DiscussionList = () => {
     ]
 
 
-    //const [context, setContext] = useState({ "option": "newest", newProblem: false, selectedProblem: -1, "problems": problems, "newProblemDetails": newProblemSchema }); // add more field as needed
     const [colorState, setColorState] = useContext(ColorContext);
     const [authState, setAuthState] = useContext(AuthContext);
 
-    // useEffect(() => {
-    //     const handleKeyDown = (event) => {
-    //         if (event.key === 'n' && context.selectedProblem === -1) {
-    //             setContext({ ...context, "newProblem": true });
-    //         }
+    const [isOpen,setIsOpen] =useState(false);
+    
+    const onClose = () =>{
+        setIsOpen(false);
+    }
 
-    //         if (event.shiftKey && event.key === 'Enter') {
-    //             setContext({ ...context, "newProblem": false });
-    //             // do your post request here
-    //           }
-    //     };
+    const OpenPopUp = () =>{
+        setIsOpen(true);;
+    }
 
-    //     const handleKeyUp = () => {
-    //     };
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'n') {
+                OpenPopUp();
+            }
+        };
 
-    //     document.addEventListener('keydown', handleKeyDown);
-    //     document.addEventListener('keyup', handleKeyUp);
-    //     return () => {
-    //         document.removeEventListener('keydown', handleKeyDown);
-    //         document.removeEventListener('keyup', handleKeyUp);
-    //     };
-    // }, [context]);
+        document.addEventListener('keydown', handleKeyDown);
 
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen]);
+ 
     return (
-        <div className="h-5/6 flex flex-col">
+        <div className="  h-5/6 flex flex-col">
             {
-                        //    <KeyBoardInstruction colorState={colorState} />
+                            <KeyBoardInstruction colorState={colorState} />
                          //   <OptionBar colorState={colorState} context={context} setContext={setContext} options={options} />
             }
 
@@ -110,17 +112,32 @@ const DiscussionList = () => {
             <div className="flex-col h-5/6 ">
                 {/* TO_DO make sure these come from backend */}
                 <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>{discussion.vote} votes</div>
-                <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>1 answers</div>
-                <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>5 solutions</div>
+                {
+                    (discussion.is_resolved )? (
+                        <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>
+                            resolved 
+                            <div className={`ml-3 bg-green-600 rounded-full w-5 h-5 flex justify-center items-center`}>
+                                <IoMdCheckmark/>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>
+                            unresolved 
+                            <div className={`ml-3 bg-red-600 rounded-full w-5 h-5 flex justify-center items-center`}>
+                                <RxCross2/>
+                            </div>
+                        </div>
+                    )
+                }
+                
             </div>
-            <div className="flex h-1/6">
-                <div className={`flex w-full justify-end full ${colorState.textcolor} font-mono rounded-md`}>posted 49 mins ago   </div>
-            </div>
+ 
         </div>
     </div>
 ))}
             </div>
         </div>
+        <NewProblem colorState={colorState}  onClose={onClose} isOpen={isOpen} /> 
         </div>
     );
 
@@ -162,5 +179,60 @@ const Option = ({ colorState, context, setContext, option }) => {
         </div>
     );
 }
+
+
+//New Problem Addition-----------------------------
+
+const NewProblem = ({ colorState,onClose,isOpen }) => {
+    const handleClose = (e) => {
+        if (e.target.classList.contains('overlay')) {
+            onClose();
+        }
+    }
+
+    if (!isOpen) {
+        return null; // If isOpen is false, don't render anything
+    }
+
+    return (
+        <>
+          <div
+            className={`fixed inset-0 overflow-y-auto transition-opacity duration-300 
+            ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            onClick={handleClose} // Added onClick event for the entire popup
+            >
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="overlay fixed inset-0 bg-black opacity-50"></div>
+              <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-4 max-w-screen-lg w-90% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
+              
+              <div className={`${colorState.captioncolor} font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> Add New Discussion</div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>title</div>
+                        <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>pick a suitable title for the discussion</div>
+                        <textarea className={`w-full h-40 rounded-lg p-4  font-roboto bg-opacity-10 ${colorState.textcolor}  text-2xl font-bold`}  />
+                    </div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>description</div>
+                        <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>Limit the amount of character used to write the code. Use 0 for no limit</div>
+                        <textarea className={`w-full h-40 rounded-lg p-4  font-roboto bg-opacity-10 ${colorState.textcolor}  text-2xl font-bold`}  />
+                    </div>
+                    <div>
+                     <div className={`${colorState.box1color} `}> Submit New Discussion</div>
+                    </div>
+                    
+    
+    
+               </div>
+            </div>
+          </div>
+        </>
+      );
+}
+
+
+
+
 
 
