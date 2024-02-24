@@ -77,35 +77,35 @@ jobs:
         DISK_URI: ${{ secrets.DISK_URI }}
         DOCKER_IMAGE_PATH: ${{ secrets.DOCKER_IMAGE_PATH }}
 
-    - name: Azure ACR Login
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_USERNAME }}.azurecr.io
-        username: ${{ secrets.ACR_USERNAME }} 
-        password: ${{ secrets.ACR_PASSWORD }}
+    # - name: Azure ACR Login
+    #   uses: azure/docker-login@v1
+    #   with:
+    #     login-server: ${{ secrets.ACR_USERNAME }}.azurecr.io
+    #     username: ${{ secrets.ACR_USERNAME }} 
+    #     password: ${{ secrets.ACR_PASSWORD }}
 
-    - name: Build and push Docker image
-      working-directory: backend
-      run: |
-        docker build -t ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }} .
-        docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }}
+    # - name: Build and push Docker image
+    #   working-directory: backend
+    #   run: |
+    #     docker build -t ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }} .
+    #     docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/tensorits-backend-image:${{ github.sha }}
 
-    - name: Azure login
-      uses: azure/login@v1.4.3
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # - name: Azure login
+    #   uses: azure/login@v1.4.3
+    #   with:
+    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - uses: azure/aks-set-context@v3
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
-        resource-group: ${{ secrets.RESOURCE_GROUP }}
-    - name: Deploy to AKS
-      uses: Azure/k8s-deploy@v4
-      with:
-        manifests: |
-          backend/kubernetes/deployment.yaml
-        images: titsacr.azurecr.io/tensorits-backend-image:${{ github.sha }}
-        pull-images: false
+    # - uses: azure/aks-set-context@v3
+    #   with:
+    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+    #     cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
+    #     resource-group: ${{ secrets.RESOURCE_GROUP }}
+    # - name: Deploy to AKS
+    #   uses: Azure/k8s-deploy@v4
+    #   with:
+    #     manifests: |
+    #       backend/kubernetes/deployment.yaml
+    #     images: titsacr.azurecr.io/tensorits-backend-image:${{ github.sha }}
+    #     pull-images: false
 
 

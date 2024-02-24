@@ -101,6 +101,7 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
             </div>
             <div className={`w-5%`}></div>
             <div className={`w-5%  flex justify-center items-center font-saira ${colorState.textcolor} font-bold text-2xl`}  onClick={() => {  setRouteContext({isPractice:false, navItemIndex:7}); navigate("./Authentication"); setMode({ mode: "none", setting: 1 });}}><FaUser /></div>
+
             {
                 <SettingsPopUp isOpen={isPopupOpen} onClose={closePopup} />
             }
