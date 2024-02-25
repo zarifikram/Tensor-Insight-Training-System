@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 import { useRef } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
+import { ClipLoader } from 'react-spinners';
 
 
 const calculateTimeDifference = (time) => {
@@ -36,6 +37,7 @@ const calculateTimeDifference = (time) => {
 };
 
 const Discussion = () =>{
+    const [isLoading,setIsloading]=useState(true)
     const iniDiscussion={
         "id": 1,
         "title": "Cras porttitor augue nec consequat dignissim. Quisque pellentesque, eros ultrices lacinia",
@@ -129,26 +131,47 @@ const Discussion = () =>{
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
-    const [discussion,setDiscussion] = useState(iniDiscussion)
+    const [discussion,setDiscussion] = useState({})
  
 
     useEffect(() => {
-
       const interval = setInterval(() => {
         axios.get(`http://127.0.0.1:8000/api/discussion-forum/${id}/`)
             .then((response) => {
                 console.log(response.data);
                 setDiscussion(response.data)
+                setIsloading(false)
             }).catch((error) => {
                 console.error("Error fetching data:", error);
             });
-
           }, 1000); // Run every second (1000 milliseconds)
-
           // Clean up the interval when the component unmounts or when the dependency changes
           return () => clearInterval(interval);
     }, []); 
 
+    //*Voting-------------------------------------------------------
+    const upvote = () =>{
+      if(authState.loggedIn){
+      axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/upvote/`)
+      .then((response) => {
+          console.log(response.data);
+      }).catch((error) => {
+          console.error("Error fetching data:", error);
+      });
+    }
+    }
+
+    const downvote = () =>{
+      if(authState.loggedIn){
+      axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/downvote/`)
+      .then((response) => {
+          console.log(response.data);
+      }).catch((error) => {
+          console.error("Error fetching data:", error);
+      });
+    }
+    }
+    //*Submit answer------------------------------------------------
 
 
   const [answerbox, setAnswerbox] = useState('');
@@ -210,12 +233,13 @@ const Discussion = () =>{
   
 
     return(
-    <div className={`mx-40 ${colorState.textcolor} font-roboto`}>    
+    <div className={`mx-40 ${colorState.textcolor} font-roboto`}>  {
+      (!isLoading)&&(<div>
         <div className={`flex mb-16`}>
           <div className={`w-16 `}>
-            <div className={`w-12 h-12 text-3xl flex justify-center items-center  rounded-full ${discussion.user_vote==="up"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`}><AiOutlineCaretUp/></div>
+            <div className={`w-12 h-12 text-3xl flex justify-center items-center  rounded-full ${discussion.user_vote==="up"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={upvote}><AiOutlineCaretUp/></div>
             <div className={`w-12 h-12 text-3xl flex justify-center items-center  ${discussion.user_vote!=null?`${colorState.textcolor2}`:``}`}>{discussion.vote}</div>
-            <div className={`w-12 h-12 text-3xl flex justify-center items-center  rounded-full ${discussion.user_vote==="down"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`}><AiOutlineCaretDown/></div>
+            <div className={`w-12 h-12 text-3xl flex justify-center items-center  rounded-full ${discussion.user_vote==="down"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={downvote}><AiOutlineCaretDown/></div>
           </div>
           <div className={`ml-4`}>
             <div>
@@ -230,7 +254,7 @@ const Discussion = () =>{
                 </div>
           </div>
           </div>
-        </div>
+        </div>{ authState.loggedIn && (
         <div className="flex mb-2">
             <textarea className={`w-full h-16 rounded-lg p-4 ${colorState.box1color}  font-roboto  ${colorState.textcolor}  text-xl `}
             value={answerbox}
@@ -238,15 +262,15 @@ const Discussion = () =>{
             <div className={`ml-2 w-40 h-16 rounded-md ${colorState.box1color} ${colorState.textcolor2} text-2xl flex justify-center items-center hover:bg-gray-400`} onClick={submitAnswer}>
               Answer
             </div>
-        </div>
-        <div className="flex mb-2">
+        </div>)}
+        {(authState.loggedIn) &&(authState.id===discussion.user.id) && (<div className="flex mb-2">
           <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2} text-2xl flex justify-center items-center hover:bg-gray-400 mr-2`} onClick={()=>{setEditOn(prevState => !prevState);}}>
                 Edit
             </div>
             <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2} text-2xl flex justify-center items-center hover:bg-gray-400`} onClick={()=>{DeleteComment();}}>
                 Delete
             </div>
-        </div>{
+        </div>)}{
           editOn && (<div> 
             <div className="flex mb-2">
                 <input className={`w-full h-10 rounded-lg p-4 ${colorState.box1color}  font-roboto  ${colorState.textcolor}  text-xl `}
@@ -276,9 +300,14 @@ const Discussion = () =>{
         {(discussion.answers!=null)&&(discussion.answers.map((answer, index) => (
                 <Answer answer={answer} />
         )))}
+        </div>)
+        }
+    {(isLoading) && (<div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50">
+      <div className="absolute bg-black opacity-40 w-full h-full"></div>
+      <ClipLoader color="#000" loading={isLoading} size={50} />
+    </div>)}
     </div>
     );
-    
     };
     
     export default Discussion;
@@ -290,6 +319,29 @@ const Discussion = () =>{
       const [colorState,setColorState]= useContext(ColorContext);
       const [authState,setAuthState] = useContext(AuthContext);
 
+    //*Voting-------------------------------------------------------
+    const upvote = () =>{
+      if(authState.loggedIn){
+      axios.post(`http://127.0.0.1:8000/api/answer/${answer.id}/upvote/`)
+      .then((response) => {
+          console.log(response.data);
+      }).catch((error) => {
+          console.error("Error fetching data:", error);
+      });}
+    }
+
+    const downvote = () =>{
+      if(authState.loggedIn){
+      axios.post(`http://127.0.0.1:8000/api/answer/${answer.id}/downvote/`)
+      .then((response) => {
+          console.log(response.data);
+      }).catch((error) => {
+          console.error("Error fetching data:", error);
+      });
+    }
+    }
+
+      //*Submit reply-----------------------------------
       const [replybox, setReplybox] = useState('');
 
       const givanswer = (event) => {
@@ -325,8 +377,8 @@ const Discussion = () =>{
 
 
       //*Toggle Boxes--------------------------
-      const [replyOn,setReplyOn] =useState(false)
-      const [editOn,setEditOn] =useState(false)
+      const [replyOn,setReplyOn] = useState(false)
+      const [editOn,setEditOn] = useState(false)
 
       //*Delete Comment----------------------
       const DeleteComment = () =>{
@@ -343,9 +395,9 @@ const Discussion = () =>{
 
         <div className={`flex mb-8`}>
         <div className={`w-16 `}>
-          <div className={`w-10 h-10 text-xl flex justify-center items-center  rounded-full ${answer.user_vote==="up"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`}><AiOutlineCaretUp/></div>
+          <div className={`w-10 h-10 text-xl flex justify-center items-center  rounded-full ${answer.user_vote==="up"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={upvote}> <AiOutlineCaretUp/></div>
           <div className={`w-10 h-10 text-xl flex justify-center items-center  ${answer.user_vote!=null?`${colorState.textcolor2}`:``}`}>{answer.vote}</div>
-          <div className={`w-10 h-10 text-xl flex justify-center items-center  rounded-full ${answer.user_vote==="down"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`}><AiOutlineCaretDown/></div>
+          <div className={`w-10 h-10 text-xl flex justify-center items-center  rounded-full ${answer.user_vote==="down"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={downvote}><AiOutlineCaretDown/></div>
         </div>
         <div className={`ml-4 w-full`}>
           <div>  
@@ -361,18 +413,23 @@ const Discussion = () =>{
        
         </div>
         <div className={`h-1 w-full rounded-md mb-3 ${colorState.box1color}`}></div>
-
+        { (authState.loggedIn)&&(
         <div className="flex mb-2">
+        
             <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2}  flex justify-center items-center hover:bg-gray-400 mr-2`} onClick={()=>{setReplyOn(prevState => !prevState); setEditOn(false);}}>
                 Reply
             </div>
-          <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2}  flex justify-center items-center hover:bg-gray-400 mr-2`} onClick={()=>{setEditOn(prevState => !prevState);  setReplyOn(false);}}>
-                Edit
-            </div>
-            <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2}  flex justify-center items-center hover:bg-gray-400`}  onClick={()=>{DeleteComment()}}>
-                Delete
-            </div>
-        </div>
+
+           { (authState.id===answer.user.id) &&(<div className="flex">
+              <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2}  flex justify-center items-center hover:bg-gray-400 mr-2`} onClick={()=>{setEditOn(prevState => !prevState);  setReplyOn(false);}}>
+                    Edit
+                </div>
+                <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2}  flex justify-center items-center hover:bg-gray-400`}  onClick={()=>{DeleteComment()}}>
+                    Delete
+                </div>
+            </div>)}
+
+        </div>)}
 
 {/* reply ------------ */}{
             replyOn && (<div className="flex mb-2">
@@ -454,6 +511,7 @@ const Discussion = () =>{
           </div>
           <div>{reply.reply}</div>
         </div>
+        {(authState.loggedIn) &&(authState.id===reply.user.id) &&(
         <div className="flex mb-2">
           <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2}  flex justify-center items-center hover:bg-gray-400 mr-2`} onClick={()=>{setEditOn(prevState => !prevState);}}>
                 Edit
@@ -461,7 +519,7 @@ const Discussion = () =>{
             <div className={` w-40 h-10 rounded-md ${colorState.box1color} ${colorState.textcolor2}  flex justify-center items-center hover:bg-gray-400`} onClick={()=>{DeleteComment()}}>
                 Delete
             </div>
-        </div>{
+        </div>)}{
             editOn && (<div className="flex mb-2">
               <input className={`w-full h-10 rounded-lg p-4 ${colorState.box1color}  font-roboto  ${colorState.textcolor}  text-xl `}
                 value={editbox}
