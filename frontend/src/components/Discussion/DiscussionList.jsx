@@ -12,11 +12,17 @@ import { FaAngry, FaHeart } from "react-icons/fa";
 import { FaDownLong, FaKeyboard, FaUpLong } from "react-icons/fa6";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
+import { RxCross2 } from "react-icons/rx";//<RxCross2/>
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 const DiscussionList = () => {
-
+    const navigate = useNavigate();
   
-    const discussions = [
+    const discussionIni = [
         {
             "id": 1,
             "title": "Is there a way in @pytorch of getting two sorted tensors of size Land generating in O(L) the sorted merged tensor?",
@@ -61,38 +67,53 @@ const DiscussionList = () => {
         },
     ]
 
+    const [discussions,setDiscussions]=useState(discussionIni)
 
-    //const [context, setContext] = useState({ "option": "newest", newProblem: false, selectedProblem: -1, "problems": problems, "newProblemDetails": newProblemSchema }); // add more field as needed
+    useEffect(() => {
+        axios.get(`http://127.0.0.1:8000/api/discussion-forum/`)
+            .then((response) => {
+                setDiscussions(response.data);
+            }).catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }, []); 
+
     const [colorState, setColorState] = useContext(ColorContext);
     const [authState, setAuthState] = useContext(AuthContext);
 
-    // useEffect(() => {
-    //     const handleKeyDown = (event) => {
-    //         if (event.key === 'n' && context.selectedProblem === -1) {
-    //             setContext({ ...context, "newProblem": true });
-    //         }
+    const [isOpen,setIsOpen] =useState(false);
+    
+    const onClose = () =>{
+        setIsOpen(false);
+    }
 
-    //         if (event.shiftKey && event.key === 'Enter') {
-    //             setContext({ ...context, "newProblem": false });
-    //             // do your post request here
-    //           }
-    //     };
+    const OpenPopUp = () =>{
+        if(authState.loggedIn)
+        setIsOpen(true);
+    }
 
-    //     const handleKeyUp = () => {
-    //     };
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'n') {
+                OpenPopUp();
+            }
+        };
 
-    //     document.addEventListener('keydown', handleKeyDown);
-    //     document.addEventListener('keyup', handleKeyUp);
-    //     return () => {
-    //         document.removeEventListener('keydown', handleKeyDown);
-    //         document.removeEventListener('keyup', handleKeyUp);
-    //     };
-    // }, [context]);
+        document.addEventListener('keydown', handleKeyDown);
 
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen]);
+
+    const GoToDiscussion = (id) =>{
+        navigate(`/Discussion/${id}`);
+    }
+ 
     return (
-        <div className="h-5/6 flex flex-col">
+        <div className="  h-5/6 flex flex-col">
             {
-                        //    <KeyBoardInstruction colorState={colorState} />
+                (authState.loggedIn)&& <KeyBoardInstruction colorState={colorState} OpenPopUp={OpenPopUp} />
                          //   <OptionBar colorState={colorState} context={context} setContext={setContext} options={options} />
             }
 
@@ -100,27 +121,42 @@ const DiscussionList = () => {
             <div className="h-fit flex flex-col items-center ">
 
             {discussions.map((discussion, index) => (
-    <div className="flex h-36 w-5/6 mb-8 cursor-pointer" key={index}>
+    <div className="flex h-36 w-5/6 mb-8 cursor-pointer" key={index} onClick={()=>{GoToDiscussion(discussion.id)}}>
         <div className="w-4/5">
-            <div className="flex flex-col h-3/5 text-white font-roboto text-2xl">{discussion.title}</div>
+            <div className={`flex flex-col h-3/5 ${colorState.textcolor2} font-roboto text-2xl`}>{discussion.title}</div>
             {/* make sure the text does not overflow */}
             <div className={`flex flex-col h-2/5 ${colorState.textcolor} align-top`}>{discussion.description.length > 200 ? discussion.description.substring(0, 200) + "..." : discussion.description}</div>
         </div>
         <div className="w-1/5">
             <div className="flex-col h-5/6 ">
                 {/* TO_DO make sure these come from backend */}
-                <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>{discussion.vote} votes</div>
-                <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>1 answers</div>
-                <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>5 solutions</div>
+                <div className={`flex justify-end items-center  ${colorState.captioncolor}`}>{discussion.vote} votes</div>
+                {
+                    (discussion.is_resolved )? (
+                        <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>
+                            resolved 
+                            <div className={`ml-3 bg-green-600 rounded-full w-5 h-5 flex justify-center items-center`}>
+                                <IoMdCheckmark/>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>
+                            unresolved 
+                            <div className={`ml-3 bg-red-600 rounded-full w-5 h-5 flex justify-center items-center`}>
+                                <RxCross2/>
+                            </div>
+                        </div>
+                    )
+                }
+                
             </div>
-            <div className="flex h-1/6">
-                <div className={`flex w-full justify-end full ${colorState.textcolor} font-mono rounded-md`}>posted 49 mins ago   </div>
-            </div>
+ 
         </div>
     </div>
 ))}
             </div>
         </div>
+        <NewProblem colorState={colorState}  onClose={onClose} isOpen={isOpen} /> 
         </div>
     );
 
@@ -128,11 +164,11 @@ const DiscussionList = () => {
 
 export default DiscussionList;
 
-const KeyBoardInstruction = ({ colorState }) => {
+const KeyBoardInstruction = ({ colorState,OpenPopUp }) => {
     return (
         <div className="flex justify-center h-8">
             <div className="text-4xl font-roboto font-bold">
-                <div className={` flex items-center center h-full`}>
+                <div className={` flex items-center center h-full hover:bg-gray-400 p-1 rounded-md`} onClick={OpenPopUp}>
                     <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>n</div>
                     <p className={`${colorState.textcolor} text-sm`}>- Add New Contest</p>
                 </div>
@@ -162,5 +198,88 @@ const Option = ({ colorState, context, setContext, option }) => {
         </div>
     );
 }
+
+
+//New Problem Addition-----------------------------
+
+const NewProblem = ({ colorState,onClose,isOpen }) => {
+    const handleClose = (e) => {
+        if (e.target.classList.contains('overlay')) {
+            onClose();
+        }
+    }
+
+    const [title, setTitle] = useState('');
+
+    const handleChange1 = (event) => {
+        setTitle(event.target.value);
+    };
+
+    const [description, setDescription] = useState('');
+
+    const handleChange2 = (event) => {
+        setDescription(event.target.value);
+    };
+
+
+const Submit = () =>{
+    axios.post(`http://127.0.0.1:8000/api/add-discussion/`,{
+        title:title,
+        description:description
+      }).then((response) => {
+        toast.success("Discussion Created")
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+
+    onClose();
+}
+
+
+    return (
+        <>
+          <div
+            className={`fixed inset-0 overflow-y-auto transition-opacity duration-300 
+            ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            onClick={handleClose} // Added onClick event for the entire popup
+            >
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="overlay fixed inset-0 bg-black opacity-50"></div>
+              <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-10 max-w-screen-lg w-90% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
+              
+              <div className={`${colorState.captioncolor} font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> add new discussion</div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>title</div>
+                        <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>pick a suitable title for the discussion</div>
+                        <textarea className={`w-full h-40 rounded-lg p-4 ${colorState.box1color} font-roboto  ${colorState.textcolor}  text-2xl `}  
+                         value={title}
+                         onChange={handleChange1} />
+                    </div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>description</div>
+                        <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>Limit the amount of character used to write the code. Use 0 for no limit</div>
+                        <textarea className={`w-full h-40 rounded-lg p-4 ${colorState.box1color}  font-roboto  ${colorState.textcolor}  text-2xl `}
+                        value={description}
+                        onChange={handleChange2}  />
+                    </div>
+                    <div className={`flex justify-center`}>
+                     <div className={`${colorState.box1color} ${colorState.textcolor} py-2 px-3 rounded-md hover:bg-gray-400`} onClick={Submit}> Submit New Discussion</div>
+                    </div>
+                    
+    
+    
+               </div>
+            </div>
+          </div>
+          <ToastContainer />
+        </>
+      );
+}
+
+
+
+
 
 

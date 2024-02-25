@@ -3,20 +3,44 @@ import { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { ColorContext } from '../helpers/ColorContext'
 import { Audio, RotatingLines } from 'react-loader-spinner'
+import { AuthContext } from '../helpers/AuthContext'
 
 export default function User() {
-    const url = 'http://127.0.0.1:8000/api/user/2/' // TO-Do replace with proper url
-    const [userInfo, setUserInfo] = useState(null)
+
     const [colorState, setColorState] = useContext(ColorContext);
+    const [authState,setAuthState] = useContext(AuthContext)
+    const [userInfo, setUserInfo] = useState({
+        "id": 6,
+        "first_name": "saif",
+        "last_name": "hafiz",
+        "level": 1,
+        "xp": 20,
+        "maxi_xp": 204,
+        "image": null,
+        "username": "saif",
+        "email": "saif@gmail.com",
+        "num_of_problem_attempted": 1,
+        "num_of_problem_solved": 2,
+        "num_of_problem_added": 3,
+        "num_of_contest_participated": 4,
+        "num_of_1_v_1_participated": 5,
+        "num_of_1_v_1_won":6,
+        "num_of_prob_attempted_in_custom_mode": 7,
+        "num_of_prob_solved_in_custom_mode": 8,
+        "num_of_prob_attempted_in_quantity_mode": 9,
+        "num_of_prob_solved_in_quantity_mode": 10,
+        "num_of_prob_attempted_in_time_mode": 11,
+        "num_of_prob_solved_in_time_mode": 12
+      })
     useEffect(() => {
-        axios.get(url)
+        axios.get(`http://127.0.0.1:8000/api/user/${authState.id}/`)
             .then(response => {
                 setUserInfo(response.data)
             })
             .catch(error => {
                 console.error(error);
             });
-    }, [userInfo])
+    }, [])
 
     return (
         userInfo ? <div className='flex flex-col items-center w-full'>

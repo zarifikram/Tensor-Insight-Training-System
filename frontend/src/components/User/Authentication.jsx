@@ -9,11 +9,13 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CSRFContext } from "../helpers/CSRFContext";
 import Cookies from 'js-cookie';
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
 const Authentication = () =>{
-
+    const navigate=useNavigate();
     // useEffect(() => {
     //     const csrfToken =  Cookies.get('csrf')
     //     console.log(csrfToken)
@@ -84,7 +86,8 @@ const Authentication = () =>{
                 toast.success("You Have Successfully Logged In");
                 setAuthState(prevState => ({
                     ...prevState,
-                    loggedIn: true // or false to change the state to logged out
+                    loggedIn: true ,// or false to change the state to logged out
+                    id: response.data.id, 
                   }));
 
                 setCSRFToken();
@@ -92,8 +95,6 @@ const Authentication = () =>{
                             axios.get(`http://127.0.0.1:8000/api/user/${response.data.id}`
                             ).then((response) => {         
                                 console.log(response.data);
-
-
                                 setAuthState(prevState => ({
                                     ...prevState,
                                     id: response.data.id, 
@@ -108,12 +109,17 @@ const Authentication = () =>{
                                 console.log("error");
                             });
 
+                            navigate("/User")
 
             }).catch((error) => {
                 console.log("error");
                 console.error("Error fetching data:", error);
                 toast.error("Couldn't log in");
+            }).finally(() => {
+                
             });
+
+            
     }
 
 
@@ -136,8 +142,6 @@ const setCSRFToken = () => {
 
 
     const SignOut=()=>{
-        console.log(Cookies.get('csrf'))
-        console.log(document.cookie)
         axios.post(`http://127.0.0.1:8000/api/signout/`
         ).then((response) => {
                 console.log("You Have Successfully Logged Out");
@@ -146,6 +150,7 @@ const setCSRFToken = () => {
                     ...prevState,
                     loggedIn: false // or false to change the state to logged out
                   }));
+                  
             }).catch((error) => {
                 console.log("error");
                 console.error("Error fetching data:", error);
@@ -160,8 +165,9 @@ const setCSRFToken = () => {
     // }, [authState]);
  
     return(
-    <div className="mx-40 font-roboto">
-        <div className={` ${colorState.box1color} ${colorState.textcolor} rounded-md py-3 w-32  flex justify-center items-center hover:bg-gray-400 ` } onClick={SignOut}> sign out</div>
+    <div className="mx-40 font-roboto">{
+        //<div className={` ${colorState.box1color} ${colorState.textcolor} rounded-md py-3 w-32  flex justify-center items-center hover:bg-gray-400 ` } onClick={SignOut}> sign out</div>
+    }
         <div className={`flex justify-end pt-20 ${colorState.textcolor} font-bold  text-lg`}>
             <div className={`w-50% flex justify-center items-center`}>
                 <div className={`w-45%`}>

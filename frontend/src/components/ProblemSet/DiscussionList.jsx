@@ -8,6 +8,8 @@ import { useParams } from "react-router-dom";
 import ProblemPopUp from "../../unused/ProblemPopUp";
 import { useRef } from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { AiOutlineCaretUp } from "react-icons/ai";
+import { AiOutlineCaretDown } from "react-icons/ai";
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -17,6 +19,27 @@ import Cookies from "js-cookie";
 
 import { useState } from "react";
 axios.defaults.withCredentials= true;
+
+const calculateTimeDifference = (time) => {
+  const currentTime = new Date();
+  const pastTime = new Date(time);
+  const difference = currentTime - pastTime;
+
+  const seconds = Math.floor(difference / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+      return `${days} day${days !== 1 ? 's' : ''} ago`;
+  } else if (hours > 0) {
+      return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+  } else if (minutes > 0) {
+      return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+  } else {
+      return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+  }
+};
 
 const DiscussionList = ({id}) => {
 
@@ -29,98 +52,61 @@ const DiscussionList = ({id}) => {
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
   //   const [discussionList,setDiscussionList] = useState([
-  //     {
-  //         "id": 10,
-  //         "user": {
-  //             "id": 4,
-  //             "first_name": "saif",
-  //             "last_name": "hafiz",
-  //             "level": 0,
-  //             "xp": 135,
-  //             "image": null
-  //         },
-  //         "comment": "comment 2",
-  //         "timestamp": "2024-02-09 16:34:05",
-  //         "vote": 0,
-  //         "replies": [
-  //             {
-  //                 "id": 11,
-  //                 "user": {
-  //                     "id": 4,
-  //                     "first_name": "saif",
-  //                     "last_name": "hafiz",
-  //                     "level": 0,
-  //                     "xp": 135,
-  //                     "image": null
-  //                 },
-  //                 "comment": "test reply",
-  //                 "timestamp": "2024-02-09 17:20:58",
-  //                 "vote": 0,
-  //                 "replies": [
-  //                     {
-  //                         "id": 12,
-  //                         "user": {
-  //                             "id": 4,
-  //                             "first_name": "saif",
-  //                             "last_name": "hafiz",
-  //                             "level": 0,
-  //                             "xp": 135,
-  //                             "image": null
-  //                         },
-  //                         "comment": "test reply's reply",
-  //                         "timestamp": "2024-02-09 17:21:47",
-  //                         "vote": 0,
-  //                         "replies": []
-  //                     },
-  //                     {
-  //                       "id": 13,
-  //                       "user": {
-  //                           "id": 4,
-  //                           "first_name": "saif",
-  //                           "last_name": "hafiz",
-  //                           "level": 0,
-  //                           "xp": 135,
-  //                           "image": null
-  //                       },
-  //                       "comment": "test reply's reply 11",
-  //                       "timestamp": "2024-02-09 17:21:47",
-  //                       "vote": 0,
-  //                       "replies": []
-  //                   }
-  //                 ]
-  //             }
-  //         ]
+  //   {
+  //     "id": 1,
+  //     "title": "tt",
+  //     "description": "ttt",
+  //     "created_at": "2024-02-20T18:34:37.590938Z",
+  //     "is_resolved": true,
+  //     "user": {
+  //         "id": 3,
+  //         "first_name": "Anamul ",
+  //         "last_name": "Hoque"
   //     },
-  //     {
-  //         "id": 9,
-  //         "user": {
-  //             "id": 4,
-  //             "first_name": "saif",
-  //             "last_name": "hafiz",
-  //             "level": 0,
-  //             "xp": 135,
-  //             "image": null
-  //         },
-  //         "comment": "comment 1",
-  //         "timestamp": "2024-02-09 16:33:55",
-  //         "vote": 0,
-  //         "replies": []
-  //     },
-  //     {
-  //         "id": 1,
-  //         "user": {
+  //     "answers": [
+  //         {
   //             "id": 2,
-  //             "first_name": "test",
-  //             "last_name": "user",
-  //             "level": 0,
-  //             "xp": 69,
-  //             "image": null
+  //             "answer": "ta",
+  //             "created_at": "2024-02-20T18:47:55.633753Z",
+  //             "user": {
+  //                 "id": 3,
+  //                 "first_name": "Anamul ",
+  //                 "last_name": "Hoque"
+  //             },
+  //             "is_accepted": true,
+  //             "reply": [
+  //                 {
+  //                     "id": 2,
+  //                     "reply": "test reply",
+  //                     "created_at": "2024-02-21T18:18:54.523098Z",
+  //                     "user": {
+  //                         "id": 3,
+  //                         "first_name": "Anamul ",
+  //                         "last_name": "Hoque"
+  //                     }
+  //                 }
+  //             ],
+  //             "vote": -2,
+  //             "user_vote": "down"
   //         },
-  //         "comment": "test discussion",
-  //         "timestamp": "2024-01-27 19:08:45",
-  //         "vote": 1,
-  //         "replies": []
-  //     }
+  //         {
+  //             "id": 7,
+  //             "answer": "dfgdfgd",
+  //             "created_at": "2024-02-25T10:43:27.772711Z",
+  //             "user": {
+  //                 "id": 6,
+  //                 "first_name": "saif",
+  //                 "last_name": "hafiz"
+  //             },
+  //             "is_accepted": false,
+  //             "reply": null,
+  //             "vote": -1,
+  //             "user_vote": "down"
+  //         }
+  //     ],
+  //     "vote": 2,
+  //     "user_vote": "up"
+  // }
   // ])
   const [discussionList,setDiscussionList] = useState([]);
 
@@ -174,6 +160,24 @@ const DiscussionList = ({id}) => {
         });
       }
 
+    //*Voting-------------------------------------------------------
+    const upvote = (id) =>{
+      axios.post(`http://127.0.0.1:8000/api/discussion/${id}/upvote/`)
+      .then((response) => {
+          console.log(response.data);
+      }).catch((error) => {
+          console.error("Error fetching data:", error);
+      });
+    }
+
+    const downvote = (id) =>{
+      axios.post(`http://127.0.0.1:8000/api/discussion/${id}/downvote/`)
+      .then((response) => {
+          console.log(response.data);
+      }).catch((error) => {
+          console.error("Error fetching data:", error);
+      });
+    }
 
     return (
     <div className={` ${colorState.textcolor} font-roboto`}>
@@ -181,8 +185,14 @@ const DiscussionList = ({id}) => {
         <input type="text" placeholder="write something ..." value={comment} onChange={(e) => setComment(e.target.value)} className={`w-90% h-10   pl-4 flex items-center  ${colorState.box1color} rounded-md hover:bg-gray-400 `}></input>
         <div onClick={postComment} className={`h-10 w-10% ${colorState.box1color} ml-2 rounded-md hover:bg-gray-400 flex justify-center items-center hover:cursor-pointer`}>Comment</div>
       </div>
-              {discussionList.map(comment => (
-                <Comment key={comment.id} comment={comment} />
+              {discussionList.map(comment => (<div className={`flex`}>
+                <div className={`pt-2 mr-2`}>
+                  <div className={`h-7 w-7 flex justify-center items-center rounded-full hover:bg-gray-400 ${comment.user_vote==="up"? `${colorState.box2color}`:`${colorState.box1color}`}`} onClick={()=>{upvote(comment.id)}}><AiOutlineCaretUp/></div>
+                  <div className={`h-7 w-7 flex justify-center items-center `}>{comment.vote}</div>
+                  <div className={`h-7 w-7 flex justify-center items-center rounded-full hover:bg-gray-400 ${comment.user_vote==="down"? `${colorState.box2color}`:`${colorState.box1color}`}`} onClick={()=>{downvote(comment.id)}}><AiOutlineCaretDown/></div>
+                </div>
+                <Comment key={comment.id} comment={comment} parent={true}/>
+                </div>
               ))}
                 
     </div>
@@ -190,7 +200,7 @@ const DiscussionList = ({id}) => {
 };
 
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment ,parent}) => {
 
   const [colorState,setColorState]= useContext(ColorContext);
   const [authState,setAuthState] = useContext(AuthContext);
@@ -255,11 +265,42 @@ const Comment = ({ comment }) => {
             setReplyText("");
   }
 
-  return (<div>
+
+
+
+      //*Voting-------------------------------------------------------
+      const upvote = (id) =>{
+        if(authState.loggedIn){
+        axios.post(`http://127.0.0.1:8000/api/discussion/${id}/upvote/`)
+        .then((response) => {
+            console.log(response.data);
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+      }
+      }
+  
+      const downvote = (id) =>{
+        if(authState.loggedIn){
+        axios.post(`http://127.0.0.1:8000/api/discussion/${id}/downvote/`)
+        .then((response) => {
+            console.log(response.data);
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+      }
+      }
+
+  return (<div className={`flex `}>
+
+
+
 <div  className={` w-100%  rounded-md   pt-2`}>
   <div className={`flex justify-start`}>
     <div className={`flex items-center `}><FaUserCircle /></div>
-    <div className="pl-3 flex items-center">{comment.user.first_name+" "+comment.user.last_name}</div>
+    <div className={`pl-3 flex items-center ${colorState.textcolor2}`}>{comment.user.first_name+" "+comment.user.last_name}</div>
+    <div>{parent&&(<div className={`ml-5 mr-2`}>commented at</div>)  } {(!parent)&&(<div className={`ml-5 mr-2`}>replied at</div>)  }</div>
+    <div>{calculateTimeDifference(comment.created_at)}</div>
   </div>
   <div className={`flex w-full`}> 
     <div className={`w-2 flex-shrink-0 ${colorState.box1color} mx-1 rounded-full hover:bg-gray-400`}></div>
@@ -268,6 +309,11 @@ const Comment = ({ comment }) => {
       <div className={`${(authState.loggedIn)?`py-2 px-3  ${colorState.box1color} rounded-md hover:bg-gray-400 hover:cursor-pointer`:`hidden`}`} onClick={toggleReply}>Reply</div>
       <div className={`${(authState.loggedIn && authState.id==comment.user.id)?`py-2 px-3 ml-2 ${colorState.box1color} rounded-md hover:bg-gray-400 hover:cursor-pointer`:`hidden`}`} onClick={toggleEdit}>Edit</div>
       <div className={`${(authState.loggedIn && authState.id==comment.user.id)?`py-2 px-3 ml-2 ${colorState.box1color} rounded-md hover:bg-gray-400 hover:cursor-pointer`:`hidden`}`} onClick={DeleteComment}>Delete</div>
+     { !parent && (<div className={`flex items-center ml-2`}>
+      <div className={`h-7 w-7 flex justify-center items-center rounded-full hover:bg-gray-400 ${comment.user_vote==="up"? `${colorState.box2color}`:`${colorState.box1color}`}`} onClick={()=>{upvote(comment.id)}}><AiOutlineCaretUp/></div>
+      <div className={`h-7 w-7 flex justify-center items-center `}>{comment.vote}</div>
+      <div className={`h-7 w-7 flex justify-center items-center rounded-full hover:bg-gray-400 ${comment.user_vote==="down"? `${colorState.box2color}`:`${colorState.box1color}`}`} onClick={()=>{downvote(comment.id)}}><AiOutlineCaretDown/></div>   
+      </div>)}
     </div>
     <div className={`${replying?`pl-0 flex pt-2`:`hidden`}`}>
       <div className={`w-2 flex-shrink-0 ${colorState.box1color} mx-1 rounded-full`}></div>
@@ -290,7 +336,7 @@ const Comment = ({ comment }) => {
     <div className={`${replying?`mt-2 py-2 px-3  ${colorState.box2color} rounded-md hover:bg-gray-400 hover:cursor-pointer w-20`:`hidden`}`} onClick={submitReply}>Submit</div>
     <div className={`${editing?`mt-2 py-2 px-3  ${colorState.box2color} rounded-md hover:bg-gray-400 hover:cursor-pointer w-20`:`hidden`}`} onClick={EditComment}>Submit</div>
           {comment.replies.map(reply => (
-            <Comment key={reply.id} comment={reply} />
+            <Comment key={reply.id} comment={reply} parent={false}/>
           ))}
     
     </div>
