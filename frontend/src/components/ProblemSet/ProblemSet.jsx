@@ -23,8 +23,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
     //Filtering-----------------------------------------
     const [is_user_added,setIs_user_added] = useState("");
     const handleUserAddedFilterChange = (e) => {
-        const selectedOptionValue = e.target.value;
-        setIs_user_added(selectedOptionValue);
+        setIs_user_added(e.target.value);
     };
     //Problems------------------------------------------
     const [perPage, setPerPage] = useState('10');
@@ -71,28 +70,24 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
         ]
     });
 
+    //*Probllem List-------------------------------------------------------------------------------------------
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page_size=${perPage}&${is_user_added}`)
+        axios.get(`http://127.0.0.1:8000/api/problem-set/?page_size=${perPage}&is_user_added=${is_user_added}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
         }).catch((error) => {
             console.error("Error fetching data:", error);
         });
-      }, [perPage]);
+      }, [perPage,is_user_added]);
 
       useEffect(() => {
       }, [problems]);
 
-    const enterProblem =(id)=>{
-        navigate(`/Problem/${id}`);
-        setCurrentProblem(id);
-        
-        
-    }
+
 
     const goToPage=(page)=>{
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}&${is_user_added}`)
+        axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}&is_user_added=${is_user_added}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
@@ -104,7 +99,8 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
     }
 
     const goForward=()=>{
-        axios.get(problems.next)
+        if(problems.next!=null){
+        axios.get(problems.next+`&is_user_added=${is_user_added}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
@@ -114,10 +110,12 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
 
         if((currentPage+1)<Math.ceil(problems.count / perPage))
             setCurrentPage(currentPage+1);
+        }
     }
 
     const goBackward=()=>{
-        axios.get(problems.previous)
+        if(problems.previous!=null){
+        axios.get(problems.previous+`&is_user_added=${is_user_added}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
@@ -127,6 +125,13 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
 
         if((currentPage-1)>0)
             setCurrentPage(currentPage-1);
+    }
+    }
+
+    //*------------------------------------------------------------------------------------------------------------
+    const enterProblem =(id)=>{
+        navigate(`/Problem/${id}`);
+        setCurrentProblem(id);
     }
 
     const handleSelectChange = (e) => {
