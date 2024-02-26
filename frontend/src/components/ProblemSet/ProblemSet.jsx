@@ -7,6 +7,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 
 import Problem from "./Problem";
+import Filter from "./Filter";
 import axios from 'axios';
 import { useEffect } from "react";
 
@@ -14,18 +15,61 @@ axios.defaults.withCredentials= true;
 
 import { useRef } from "react";
 
+function convertSettingsToString(settings) {
+    let str = "";
+    for (const key in settings.manipulator) {
+        str += `&${key}=${settings.manipulator[key].toString()}`;
+    }
+    return str;
+}
+
 const ProblemSet = ({ routeContext, setRouteContext }) =>{
 
     const navigate = useNavigate();
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
 
-    //Filtering-----------------------------------------
+    //*Filtering-----------------------------------------
     const [is_user_added,setIs_user_added] = useState("");
-    const handleUserAddedFilterChange = (e) => {
-        setIs_user_added(e.target.value);
-    };
-    //Problems------------------------------------------
+    const iniSettings={
+        "depth": 2,
+        "initiator": {
+            "randint": false,
+            "zeros": false,
+            "ones": false,
+            "arange": false
+        },
+        "manipulator": {
+            "argwhere": false,
+            "tensor_split": false,
+            "gather": false,
+            "masked_select": false,
+            "movedim": false,
+            "splicing": false,
+            "t": false,
+            "take": false,
+            "tile": false,
+            "unsqueeze": false,
+            "negative": false,
+            "positive": false,
+            "where": false,
+            "remainder": false,
+            "clip": false,
+            "argmax": false,
+            "argmin": false,
+            "sum": false,
+            "unique": false
+        }
+    }
+
+    const [settings, setSettings] = useState(iniSettings)
+
+    const [difficultyGTE,setDifficultyGTE] = useState("")
+    const [difficultyLTE,setDifficultyLTE] = useState("")
+    const [depthGTE,setDepthGTE] = useState("")
+    const [depthLTE,setDepthLTE] = useState("")
+
+    //*Problems------------------------------------------
     const [perPage, setPerPage] = useState('10');
     const [currentPage,setCurrentPage] =useState(1);
     const [currentProblem,setCurrentProblem] = useState(1);
@@ -72,22 +116,24 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
 
     //*Probllem List-------------------------------------------------------------------------------------------
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page_size=${perPage}&is_user_added=${is_user_added}`)
+        let str=convertSettingsToString(settings)
+        
+        axios.get(`http://127.0.0.1:8000/api/problem-set/?page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
         }).catch((error) => {
             console.error("Error fetching data:", error);
         });
-      }, [perPage,is_user_added]);
 
-      useEffect(() => {
-      }, [problems]);
-
+        setCurrentPage(1);
+      }, [perPage,is_user_added,settings,depthGTE,depthLTE,difficultyGTE,difficultyLTE]);
 
 
     const goToPage=(page)=>{
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}&is_user_added=${is_user_added}`)
+        let str=convertSettingsToString(settings)
+
+        axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
@@ -99,8 +145,10 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
     }
 
     const goForward=()=>{
+        let str=convertSettingsToString(settings)
+
         if(problems.next!=null){
-        axios.get(problems.next+`&is_user_added=${is_user_added}`)
+        axios.get(problems.next+`${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
@@ -108,14 +156,16 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
             console.error("Error fetching data:", error);
         });
 
-        if((currentPage+1)<Math.ceil(problems.count / perPage))
+        if((currentPage)<Math.ceil(problems.count / perPage))
             setCurrentPage(currentPage+1);
         }
     }
 
     const goBackward=()=>{
+        let str=convertSettingsToString(settings)
+
         if(problems.previous!=null){
-        axios.get(problems.previous+`&is_user_added=${is_user_added}`)
+        axios.get(problems.previous+`${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
         .then((response) => {
         console.log(response.data);
         setProblems(response.data)
@@ -139,21 +189,34 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
         setPerPage(selectedOptionValue);
     };
 
+    //*--------------------------------------------------------------------------------------------------------
+    const [isFilterPopUpOpen,setFilterPopUpOpen]=useState(false)
+    const OpenFilter = () =>{
+        setFilterPopUpOpen(true);
+        console.log(isFilterPopUpOpen);
+    }
+
+    const CloseFilter = () =>{
+        setFilterPopUpOpen(false);
+    }
+
+    const cleanFilter = () =>{
+        setSettings(iniSettings);
+        setIs_user_added("")
+        setDifficultyGTE("")
+        setDifficultyLTE("")
+        setDepthGTE("")
+        setDepthLTE("")
+    }
+
     return(
         <div className={`mx-40 ${colorState.textcolor} font-roboto`}>
               <div className={` `}>
                 <div className={`text-2xl ${colorState.captioncolor} font-bold pb-5`}>Problem Set</div>
                 <div className={`flex justify-end pb-5`}>
-                        <div className={`${colorState.box1color} flex justify-center items-center px-3 mx-3 rounded-md hover:bg-gray-400`} onClick={() => navigate("/AddProblem")}>Add Problem</div>
-                        <select className={`${colorState.box1color} py-2 rounded-md `}
-                            onChange={handleUserAddedFilterChange}
-                            value={is_user_added}
-                            >
-                                <option value="">All</option>
-                                <option value="true">User Added</option>
-                                <option value="false">Generated</option>
-                           
-                        </select>
+                        <div className={`${colorState.box1color} flex justify-center items-center px-3 py-3 mr-3 rounded-md hover:bg-gray-400`} onClick={() => navigate("/AddProblem")}>Add Problem</div>
+                        <div className={`${colorState.box1color} flex justify-center items-center px-3 py-3 mr-3 rounded-md hover:bg-gray-400`} onClick={() => {cleanFilter()}}>Remove Filters</div>
+                        <div className={`${colorState.box1color} flex justify-center items-center px-3 py-3 rounded-md hover:bg-gray-400`} onClick={() => {OpenFilter()}}>Filters</div>
                     </div>
                 <div className={`flex w-100% justify-between pb-1`}>
                     <div className={`flex w-50% justify-start ${colorState.textcolor2}`}>
@@ -203,6 +266,16 @@ const ProblemSet = ({ routeContext, setRouteContext }) =>{
                         </div>   
                     </div>
                 </div>
+                {
+                    <Filter isOpen={isFilterPopUpOpen}  onClose={CloseFilter} 
+                     is_user_added={is_user_added} setIs_user_added={setIs_user_added} 
+                     settings={settings} setSettings={setSettings} 
+                     difficultyGTE={difficultyGTE} setDifficultyGTE={setDifficultyGTE}
+                     difficultyLTE={difficultyLTE} setDifficultyLTE={setDifficultyLTE}
+                     depthGTE={depthGTE} setDepthGTE={setDepthGTE}
+                     depthLTE={depthLTE} setDepthLTE={setDepthLTE}
+                     ></Filter>
+                }
       </div>
     );
     
