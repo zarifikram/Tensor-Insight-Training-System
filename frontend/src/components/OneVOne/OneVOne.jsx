@@ -1,5 +1,5 @@
-import { AuthContext } from ".././helpers/AuthContext";
-import { ColorContext } from ".././helpers/ColorContext";
+import { AuthContext } from "../helpers/AuthContext";
+import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 
@@ -12,389 +12,341 @@ import { FaAngry, FaHeart } from "react-icons/fa";
 import { FaDownLong, FaKeyboard, FaUpLong } from "react-icons/fa6";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
+import { RxCross2 } from "react-icons/rx";//<RxCross2/>
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
-const testCaseSchema = {
-  "input": "",
-  "output": "",
-  "test_case_no": 1
-}
 
-// 100 testcases
-const testCases = []
-for (let i = 0; i < 100; i++) {
-  testCases.push(testCaseSchema);
-}
+function formatTime(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var remainingSeconds = seconds % 60;
 
-const newProblemSchema = {
-  "title": "",
-  "description": "",
-  "depth": 0,
-  "num_problems": 0,
-  "duration": 0,
+    return hours + " hours, " + minutes + " minutes, " + remainingSeconds + " seconds";
 }
 
 const OneVOne = () => {
+    const navigate = useNavigate();
+  
+    const onevoneIni =  {
+            "title": "New One V One",
+            "description": "This is The New One VS One challange",
+            "duration": 40,
+            "status": "created",
+            "num_of_problem": 4,
+            "user1": {
+                "username": "saif",
+                "id": 6,
+                "score": 0.0
+            },
+            "user2": null,
+            "started_at": null
+        }
 
-  const options = ["created", "invited"]
-  const problem = {
-    "title": "ZIkram vs Emtiaz Contest",
-    "description": "a standard 1v1 contest",
-    "depth": 2,
-    "used_manipulator": { "unique": true },
-    "test_cases": [
-      {
-        "input": "[[-6, -2], [6, 2]]",
-        "output": "[[-6, -2], [6, 2]]",
-        "test_case_no": 1
-      },
-      {
-        "input": "[[-10, -5], [-1, -8]]",
-        "output": "[[-10, -5], [-1, -8]]",
-        "test_case_no": 2
-      },
-      {
-        "input": "[[-2, -5], [-10, 1]]",
-        "output": "[[-5, -2], [1, -10]]",
-        "test_case_no": 3
-      },
-      {
-        "input": "[[9, 2], [9, 2]]",
-        "output": "[[2, 9]]",
-        "test_case_no": 4
-      },
-      {
-        "input": "[[-6, 8], [-5, -4]]",
-        "output": "[[-6, 8], [-5, -4]]",
-        "test_case_no": 5
-      }
-    ],
-    "solution": "o_tensor = torch.unique(tensor, dim=1)\ntensor = o_tensor\no_tensor = torch.unique(tensor, dim=0)\ntensor = o_tensor"
-  }
+    const [onevone,setOnevone]=useState(onevoneIni)
 
+    useEffect(() => {
+        axios.get(`http://127.0.0.1:8000/api/1-v-1/`)
+            .then((response) => {
+                setOnevone(response.data);
+            }).catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }, []); 
 
+    const [colorState, setColorState] = useContext(ColorContext);
+    const [authState, setAuthState] = useContext(AuthContext);
 
-  // make the same problem 10 times
-  const problems = []
-  for (let i = 0; i < 2; i++) {
-    problems.push(problem);
-  }
+    const [isOpen,setIsOpen] =useState(false);
+    
+    const onClose = () =>{
+        setIsOpen(false);
+    }
 
-  const [context, setContext] = useState({ "option": "created", newProblem: false, keyState: false, selectedProblem: -1, "problems": problems, "newProblemDetails": newProblemSchema }); // add more field as needed
-  const [colorState, setColorState] = useContext(ColorContext);
-  const [authState, setAuthState] = useContext(AuthContext);
+    const OpenPopUp = () =>{
+        if(authState.loggedIn)
+        setIsOpen(true);
+    }
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'n' && context.selectedProblem === -1) {
-        setContext({ ...context, "newProblem": true });
-      }
+    const [isOpen2,setIsOpen2] =useState(false);
+    
+    const onClose2 = () =>{
+        setIsOpen2(false);
+    }
 
-      if (event.key === 'i' && context.selectedProblem === -1) {
-        setContext({ ...context, "enterContest": true });
-      }
+    const OpenPopUp2 = () =>{
+        if(authState.loggedIn)
+        setIsOpen2(true);
+    }
 
-      if (event.shiftKey && event.key === 'Enter') {
-        if (context.keyState) {
-          setContext({ ...context, "newProblem": false, "keyState": false });
-        } else if (context.newProblem) {
-          setContext({ ...context, "keyState": true });
-        }              // do your post request here
-      }
-    };
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'n') {
+                OpenPopUp();
+            }
 
-    const handleKeyUp = () => {
-    };
+            if (e.key === 'j') {
+                OpenPopUp2();
+            }
+        };
 
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [context]);
+        document.addEventListener('keydown', handleKeyDown);
 
-  return (
-    <div className="h-5/6 flex flex-col">
-      <KeyBoardInstruction colorState={colorState} key_button="n" description="create new 1v1" />
-      <KeyBoardInstruction colorState={colorState} key_button="i" description="enter into a 1v1" />
-      <OptionBar colorState={colorState} context={context} setContext={setContext} options={options} />
-      <ProblemList colorState={colorState} context={context} setContext={setContext} />
-      <ProblemDetails colorState={colorState} context={context} setContext={setContext} />
-      <AddNewProblem colorState={colorState} context={context} setContext={setContext} />
-      <EnterContest colorState={colorState} context={context} setContext={setContext} />
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen]);
+
+    const GoToDiscussion = (id) =>{
+       // navigate(`/Discussion/${id}`);
+    }
+ 
+    return (
+        <div className="  h-5/6 flex flex-col">
+            {
+                (authState.loggedIn)&& <div><KeyBoardInstruction colorState={colorState} OpenPopUp={OpenPopUp} />
+                                    <KeyBoardInstruction2 colorState={colorState} OpenPopUp={OpenPopUp2} />
+                </div>
+            }
+
+            <div className=" h-full items-center overflow-y-auto">
+            <div className="h-fit flex flex-col items-center ">
+
+            
+    <div className="flex h-36 w-5/6 mb-8 cursor-pointer"  onClick={()=>{GoToDiscussion(onevone.id)}}>
+        <div className="w-3/5">
+            <div className={`flex flex-col h-3/5 ${colorState.textcolor2} font-roboto text-2xl`}>{onevone.title}</div>
+            {/* make sure the text does not overflow */}
+            <div className={`flex flex-col h-2/5 ${colorState.textcolor} align-top`}>{onevone.description.length > 200 ? discussion.description.substring(0, 200) + "..." : onevone.description}</div>
+        </div>
+        <div className="w-2/5">
+            <div className="flex-col h-5/6 ">
+                {/* TO_DO make sure these come from backend */}
+                <div className={`flex justify-end items-center  ${colorState.captioncolor}`}><div className={`mr-3 ${colorState.textcolor}`} >duration:</div>{formatTime(onevone.duration)} </div>
+   
+                <div className={`flex justify-end items-center ${colorState.captioncolor}`}><div className={`mr-3 ${colorState.textcolor}`} >number of problems:</div> {onevone.num_of_problem}</div>            
+            </div>
+ 
+        </div>
     </div>
-  );
+
+            </div>
+        </div>
+        <NewOneVOne colorState={colorState}  onClose={onClose} isOpen={isOpen} /> 
+        <JoinOneVOne colorState={colorState}  onClose={onClose2} isOpen={isOpen2} /> 
+        </div>
+    );
 
 };
 
 export default OneVOne;
 
-const KeyBoardInstruction = ({ colorState, key_button, description }) => {
-  return (
-    <div className="flex justify-center h-8">
-      <div className="text-4xl font-roboto font-bold">
-        <div className={` flex items-center center h-full`}>
-          <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>{key_button}</div>
-          <p className={`${colorState.textcolor} text-sm`}>- {description}</p>
+const KeyBoardInstruction = ({ colorState,OpenPopUp }) => {
+    return (
+        <div className="flex justify-center h-8">
+            <div className="text-4xl font-roboto font-bold">
+                <div className={` flex items-center center h-full hover:bg-gray-400 p-1 rounded-md`} onClick={OpenPopUp}>
+                    <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>n</div>
+                    <p className={`${colorState.textcolor} text-sm`}>- Create New One vs One</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
-}
-const KeyBoardInstructionNewProblem = ({ colorState }) => {
-  return (
-    <div className="flex justify-center h-8">
-      <div className="text-4xl font-roboto font-bold">
-        <div className={` flex items-center center h-full`}>
-          <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>shift</div>
-          <p className={`${colorState.textcolor} text-sm`}>+</p>
-          <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>enter</div>
-          <p className={`${colorState.textcolor} text-sm`}>- post 1v1 and get a key</p>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
 
-const OptionBar = ({ colorState, context, setContext, options }) => {
-  return (
-    <div className="flex h-8 my-4">
-      <div className="flex justify-evenly w-full">
-        {options.map((option, index) => {
-          return <Option colorState={colorState} context={context} setContext={setContext} option={option} key={index} />
+const KeyBoardInstruction2 = ({ colorState,OpenPopUp }) => {
+    return (
+        <div className="flex justify-center h-8">
+            <div className="text-4xl font-roboto font-bold">
+                <div className={` flex items-center center h-full hover:bg-gray-400 p-1 rounded-md`} onClick={OpenPopUp}>
+                    <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>j</div>
+                    <p className={`${colorState.textcolor} text-sm`}>- Join New Contest</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+//New Problem Addition-----------------------------
+
+const NewOneVOne = ({ colorState,onClose,isOpen }) => {
+    const handleClose = (e) => {
+        if (e.target.classList.contains('overlay')) {
+            onClose();
         }
-        )}
-      </div>
-    </div>
-  );
+    }
+
+    const [title, setTitle] = useState('');
+
+    const handleChange1 = (event) => {
+        setTitle(event.target.value);
+    };
+
+    const [description, setDescription] = useState('');
+
+    const handleChange2 = (event) => {
+        setDescription(event.target.value);
+    };
+
+    const [duration,setDuration] = useState(1)
+
+    const handleChange3 = (event) => {
+        setDuration(event.target.value);
+    };
+
+    const [numberOfProblem,setNumberOfProblem] = useState(1)
+
+    const handleChange4 = (event) => {
+        setNumberOfProblem(event.target.value);
+    };
+
+
+const Submit = () =>{
+    axios.post(`http://127.0.0.1:8000/api/1-v-1/create/`,{
+        title:title,
+        description:description,
+        duration:duration,
+        num_of_problem: numberOfProblem,
+      }).then((response) => {
+        toast.success("One Vs One Created")
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+
+    onClose();
 }
 
-const Option = ({ colorState, context, setContext, option }) => {
-  return (
-    <div className="flex h-full w-1/6 justify-center cursor-pointer" onClick={() => setContext({ ...context, "option": option })}>
-      <p className={`${option === context.option ? colorState.textcolor2 : colorState.textcolor} text-base font-roboto`}>{option}</p>
-    </div>
-  );
-}
-const ProblemList = ({ colorState, context, setContext }) => {
-  const problems = context.problems;
-  return (
-    <div className=" h-full items-center overflow-y-auto">
-      <div className="h-fit flex flex-col items-center ">
 
-        {problems.map((problem, index) => {
-          return <Problem colorState={colorState} problem={problem} key={index} onClick={() => setContext({ ...context, "selectedProblem": index, "newProblem": false })} />
+    return (
+        <>
+          <div
+            className={`fixed inset-0 overflow-y-auto transition-opacity duration-300 
+            ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            onClick={handleClose} // Added onClick event for the entire popup
+            >
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="overlay fixed inset-0 bg-black opacity-50"></div>
+              <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-10 max-w-screen-lg w-90% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
+              
+              <div className={`${colorState.captioncolor} font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> add new one vs one</div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>title</div>
+                        <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>pick a suitable title for the discussion</div>
+                        <textarea className={`w-full h-40 rounded-lg p-4 ${colorState.box1color} font-roboto  ${colorState.textcolor}  text-2xl `}  
+                         value={title}
+                         onChange={handleChange1} />
+                    </div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>description</div>
+                        <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>Limit the amount of character used to write the code. Use 0 for no limit</div>
+                        <textarea className={`w-full h-40 rounded-lg p-4 ${colorState.box1color}  font-roboto  ${colorState.textcolor}  text-2xl `}
+                        value={description}
+                        onChange={handleChange2}  />
+                    </div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>duration</div>
+                        
+                        <input className={`w-full  rounded-lg p-4 ${colorState.box1color}  font-roboto  ${colorState.textcolor}  text-2xl `}
+                        value={duration}
+                        type="number"
+                        min={1}
+                        onChange={handleChange3}  />
+                    </div>
+
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>number of problem</div>
+                        
+                        <input className={`w-full  rounded-lg p-4 ${colorState.box1color}  font-roboto  ${colorState.textcolor}  text-2xl `}
+                        value={numberOfProblem}
+                        type="number"
+                        min={1}
+                        onChange={handleChange4}  />
+                    </div>
+
+                    <div className={`flex justify-center`}>
+                     <div className={`${colorState.box1color} ${colorState.textcolor} py-2 px-3 rounded-md hover:bg-gray-400`} onClick={Submit}> Create New Contest</div>
+                    </div>
+                    
+    
+    
+               </div>
+            </div>
+          </div>
+          <ToastContainer />
+        </>
+      );
+}
+
+
+
+const JoinOneVOne = ({ colorState,onClose,isOpen }) => {
+    const handleClose = (e) => {
+        if (e.target.classList.contains('overlay')) {
+            onClose();
         }
-        )}
-      </div>
-    </div>
-  );
-}
-
-const Problem = ({ colorState, problem, onClick }) => {
-  return (
-    <div className="flex h-36 w-5/6 mb-8 cursor-pointer" onClick={onClick}>
-      <div className="w-4/5">
-        <div className="flex flex-col h-3/5 text-white font-roboto text-2xl">{problem.title}</div>
-        {/* make sure the text does not overflow */}
-        <div className={`flex flex-col h-2/5 ${colorState.textcolor} align-top`}>{problem.description.length > 200 ? problem.description.substring(0, 200) + "..." : problem.description}</div>
-      </div>
-      <div className="w-1/5">
-        <div className="flex-col h-5/6 ">
-          {/* TO_DO make sure these come from backend */}
-          <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>Winning</div>
-          {/* <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>{1} answers</div>
-                    <div className={`flex justify-end items-center font-mono ${colorState.captioncolor}`}>{problem.depth} solutions</div> */}
-        </div>
-        <div className="flex h-1/6">
-          <div className={`flex w-full justify-end full ${colorState.textcolor} font-mono rounded-md`}> 10 mins to start </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const ProblemDetails = ({ colorState, context, setContext }) => {
-  return (
-    context.selectedProblem === -1 ? <div /> : <ProblemPopUp colorState={colorState} context={context} setContext={setContext} />
-  );
-};
-
-const ProblemPopUp = ({ colorState, context, setContext }) => {
-  const onClick = (e) => {
-    if (!e.target.closest('.popup')) {
-      setContext({ ...context, "selectedProblem": -1 });
-
     }
-  }
-  const problem = context.problems[context.selectedProblem];
-  return (
-    // make sure the popup is centered and there is translucent background
 
-    <div className="fixed top-0 left-0 w-screen bg-opacity-50 bg-black h-screen flex justify-center items-center" onClick={onClick}>
-      <div className={`${colorState.bgcolor} w-5/6 h-5/6 bg-opacity-100 rounded-md popup p-12 overflow-y-auto`}>
-        <div className="flex-col h-full">
-          <div className={`text-white font-roboto text-4xl font-bold w-5/6 h-fit`}> {problem.title}</div>
-          <div className={`${colorState.textcolor} font-roboto font-bold w-5/6 h-fit mb-8`}> {"problem_author"} : posted {31} mins ago</div>
-          <div className={`${colorState.textcolor} font-roboto font-bold h-fit text-lg mb-8`}> {problem.description}{problem.description}</div>
-          <TestCasePicker colorState={colorState} context={context} setContext={setContext} />
-          <VoteSolveReveal colorState={colorState} context={context} setContext={setContext} />
-          <div className="h-20" ></div>
-        </div>
-      </div>
-    </div>
-  );
-}
+    const [key, setKey] = useState('');
+    const handleChange1 = (event) => {
+        setKey(event.target.value);
+    };
 
-const TestCasePicker = ({ colorState, context, setContext }) => {
-  const testCases = context.problems[context.selectedProblem].test_cases;
-  const [testCaseId, setTestCaseId] = useState(0);
-  return (
-    <div className="flex-col h-fit">
-      <div className="flex w-full">
-        <div className="w-1/6 flex justify-center items-center cursor-pointer" onClick={() => setTestCaseId(testCaseId > 0 ? testCaseId - 1 : testCaseId)}> <IoArrowBack className={`${colorState.box1color} p-2 text-white h-12 w-12 font-roboto rounded-full`} />   </div>
-        <TestCase colorState={colorState} test_case={testCases[testCaseId]} />
-        <div className="w-1/6 flex justify-center items-center cursor-pointer" onClick={() => setTestCaseId(testCaseId < testCases.length - 1 ? testCaseId + 1 : testCaseId)}> <IoArrowForward className={`${colorState.box1color} p-2 text-white h-12 w-12 font-roboto rounded-full`} />   </div>
-      </div>
-      <div className="w-full h-20">
-        {/* it gives circular indicator of the number of test cases */}
-        <div className="flex justify-center items-center h-full">
-          {testCases.map((_, index) => {
-            return <div className={`h-2 w-2 rounded-full mx-2 ${index === testCaseId ? "bg-white" : colorState.box1color}`}></div>
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const TestCase = ({ colorState, test_case }) => {
-  return (
-    <div className="flex-col h-72 w-full mb-8 ">
-      <div className="text-white font-roboto text-2xl mb-4 ">input tensor</div>
-      <div className={`flex flex-col h-fit bg-white bg-opacity-20 rounded-lg text-white font-roboto text-2xl p-10 mb-4`}><div className="bg-opacity-100">t = {test_case.input}</div></div>
-      <div className="text-white font-roboto text-2xl  mb-4">expected tensor</div>
-      <div className={`flex flex-col h-fit bg-white bg-opacity-20 rounded-lg text-white font-roboto text-2xl p-10`}><div className="bg-opacity-100">t = {test_case.output}</div></div>
-    </div>
-  );
-}
-
-const VoteSolveReveal = ({ colorState, context, setContext }) => {
-  const isVoted = false; // TODO: get this from backend
-  const [revealSolution, setRevealSolution] = useState(false);
-
-  const voteColor = isVoted ? "bg-white " + colorState.textcolor : "bg-white bg-opacity-10 textcolor-white";
-  const revealColor = revealSolution ? "bg-white " + colorState.textcolor : "bg-white bg-opacity-10 textcolor-white";
-  return (
-    <div className="flex-col h-fit">
-      <div className="flex h-20 items-center rounded-lg w-full">
-        <div className={"flex w-fit px-8 h-10 rounded-lg items-center justify-center cursor-pointer mr-6 " + voteColor}> <FaHeart className="h-6 w-6 mr-4" /> Vote</div>
-        <div className={`flex w-fit px-8 h-10 rounded-lg items-center justify-center cursor-pointer mr-6 ${colorState.box2color}`}> <FaKeyboard className="h-6 w-6 mr-4" /> Solve </div>
-        <div className={"flex w-fit px-8 h-10 rounded-lg items-center justify-center cursor-pointer " + revealColor} onClick={() => setRevealSolution(!revealSolution)}> <FaAngry className="h-6 w-6 mr-4" /> reveal solution </div>
-      </div>
-      {revealSolution ?
-        <SyntaxHighlighter language="python" showLineNumbers={true}>
-          {context.problems[context.selectedProblem].solution}
-        </SyntaxHighlighter>
-        : <div />}
-    </div>
-  );
+const Submit = () =>{
+    // axios.post(`http://127.0.0.1:8000/api/1-v-1/create/`,{
+    //     title:title,
+    //     description:description,
+    //     duration:duration,
+    //     num_of_problem: numberOfProblem,
+    //   }).then((response) => {
+    //     toast.success("One Vs One Created")
+    // }).catch((error) => {
+    //     console.error("Error fetching data:", error);
+    // });
+    onClose();
 }
 
 
-const AddNewProblem = ({ colorState, context, setContext }) => {
-  return (
-    context.keyState ? <ShowKey colorState={colorState} context={context} setContext={setContext} /> : (context.newProblem ? <NewProblem colorState={colorState} context={context} setContext={setContext} /> : <div />)
-  );
-}
+    return (
+        <>
+          <div
+            className={`fixed inset-0 overflow-y-auto transition-opacity duration-300 
+            ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            onClick={handleClose} // Added onClick event for the entire popup
+            >
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="overlay fixed inset-0 bg-black opacity-50"></div>
+              <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-10 max-w-screen-lg w-30% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
+              
+              <div className={`${colorState.captioncolor} font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> join one vs one</div>
 
-const NewProblem = ({ colorState, context, setContext }) => {
-  const onClick = (e) => {
-    if (!e.target.closest('.popup')) {
-      setContext({ ...context, "newProblem": false });
-    }
-  }
+                    <div className="flex-col h-fit mb-8">
+                        <div className={`font-roboto text-2xl ${colorState.textcolor2} mb-2`}>Give Contest Key</div>
+                        <input className={`w-full h-20 rounded-lg p-4 ${colorState.box1color} font-roboto  ${colorState.textcolor}  text-2xl `}  
+                         value={key}
+                         onChange={handleChange1} />
+                    </div>
 
-  return (
-    // make sure the popup is centered and there is translucent background
-
-    <div className="fixed top-0 left-0 w-screen bg-opacity-50 bg-black h-screen flex justify-center items-center" onClick={onClick}>
-      <div className={`${colorState.bgcolor} w-5/6 h-5/6 bg-opacity-100 rounded-md popup p-12 overflow-y-auto`}>
-        <div className="flex-col h-full">
-          <div className={`text-white font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> add new 1v1</div>
-          <CustomTextBox colorState={colorState} context={context} setContext={setContext} title="title" subtitle="pick a suitable title for the fight" textboxStyle="text-2xl font-bold" target="title" />
-          <CustomTextBox colorState={colorState} context={context} setContext={setContext} title="description" subtitle="Say something to light up the fire" textboxStyle="" target="description" />
-          <CustomTextBox colorState={colorState} context={context} setContext={setContext} title="number of problems" subtitle="take up the challange and pick a higher number" textboxStyle="h-fit w-11/12" target="num_problems" />
-          <CustomTextBox colorState={colorState} context={context} setContext={setContext} title="duration" subtitle="how long can you survive" textboxStyle="h-fit w-11/12" target="duration" />
-          <KeyBoardInstructionNewProblem colorState={colorState} />
-          <div className="h-20"></div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const CustomTextBox = ({ colorState, context, setContext, title, subtitle, textboxStyle, target }) => {
-  return (
-    <div className="flex-col h-fit mb-8">
-      <div className="font-roboto text-2xl text-white mb-2">{title}</div>
-      <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>{subtitle}</div>
-      <textarea className={`w-full h-40 rounded-lg p-4 bg-white font-roboto bg-opacity-10 text-white  ${textboxStyle}`} value={context.newProblemDetails[target]} onChange={(e) => setContext({ ...context, "newProblemDetails": { ...context["newProblemDetails"], [target]: e.target.value } })} />
-    </div>
-  );
-}
-const CustomTextBox2 = ({ colorState, contestKey, setKey, title, subtitle, textboxStyle }) => {
-  return (
-    <div className="flex-col h-fit mb-8">
-      <div className="font-roboto text-2xl text-white mb-2">{title}</div>
-      <div className={`font-roboto text-sm ${colorState.textcolor} mb-2`}>{subtitle}</div>
-      <textarea className={`w-full h-40 rounded-lg p-4 bg-white font-roboto bg-opacity-10 text-white  ${textboxStyle}`} value={contestKey} onChange={(e) => setKey(e.target.value)} />
-    </div>
-  );
+                    <div className={`flex justify-center`}>
+                     <div className={`${colorState.box1color} ${colorState.textcolor} py-2 px-3 rounded-md hover:bg-gray-400`} onClick={Submit}> Create New Contest</div>
+                    </div>
+                    
+               </div>
+            </div>
+          </div>
+          <ToastContainer />
+        </>
+      );
 }
 
 
-const ShowKey = ({ colorState, context, setContext }) => {
-  const onClick = (e) => {
-    if (!e.target.closest('.popup')) {
-      setContext({ ...context, "keyState": false, "newProblem": false });
-    }
-  }
 
-  return (
-    // make sure the popup is centered and there is translucent background
 
-    <div className="fixed top-0 left-0 w-screen bg-opacity-50 bg-black h-screen flex justify-center items-center" onClick={onClick}>
-      <div className={`${colorState.bgcolor} w-5/6 h-5/6 bg-opacity-100 rounded-md popup p-12 overflow-y-auto`}>
-        <div className="flex-col h-full">
-          <div className={`text-white font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> Your 1v1 is created</div>
-          {/* show title from context.newProblemDetails */}
-          <div className={`text-white font-roboto text-4xl font-bold w-5/6 h-fit`}> {context.newProblemDetails.title}</div>
-          <div className={`${colorState.textcolor} font-roboto font-bold h-fit text-lg mb-8`}> {context.newProblemDetails.description}</div>
-          <div className={`text-white font-roboto text-4xl font-bold w-5/6 h-fit`}> 1v1 key</div>
-          <div className={`${colorState.textcolor3} bg-white bg-opacity-20 font-roboto text-4xl font-bold w-5/6 h-fit p-12 mt-4 rounded-xl text-center mb-12`}> 124124fasf31r1wfwr3</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-const EnterContest = ({ colorState, context, setContext }) => {
-  const [contestKey, setContestKey] = useState("");
-  const onClick = (e) => {
-    if (!e.target.closest('.popup')) {
-      setContext({ ...context, "enterContest": false });
-    }
-  }
-  console.log(contestKey)
-  return (
-    context.enterContest ? <div className="fixed top-0 left-0 w-screen bg-opacity-50 bg-black h-screen flex justify-center items-center" onClick={onClick}>
-      <div className={`${colorState.bgcolor} w-1/3 h-3/6 bg-opacity-100 rounded-md popup p-12 overflow-y-auto`}>
-        <div className="flex-col h-full">
-          <div className={`text-white font-roboto text-4xl font-bold w-5/6 h-fit mb-12`}> Enter 1v1</div>
-          <CustomTextBox2 colorState={colorState} contestKey={contestKey} setKey={setContestKey} title="1v1 key" subtitle="enter the key you got from your opponent" textboxStyle="h-20 w-11/12" />
-          <div className="h-20"></div>
-        </div>
-      </div>
-    </div> : <div />
-  );
-}
+
+
