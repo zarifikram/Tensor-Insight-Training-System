@@ -69,6 +69,26 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
     const [depthGTE, setDepthGTE] = useState("")
     const [depthLTE, setDepthLTE] = useState("")
 
+
+    const [isFilterPopUpOpen, setFilterPopUpOpen] = useState(false)
+    const OpenFilter = () => {
+        setFilterPopUpOpen(true);
+        console.log(isFilterPopUpOpen);
+    }
+
+    const CloseFilter = () => {
+        setFilterPopUpOpen(false);
+    }
+
+    const cleanFilter = () => {
+        setSettings(iniSettings);
+        setIs_user_added("")
+        setDifficultyGTE("")
+        setDifficultyLTE("")
+        setDepthGTE("")
+        setDepthLTE("")
+    }
+
     //*Problems------------------------------------------
     const [perPage, setPerPage] = useState('10');
     const [currentPage, setCurrentPage] = useState(1);
@@ -178,7 +198,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
         }
     }
 
-    //*------------------------------------------------------------------------------------------------------------
+    //*Entering Specific Problem----------------------------------------------------------------------------------------------
     const enterProblem = (id) => {
         navigate(`/Problem/${id}`);
         setCurrentProblem(id);
@@ -189,25 +209,8 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
         setPerPage(selectedOptionValue);
     };
 
-    //*--------------------------------------------------------------------------------------------------------
-    const [isFilterPopUpOpen, setFilterPopUpOpen] = useState(false)
-    const OpenFilter = () => {
-        setFilterPopUpOpen(true);
-        console.log(isFilterPopUpOpen);
-    }
 
-    const CloseFilter = () => {
-        setFilterPopUpOpen(false);
-    }
 
-    const cleanFilter = () => {
-        setSettings(iniSettings);
-        setIs_user_added("")
-        setDifficultyGTE("")
-        setDifficultyLTE("")
-        setDepthGTE("")
-        setDepthLTE("")
-    }
 
     return (
         <div className={`mx-40 ${colorState.textcolor} font-roboto`}>
@@ -218,6 +221,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
                     <div className={`${colorState.box1color} flex justify-center items-center px-3 py-3 mr-3 rounded-md hover:bg-gray-400`} onClick={() => { cleanFilter() }}>Remove Filters</div>
                     <div className={`${colorState.box1color} flex justify-center items-center px-3 py-3 rounded-md hover:bg-gray-400`} onClick={() => { OpenFilter() }}>Filters</div>
                 </div>
+                {/*Column names----------------------------------------------------------*/}
                 <div className={`flex w-100% justify-between pb-1`}>
                     <div className={`flex w-50% justify-start ${colorState.textcolor2}`}>
                         <div className={`w-10% flex justify-center`}>id</div>
@@ -230,6 +234,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
                         <div className={`w-25% flex justify-center`}>difficulty</div>
                     </div>
                 </div>
+                {/*Row Renders----------------------------------------------------------*/}
                 {Array.from({ length: problems.results.length }, (_, index) => (
                     <div className={` `} onClick={() => enterProblem(problems.results[index].id)}>
                         <div className={`${(index + 1) % 2 === 1 ? `${colorState.box1color} w-100% flex justify-between rounded-md hover:bg-gray-400 hover:rounded-md py-2` : `w-100% flex justify-between hover:bg-gray-400 hover:rounded-md py-2`}`}>
