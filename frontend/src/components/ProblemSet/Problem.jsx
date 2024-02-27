@@ -208,7 +208,20 @@ const Problem = () => {
           window.removeEventListener("keydown", handleKeyPress);
         };
       }, []); // Empty dependency array ensures that this effect runs only once when the component mounts
-    
+      
+      const saveProblem = () => {
+        console.log("save problem");
+        // send the problem id to the backend for later revisit to the problem
+        axios.get(`http://127.0.0.1:8000/api/user/${id}/save/`)
+        .then((response) => {
+          alert(`Problem ${id} saved successfully`);
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+      };
+
       const submitAnswer=()=>{
         axios.post(`http://127.0.0.1:8000/api/problem/${id}/submit/`,{
           code:codeRef.current,
@@ -281,6 +294,11 @@ const Problem = () => {
             <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
         </div>
         <CodePane  onCodeChange={handleCodeChange} />
+        <div className="w-full flex justify-center">
+          <div className="">
+            <button className={`${colorState.box2color} px-2 py-2 rounded-xl mb-4 ${colorState.textcolor}`} onClick={saveProblem}> save problem</button>
+          </div>
+        </div>
         <div className=" flex justify-center text-2xl font-bold py-5"> Comments</div>
         <DiscussionList id={id}></DiscussionList>
         {

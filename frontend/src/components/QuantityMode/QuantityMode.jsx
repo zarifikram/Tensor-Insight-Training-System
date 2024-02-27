@@ -75,7 +75,10 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
   //*Problem PopUp--------------------------------------------------------------------------
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [currentPage,setCurrentPage] = useState(0);
-    
+  
+  const saveProblem = () => {
+  };
+  
   const openPopup = (page) => {
       setPopupOpen(true);
       setCurrentPage(page);
@@ -246,6 +249,11 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
         </div>
         <div className={`pt-20 ${colorState.textcolor2} font-roboto text-2xl font-bold`}>{authState.QuantityModeRunning}</div>
         <CodePane  onCodeChange={handleCodeChange} />
+        <div className="w-full flex justify-center">
+          <div className="">
+            <button className={`${colorState.box2color} px-2 py-2 rounded-xl mb-4`} onClick={saveProblem} >save problem</button>
+          </div>
+        </div>
         <div className={`flex justify-center`}>
           <div className={` flex items-center`}>
             <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor}`}>shift</div>

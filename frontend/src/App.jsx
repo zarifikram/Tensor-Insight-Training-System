@@ -31,6 +31,7 @@ import axios from 'axios'
 import Home from './components/Home'
 import OneVOne from './components/OneVOne/OneVOne.jsx'
 import DiscussionList from './components/Discussion/DiscussionList.jsx'
+import SavedProblems from './components/SavedProblems.jsx'
 
 axios.defaults.withCredentials = true;
 function App() {
@@ -136,6 +137,7 @@ function App() {
                   <Route exact path='/OneVOne' element={<OneVOne/>} />
                   <Route exact path='/DiscussionList' element={<DiscussionList/>} />
                   <Route exact path='/Discussion/:id' element={<Discussion/>} />
+                  <Route exact path='/Saved' element={<SavedProblems/>} />
                 </Routes>
                 <Footer />
               </div>
