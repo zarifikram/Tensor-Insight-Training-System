@@ -115,7 +115,7 @@ class ContestListView(generics.ListAPIView):
 # Contest Problem View:
 class ContestProblemView(APIView):
     serializer_class = ProblemDetailsSerializer
-    
+    permission_classes = [IsAuthenticated]
     def get(self, request, cid, pid):
         problem = ContestProblem.objects.filter(contest__id=cid, problem__id=pid).first()
         if problem == None:
@@ -311,6 +311,10 @@ class CreateContestView(generics.CreateAPIView):
 
         add_contest_problems(contest,num_random_problem)
 
+        request.user.xp = request.user.xp + 50
+        request.user.level = xp_to_level(request.user.xp)
+        request.user.save()
+
         return Response({"message": "Contest created successfully."}, status=status.HTTP_201_CREATED)
 
 class AddProblemToContestView(APIView):
@@ -362,6 +366,10 @@ class AddProblemToContestView(APIView):
 
         # create user problem
         user_problem = UserProblem.objects.create(user=request.user, problem=problem)
+
+        request.user.xp = request.user.xp + 10
+        request.user.level = xp_to_level(request.user.xp)
+        request.user.save()
 
         return Response({"message": "Problem added to contest successfully."}, status=status.HTTP_201_CREATED)
     
@@ -425,7 +433,9 @@ class AddUserToContestView(APIView):
             contest=contest,
             user=user
         )
-
+        user.xp = user.xp + 20
+        user.level = xp_to_level(user.xp)
+        user.save()
         return Response({"message": "User added to contest successfully."}, status=status.HTTP_201_CREATED)
     
 class SearchContestView(APIView):

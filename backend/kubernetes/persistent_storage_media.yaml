@@ -7,7 +7,7 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
-  azureDisk:
-    kind: Managed
-    diskName: media-disk
-    diskURI: ""
+  azureFile:
+    secretName: tits-secrets
+    shareName: media
+    readOnly: false

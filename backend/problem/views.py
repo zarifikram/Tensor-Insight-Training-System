@@ -4,7 +4,7 @@ from rest_framework import status,generics
 from utils.utils import xp_to_level
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-from .models import Problem, Submission, Discussion, DiscussionVote
+from .models import Problem, Submission, Discussion, DiscussionVote,SavedProblem
 from .serializers import ProblemSetSerializer, ProblemDetailsSerializer, ProblemSubmitSerializer, ProblemSubmissionListSerializer, SubmissionSerializer, DiscussionSerializer, AddDiscussionSerializer, DiscussionVoteSerializer, ModeProblemSerializer, RunProblemSerializer
 from utils.code_runner import evaluate_code
 import json
@@ -91,7 +91,7 @@ class RunProblemView(APIView):
 
 # Problem Detail View:
 class ProblemDetailView(generics.RetrieveAPIView):
-    queryset = Problem.objects.filter(show_code=True)
+    queryset = Problem.objects.all()
     serializer_class = ProblemDetailsSerializer
 
     def retrieve(self, request, *args, **kwargs):
@@ -229,7 +229,7 @@ class AddDiscussionView(generics.CreateAPIView):
             comment=comment
         )
 
-        user.xp = user.xp + 2
+        user.xp = user.xp + 10
         user.level = xp_to_level(user.xp)
         user.save()
 
@@ -253,7 +253,7 @@ class ReplyDiscussionView(generics.CreateAPIView):
             parent_comment=parent_discussion
         )
 
-        user.xp = user.xp + 3
+        user.xp = user.xp + 5
         user.level = xp_to_level(user.xp)
         user.save()
 
@@ -308,6 +308,9 @@ class UpvoteDiscussionView(APIView):
         except DiscussionVote.DoesNotExist:
             # Case 1: User has not voted before, add a new upvote
             serializer = DiscussionVoteSerializer(data={'discussion': pk, 'user': request.user.id, 'vote': DiscussionVote.VOTE_UP})
+            user.xp = user.xp + 3
+            user.level = xp_to_level(user.xp)
+            user.save()
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -337,7 +340,28 @@ class DownvoteDiscussionView(APIView):
         except DiscussionVote.DoesNotExist:
             # Case 1: User has not voted before, add a new downvote
             serializer = DiscussionVoteSerializer(data={'discussion': pk, 'user': request.user.id, 'vote': DiscussionVote.VOTE_DOWN})
+            user.xp = user.xp + 3
+            user.level = xp_to_level(user.xp)
+            user.save()
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#for online
+class ProblemSaveView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request,pk):
+        user = request.user
+        problem = Problem.objects.get(pk=pk)
+        if problem == None:
+            return Response({'detail': 'Problem not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        saved_problem, created = SavedProblem.objects.get_or_create(user=user, problem=problem)
+
+        if not created:
+            # If the SavedProblem already exists, delete it
+            saved_problem.delete()
+            return Response({'detail': 'Problem unsaved successfully.'}, status=status.HTTP_201_CREATED)
+
+        return Response({'detail': 'Problem saved successfully.'}, status=status.HTTP_201_CREATED)

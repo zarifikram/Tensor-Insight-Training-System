@@ -31,7 +31,7 @@ class CustomModeView(APIView):
                                                                                 negative=True, where=True, remainder=True, clip=True,
                                                                                 argmax=True, argmin=True, sum=True, unique=True)
 
-                custom_mode = CustomMode.objects.create(user=user, initiator=initiator_choice, manipulator=manipulator_choice)
+                custom_mode,_ = CustomMode.objects.get_or_create(user=user, initiator=initiator_choice, manipulator=manipulator_choice)
 
             # Generate a problem using custom mode settings if current problem is null
             if custom_mode.current_problem is None:
@@ -50,6 +50,7 @@ class CustomModeView(APIView):
 
             # Serialize the current problem
             serializer = ModeProblemSerializer(custom_mode.current_problem)
+            print(custom_mode.current_problem.solution)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             if request.session.get('custom_mode')=='on':
@@ -57,11 +58,8 @@ class CustomModeView(APIView):
                 initiator = request.session.get('chosen_initiator')
                 manipulator = request.session.get('chosen_manipulator')
 
-                used_manipulator,test_cases = generate_custom_problem(depth,initiator,manipulator)
-                # serializer = ModeProblemSerializer(data={'test_cases':test_cases,'used_manipulator':used_manipulator})
-                # serializer.is_valid(raise_exception=True)
-
-                # return Response(serializer.validated_data, status=status.HTTP_200_OK)
+                used_manipulator,test_cases,code = generate_custom_problem(depth,initiator,manipulator)
+                print(code)
                 return Response({'test_cases':test_cases,'used_manipulator':used_manipulator}, status=status.HTTP_200_OK)
 
             else:
@@ -72,11 +70,8 @@ class CustomModeView(APIView):
 
                 print(request.session)
 
-                used_manipulator,test_cases = generate_custom_problem(2)
-                # serializer = ModeProblemSerializer(data={'test_cases':test_cases,'used_manipulator':used_manipulator})
-                # serializer.is_valid(raise_exception=True)
-                
-                # return Response(serializer.validated_data, status=status.HTTP_200_OK)
+                used_manipulator,test_cases,code = generate_custom_problem(2)
+                print(code)
                 return Response({'test_cases':test_cases,'used_manipulator':used_manipulator}, status=status.HTTP_200_OK)
 # Submit Custom Mode View:
 class CustomModeSubmitView(APIView):

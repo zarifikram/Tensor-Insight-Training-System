@@ -1,6 +1,6 @@
 from . import tensor_generator
 import json
-from math import sqrt
+from math import sqrt, ceil
 from problem.models import Problem,TestCase
 
 
@@ -50,7 +50,8 @@ def generate_problem(depth,chosen_initiator=ci,chosen_manipulator=cm):
             depth=depth,
             difficulty=difficulty,
             shape=json.dumps(generated_problem['shape']),
-            solution = generated_problem['manipulation_code']
+            solution = generated_problem['manipulation_code'],
+            show_code = True
         )
 
         for j in range(args['how_many']):
@@ -89,9 +90,12 @@ def generate_custom_problem(depth,chosen_initiator=ci,chosen_manipulator=cm):
             out = generated_problem['expected_tensors'][j].numpy().tolist()
             test_cases.append({'input':inp,'output':out,'test_case_no':j+1})
         print(json.dumps(test_cases))
-        return used_manipulator,json.dumps(test_cases)
+        return used_manipulator,json.dumps(test_cases),generated_problem['manipulation_code']
     except:
         return generate_custom_problem(depth,chosen_initiator,chosen_manipulator)
     
 def xp_to_level(xp):
-    return sqrt(xp)*0.07
+    return ceil(sqrt(xp)*0.07)
+def max_xp(xp):
+    level = xp_to_level(xp)
+    return int((level/0.07)**2)

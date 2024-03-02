@@ -3,7 +3,7 @@ from .views import (
     ProblemSetView, HomePageView,
     ProblemDetailView,ProblemSubmissionListView,
     AddDiscussionView,ProblemSubmitView,SubmissionDetailView,
-    DiscussionListView, RunProblemView,
+    DiscussionListView, RunProblemView,ProblemSaveView,
     UpvoteDiscussionView, DownvoteDiscussionView,ReplyDiscussionView, EditDiscussionView, DeleteDiscussionView
 )
 urlpatterns = [
@@ -28,5 +28,8 @@ urlpatterns = [
     path('api/discussion/<int:pk>/reply/', ReplyDiscussionView.as_view(), name='reply_discussion'),
     path('api/discussion/<int:pk>/upvote/', UpvoteDiscussionView.as_view(), name='upvote_discussion'),
     path('api/discussion/<int:pk>/downvote/', DownvoteDiscussionView.as_view(), name='downvote_discussion'),
+
+    #for online
+    path('api/problem/<int:pk>/save/',ProblemSaveView.as_view(), name='problem_save'),
 
 ]

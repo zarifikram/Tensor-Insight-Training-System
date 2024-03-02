@@ -11,16 +11,19 @@ spec:
     metadata:
       labels:
         app: tensorits-backend
-        dummy-label: "updated"
     spec:
       containers:
         - name: tensorits-backend-container
-          image: titsacr.azurecr.io/tensorits-backend-image:latest
+          image: tensorits.azurecr.io/tensorits-backend-image:latest
           ports:
             - containerPort: 8000
           envFrom:
             - secretRef:
-                name: tits-secret
+                name: tits-secrets
+      imagePullSecrets:
+        - name: acr-secret 
+
+
 ---
 apiVersion: v1
 kind: Service
@@ -30,7 +33,7 @@ spec:
   selector:
     app: tensorits-backend
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8000
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
   type: LoadBalancer

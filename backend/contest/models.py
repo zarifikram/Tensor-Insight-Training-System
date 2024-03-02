@@ -5,7 +5,7 @@ from user_app.models import CustomUser
 
 # Create your models here.
 class Contest(models.Model):
-    title = models.CharField(max_length=15, default=timezone.now().strftime("%Y-%m-%d"))
+    title = models.CharField(max_length=150, default=timezone.now().strftime("%Y-%m-%d"))
     start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(default=(timezone.now() + timezone.timedelta(hours=24)))
     is_user_added = models.BooleanField(default=False)

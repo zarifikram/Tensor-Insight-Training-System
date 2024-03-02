@@ -8,7 +8,7 @@ from firebase_admin import  auth
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
 from .models import  CustomUser, Achievement, UserAchievement
-from problem.models import Submission, UserProblem, Problem, TestCase
+from problem.models import Submission, UserProblem, Problem, TestCase,SavedProblem
 from contest.models import ContestUser, UserContest
 from quantity_mode.models import QuantityModeSubmission
 from time_mode.models import TimeModeSubmission
@@ -18,7 +18,7 @@ import json
 
 
 
-from .serializers import SignUpSerializer,LoginSerializer,UserSerializer, AchievementSerializer, UserAchievementSerializer, UserProblemSerializer,UserAddProblemSerializer,UserSubmissionListSerializer,EditProfileSerializer
+from .serializers import SignUpSerializer,LoginSerializer,UserSerializer, AchievementSerializer, UserAchievementSerializer, UserProblemSerializer,UserAddProblemSerializer,UserSubmissionListSerializer,EditProfileSerializer,UserSavedProblemSerializer
 from contest.serializers import ContestListSerializer
 
 # Create your views here.
@@ -224,6 +224,10 @@ class UserAddProblemView(APIView):
         # Create UserProblem instance
         UserProblem.objects.create(user=user, problem=problem)
 
+        user.xp = user.xp + 10
+        user.level = xp_to_level(user.xp)
+        user.save()
+
         return Response({'message': f'Problem "{problem.title}" added successfully.'}, status=status.HTTP_201_CREATED)
     
 # {
@@ -282,6 +286,13 @@ class OneVOneListView(APIView):
             if one_v_one.secondary_user == None:
                 opponent = {"status": "not joined"}
             else:
+                if one_v_one.primary_user_score>one_v_one.secondary_user_score:
+                    result = "won"
+                elif one_v_one.primary_user_score<one_v_one.secondary_user_score:
+                    result = "lost"
+                else:
+                    result = "draw"
+                score = {"own": one_v_one.primary_user_score, "opponent": one_v_one.secondary_user_score, "result": result}
                 opponent = {"id": one_v_one.secondary_user.id, "username": one_v_one.secondary_user.username}
             data.append({
                 'id': one_v_one.id,
@@ -290,11 +301,19 @@ class OneVOneListView(APIView):
                 'duration': one_v_one.duration,
                 'num_of_problem': one_v_one.num_of_problem,
                 'status': one_v_one.status,
-                'opponent': opponent
+                'opponent': opponent,
+                'score': score
             })
         one_v_one_list = OneVOne.objects.filter(secondary_user=user)
         data2 = []
         for one_v_one in one_v_one_list:
+            if one_v_one.primary_user_score>one_v_one.secondary_user_score:
+                result = "lost"
+            elif one_v_one.primary_user_score<one_v_one.secondary_user_score:
+                result = "won"
+            else:
+                result = "draw"
+            score = {"own": one_v_one.secondary_user_score, "opponent": one_v_one.primary_user_score, "result": result}
             data2.append({
                 'id': one_v_one.id,
                 'title': one_v_one.title,
@@ -302,7 +321,8 @@ class OneVOneListView(APIView):
                 'duration': one_v_one.duration,
                 'num_of_problem': one_v_one.num_of_problem,
                 'status': one_v_one.status,
-                'opponent': {"id": one_v_one.primary_user.id, "username": one_v_one.primary_user.username}
+                'opponent': {"id": one_v_one.primary_user.id, "username": one_v_one.primary_user.username},
+                'score': score
             })
         return Response({"created":data,"invited":data2}, status=status.HTTP_200_OK)
 
@@ -366,3 +386,11 @@ class EditProfileView(APIView):
 
         user.save()
         return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
+    
+#For Online
+class UserSaveProblemsView(APIView):
+    serializer_class = UserSavedProblemSerializer
+    def get(self, request, pk):
+        user_problems = SavedProblem.objects.filter(user_id=pk)
+        serializer = UserSavedProblemSerializer(user_problems, many=True)
+        return Response(serializer.data)

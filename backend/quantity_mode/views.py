@@ -20,6 +20,7 @@ class QuantityModeView(generics.RetrieveAPIView):
             try:
                 quantity_mode = QuantityMode.objects.get(user=request.user, is_finished=False)
                 serializer = QuantityModeSerializer(quantity_mode)
+                print(serializer.data.current_problem.solution)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except QuantityMode.DoesNotExist:
                 return Response({'detail': 'Quantity mode not found'}, status=status.HTTP_204_NO_CONTENT)
@@ -29,6 +30,7 @@ class QuantityModeView(generics.RetrieveAPIView):
                 current_problem_num = request.session.get('quantity_mode_current_problem_num')
                 number_of_problems = request.session.get('quantity_mode_number_of_problems')
                 problem = Problem.objects.get(pk=pid)
+                print(problem.solution)
                 serializer = ModeProblemSerializer(problem)
                 return Response({'current_problem':serializer.data,'current_problem_num':current_problem_num,'number_of_problems':number_of_problems}, status=status.HTTP_200_OK)
             else:
