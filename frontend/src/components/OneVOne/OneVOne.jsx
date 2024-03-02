@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
+import OneVOneProblem from "./OneVOneProblem";
 
 
 function formatTime(seconds) {
@@ -29,8 +30,9 @@ function formatTime(seconds) {
     return hours + " hours, " + minutes + " minutes, " + remainingSeconds + " seconds";
 }
 
-function calculateTimeLeft(startTime) {
-    const endTime = new Date(startTime).getTime();
+function calculateTimeLeft(startedAt, durationInSeconds) {
+    const startTime = new Date(startedAt);
+    const endTime = new Date(startTime.getTime() + durationInSeconds * 1000);
     const currentTime = new Date().getTime();
     const timeDifference = endTime - currentTime;
 
@@ -129,7 +131,7 @@ const OneVOne = () => {
         if(onevone!=null)
         if(onevone.started_at!=null){
         const timerInterval = setInterval(() => {
-          setTimeLeft(calculateTimeLeft(onevone.started_at));
+          setTimeLeft(calculateTimeLeft(onevone.started_at,onevone.duration));
         }, 1000);
     
         return () => clearInterval(timerInterval);
@@ -210,17 +212,27 @@ const OneVOne = () => {
         });
     }
 
+    const getStatus = () =>{
+        axios.get(`http://127.0.0.1:8000/api/1-v-1/status/`)
+        .then((response) => {
+          console.log(response.data)
+        }).catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+
     return (
         <div className={`mx-40 ${colorState.textcolor} font-roboto`} >
+            <div onClick={getStatus}>get status</div>
             {
-                (authState.loggedIn) && <div><KeyBoardInstruction colorState={colorState} OpenPopUp={OpenPopUp} />
+                (authState.loggedIn)&&(onevone === null) && <div><KeyBoardInstruction colorState={colorState} OpenPopUp={OpenPopUp} />
                     <KeyBoardInstruction2 colorState={colorState} OpenPopUp={OpenPopUp2} />
                 </div>
             }
             {
                 (onevone != null) && (<div> {(onevone.status === "created") && (<div>
                     <div className="w-full">
-                        <div className={`flex justify-center  ${colorState.textcolor2} font-roboto font-bold text-3xl mt-10`}>{onevone.title}</div>
+                        <div className={`flex justify-center  ${colorState.textcolor2} font-roboto font-bold text-3xl `}>{onevone.title}</div>
                         <div className={`flex justify-center  ${colorState.textcolor} mt-2`}>{onevone.description.length > 200 ? onevone.description.substring(0, 200) + "..." : onevone.description}</div>
                         <div className={`flex justify-center ${colorState.textcolor} mt-1`}><div className={`mr-2`}>One V One Key:</div><div>{key}</div></div>
                     </div>
@@ -238,13 +250,25 @@ const OneVOne = () => {
 
                 {(onevone.status === "started") && (<div>
                     <div className="w-full">
-                        <div className={`flex justify-center  ${colorState.textcolor2} font-roboto font-bold text-3xl mt-10`}>{onevone.title}</div>
+                        <div className={`flex justify-center  ${colorState.textcolor2} font-roboto font-bold text-3xl`}>{onevone.title}</div>
                         <div className={`flex justify-center  ${colorState.textcolor} mt-2`}>{onevone.description.length > 200 ? onevone.description.substring(0, 200) + "..." : onevone.description}</div>
                     </div>
                     <div className={`flex justify-center text-2xl mt-3 ${colorState.captioncolor}`}>
-                        <div>{onevone.user1.username}</div>
-                        <div className={`mx-2`}>vs</div>
-                        <div>{onevone.user2.username}</div>
+                        <div className={`p-1   rounded-md flex ${(onevone.user1.score>onevone.user2.score)?`${colorState.box2color}`:``}`}>
+                            <div className={`${(onevone.user1.score>onevone.user2.score)?`px-2 ${colorState.textcolor} text-2xl font-bold flex items-center`:`hidden`}`}>winning!</div>
+                            <div className={`px-2 py-2 ${colorState.box1color} flex rounded-md`}>
+                                <div className={`px-2 py-1 ${colorState.bgcolor} rounded-md`}>{onevone.user1.username}</div>
+                                <div className={`pl-2 py-1 ${colorState.textcolor2}`}>{onevone.user1.score}</div>
+                            </div>
+                        </div>
+                        <div className={`mx-2 flex items-center`}>vs</div>
+                        <div  className={`p-1  rounded-md flex  ${(onevone.user2.score>onevone.user1.score)?`${colorState.box2color}`:``}`}>
+                            <div className={`px-2 py-2 ${colorState.box1color} flex rounded-md`}>
+                                <div className={`pr-2 py-1 ${colorState.textcolor2}`}>{onevone.user2.score}</div>
+                                <div className={`px-2 py-1 ${colorState.bgcolor} rounded-md`}>{onevone.user2.username}</div>
+                            </div>
+                            <div className={`${(onevone.user2.score>onevone.user1.score)?`px-2 ${colorState.textcolor} text-2xl font-bold flex items-center`:`hidden`}`}>winning!</div>
+                        </div>
                     </div>
                     <div className={`flex justify-center`}> 
                     <div className={`flex justify-center items-center text-2xl mt-2 py-2 px-5 ${colorState.captioncolor} rounded-full ${colorState.box1color}`}>
@@ -256,19 +280,34 @@ const OneVOne = () => {
                         <div className={`flex ${colorState.captioncolor}`}><div className={`mr-3 ${colorState.textcolor}`} >duration:</div>{formatTime(onevone.duration)}</div>
                         <div className={`flex ${colorState.captioncolor}`}><div className={`mr-3 ${colorState.textcolor}`} >ends at:</div>{calculateEndTime(onevone.started_at,onevone.duration)}</div>
                     </div>
-                    <div className={`mt-3`}>
-                    {Object.keys(onevone.problem_list).map((key,index) => (
-                        <div key={key} className={`flex text-xl`}>
-                            <div className={`flex ${colorState.textcolor2} mr-2`}><div className={`mr-2`}>Problem</div>{index + 1}:</div>
-                            <div className={`mr-3`}>{onevone.user1.username} {onevone.problem_list[key].is_user1_solved}</div>
-                            <div>{onevone.user2.username} {onevone.problem_list[key].is_user2_solved}</div>
+                    <div className={`mt-3 pt-1 px-2 pb-2 ${colorState.box1color} rounded-md`}>
+                        <div className={`flex text-xl`}>
+                            <div className={`w-10% flex justify-start pl-2`}>Problem</div>
+                            <div className={`w-45% flex justify-center`}>{onevone.user1.username}</div>
+                            <div className={`w-45% flex justify-center`}>{onevone.user2.username}</div>
                         </div>
-                    ))}
-                    <div>
+                        {Object.keys(onevone.problem_list).map((key,index) => (
+                            <div key={key} className={`flex text-xl p-1 hover:bg-gray-400 rounded-md ${(index%2==0)?`${colorState.bgcolor}`:``}`} onClick={()=>{navigate(`/OneVOneProblem/${onevone.problem_list[key].id}`)}}>
+                                <div className={`flex w-10% ${colorState.textcolor2} mr-2`}><div className={`mr-2`}>Problem</div>{index + 1}:</div>
+                                <div className={`mr-3 flex justify-center w-45%`}>
+                                    <div>{
+                                    (onevone.problem_list[key].is_user1_solved==-1)&&(<div>---</div>)
+                                    }{
+                                    (onevone.problem_list[key].is_user1_solved>-1)&&(<div className={`flex`}>{onevone.problem_list[key].is_user1_solved.toFixed(2)}<div className={`ml-1`}>s</div></div>)
+                                    }</div> 
+                                </div>
+                                <div className={`flex justify-center w-45%`}>
+                                <div>{
+                                    (onevone.problem_list[key].is_user2_solved==-1)&&(<div>---</div>)
+                                    }{
+                                    (onevone.problem_list[key].is_user2_solved>-1)&&(<div className={`flex`}>{onevone.problem_list[key].is_user2_solved.toFixed(2)}<div className={`ml-1`}>s</div></div>)
+                                    }</div> 
+                                </div>
+                            </div>
+                        ))}  
+                    </div>
                     <div className={` flex justify-center text-2xl mt-2 py-2 px-5 hover:bg-gray-400 ${colorState.captioncolor} rounded-md ${colorState.box1color} w-32`} onClick={leave}>
-                    Leave
-                    </div>
-                    </div>
+                        Leave
                     </div>
                 </div>)
                 } </div>)

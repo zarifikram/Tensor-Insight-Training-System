@@ -21,6 +21,7 @@ import ContestList from './components/Contest/ContestList.jsx'
 import Contest from './components/Contest/Contest.jsx'
 import ContestProblem from './components/Contest/ContestProblem.jsx'
 import Discussion from './components/Discussion/Discusssion.jsx'
+import OneVOneProblem from './components/OneVOne/OneVOneProblem.jsx'
 
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
@@ -136,6 +137,7 @@ function App() {
                   <Route exact path='/OneVOne' element={<OneVOne/>} />
                   <Route exact path='/DiscussionList' element={<DiscussionList/>} />
                   <Route exact path='/Discussion/:id' element={<Discussion/>} />
+                  <Route exact path='/OneVOneProblem/:id' element={<OneVOneProblem/>} />
                 </Routes>
                 <Footer />
               </div>
