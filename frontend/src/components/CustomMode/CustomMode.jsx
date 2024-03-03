@@ -1,6 +1,7 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
 import { CSRFContext } from "../helpers/CSRFContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { IoMdSettings } from "react-icons/io";
