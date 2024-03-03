@@ -1,5 +1,6 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import { AiFillCaretRight } from "react-icons/ai";
 import React, { useContext } from "react";
 import { useState } from "react";

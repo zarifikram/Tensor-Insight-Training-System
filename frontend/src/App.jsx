@@ -26,6 +26,7 @@ import OneVOneProblem from './components/OneVOne/OneVOneProblem.jsx'
 import { AuthContext } from './components/helpers/AuthContext'
 import { ColorContext } from './components/helpers/ColorContext'
 import { CSRFContext } from './components/helpers/CSRFContext'
+import { EnvVariableContext } from './components/helpers/EnvVariableContext.jsx'
 
 import axios from 'axios'
 
@@ -49,9 +50,13 @@ function App() {
     username: "response.data.username",
   })
 
+  const [envVariables,setEnvVariables]= useState({
+    backendDomain:"http://127.0.0.1:8000/"
+  })
+
   useEffect(() => {
    
-    axios.get('http://127.0.0.1:8000/')
+    axios.get(envVariables.backendDomain)
     .then(response => {
       console.log(response.data)
     })
@@ -113,6 +118,7 @@ function App() {
       < ColorContext.Provider value={[colorState, setColorState]} >
         <AuthContext.Provider value={[authState, setAuthState]}>
           <CSRFContext.Provider value={[csrfState, setCSRFState]}>
+            <EnvVariableContext.Provider value={[envVariables,setEnvVariables]}>
             <BrowserRouter>
 
               <div className={`${colorState.bgcolor} min-h-screen flex flex-col`}>
@@ -142,6 +148,7 @@ function App() {
                 <Footer />
               </div>
             </BrowserRouter>
+            </EnvVariableContext.Provider>
           </CSRFContext.Provider>
         </AuthContext.Provider>
       </ColorContext.Provider >

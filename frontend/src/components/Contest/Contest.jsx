@@ -2,6 +2,7 @@ import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 import axios from 'axios';
 import { useEffect } from "react";

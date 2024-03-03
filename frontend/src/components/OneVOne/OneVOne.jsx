@@ -1,5 +1,6 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { ClipLoader } from 'react-spinners';
@@ -232,7 +233,6 @@ const OneVOne = () => {
 
     return (
         <div className={`mx-40 ${colorState.textcolor} font-roboto`} >
-            <div onClick={getStatus}>get status</div>
             {
                 (authState.loggedIn)&&(onevone === null) && <div><KeyBoardInstruction colorState={colorState} OpenPopUp={OpenPopUp} />
                     <KeyBoardInstruction2 colorState={colorState} OpenPopUp={OpenPopUp2} />

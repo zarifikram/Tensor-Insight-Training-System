@@ -3,6 +3,7 @@ import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 //import { useRef } from "react";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>

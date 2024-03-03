@@ -4,6 +4,7 @@ import axios from 'axios'
 import { ColorContext } from '../helpers/ColorContext'
 import { Audio, RotatingLines } from 'react-loader-spinner'
 import { AuthContext } from '../helpers/AuthContext'
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 export default function User() {
 

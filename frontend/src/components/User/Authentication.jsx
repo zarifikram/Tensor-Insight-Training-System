@@ -1,6 +1,7 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';

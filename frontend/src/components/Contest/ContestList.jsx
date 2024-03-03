@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import ContestLeaderboard from "./ContestLeaderboard";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 import axios from 'axios';
 import { useEffect } from "react";
