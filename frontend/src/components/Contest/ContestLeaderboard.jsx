@@ -128,7 +128,7 @@ const ContestLeaderboard = (id) =>{
 
     useEffect(() => {
         console.log(id);
-        axios.get(`http://127.0.0.1:8000/api/contest/${id.id}/rank-list/`)
+        axios.get(`${envVariables.backendDomain}api/contest/${id.id}/rank-list/`)
             .then((response) => {
                 console.log(response.data);
                 setRankList(response.data)
@@ -140,7 +140,7 @@ const ContestLeaderboard = (id) =>{
     // useEffect(() => {
     //     // Function to update time remaining every second
     //     const intervalId = setInterval(() => {
-    //         axios.get(`http://127.0.0.1:8000/api/contest/${id}/rank-list/`)
+    //         axios.get(`${envVariables.backendDomain}api/contest/${id}/rank-list/`)
     //         .then((response) => {
     //             console.log(response.data);
     //             setRankList(response.data)

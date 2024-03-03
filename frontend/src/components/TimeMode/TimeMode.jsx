@@ -156,7 +156,7 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
 
   //*Create Time Mode---------------------------------------------------------------------
   const initializeTimeMode = () =>{ 
-    axios.post("http://127.0.0.1:8000/api/time-mode/create/",{time:sendTime})
+    axios.post(`${envVariables.backendDomain}api/time-mode/create/`,{time:sendTime})
     .then((response) => {
       console.log(response.data);
       setAuthState(prevState => ({
@@ -172,7 +172,7 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
 
   //*Functions--------------------------------------------------------------------------
   const getProblem = () =>{
-    axios.get("http://127.0.0.1:8000/api/time-mode/")
+    axios.get(`${envVariables.backendDomain}api/time-mode/`)
     .then((response) => {
     const test_cases = response.data.current_problem.test_cases;
     for (let i = 0; i < test_cases.length; i++) {
@@ -191,7 +191,7 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
   }
 
   const submitAnswer=()=>{
-    axios.post("http://127.0.0.1:8000/api/time-mode/submit/",{
+    axios.post(`${envVariables.backendDomain}api/time-mode/submit/`,{
       code:codeRef.current,
       taken_time:time
     }).then((response) => {
@@ -221,7 +221,7 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
       ...prevState,
       timerModeRunning:0
     }));
-    axios.post("http://127.0.0.1:8000/api/time-mode/complete/")
+    axios.post(`${envVariables.backendDomain}api/time-mode/complete/`)
     .then((response) => {
       console.log(response.data)
       toast.success("Time mode completed")
@@ -248,7 +248,7 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
           });
         }
         const singleStringCode = codeRef.current
-        axios.post("http://127.0.0.1:8000/api/run-problem/",{
+        axios.post(`${envVariables.backendDomain}api/run-problem/`,{
           test_cases:test_cases,code:singleStringCode
         }).then((response) => {
           for (let i = 0; i < 5; i++) {

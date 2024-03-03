@@ -71,7 +71,7 @@ function App() {
       setAuthState(authStateFromCookie);
     }
     
-    axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+    axios.get(`${envVariables.backendDomain}api/get-csrftoken/`)
     .then(response => {
       const csrfToken = response.data.csrftoken;
       axios.defaults.headers.common['X-CSRFToken'] = csrfToken;

@@ -131,7 +131,7 @@ const DiscussionList = ({id}) => {
     const interval = setInterval(() => {
         console.log(authState)
         console.log("loading comments: "+id);
-        axios.get(`http://127.0.0.1:8000/api/problem/${id}/discussion-list/`)
+        axios.get(`${envVariables.backendDomain}api/problem/${id}/discussion-list/`)
             .then((response) => {
                 console.log(response.data);
                 setDiscussionList(response.data);
@@ -152,7 +152,7 @@ const DiscussionList = ({id}) => {
       const [comment,setComment] = useState("");
 
       const postComment = () =>{
-        axios.post(`http://127.0.0.1:8000/api/problem/${id}/add-discussion/`,{
+        axios.post(`${envVariables.backendDomain}api/problem/${id}/add-discussion/`,{
           comment:comment
         })
         .then((response) => {
@@ -164,7 +164,7 @@ const DiscussionList = ({id}) => {
 
     //*Voting-------------------------------------------------------
     const upvote = (id) =>{
-      axios.post(`http://127.0.0.1:8000/api/discussion/${id}/upvote/`)
+      axios.post(`${envVariables.backendDomain}api/discussion/${id}/upvote/`)
       .then((response) => {
           console.log(response.data);
       }).catch((error) => {
@@ -173,7 +173,7 @@ const DiscussionList = ({id}) => {
     }
 
     const downvote = (id) =>{
-      axios.post(`http://127.0.0.1:8000/api/discussion/${id}/downvote/`)
+      axios.post(`${envVariables.backendDomain}api/discussion/${id}/downvote/`)
       .then((response) => {
           console.log(response.data);
       }).catch((error) => {
@@ -206,6 +206,7 @@ const Comment = ({ comment ,parent}) => {
 
   const [colorState,setColorState]= useContext(ColorContext);
   const [authState,setAuthState] = useContext(AuthContext);
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext)
   const [replying,setReplying] =useState(false);
   const [replyText, setReplyText] = useState("Write Your Opinion ...");
   const [editing,setEditing] =useState(false);
@@ -224,7 +225,7 @@ const Comment = ({ comment ,parent}) => {
 
   const EditComment = () =>{
     toggleEdit();
-    axios.patch(`http://127.0.0.1:8000/api/discussion/${comment.id}/edit/`,{
+    axios.patch(`${envVariables.backendDomain}api/discussion/${comment.id}/edit/`,{
       comment:editText
     }).then((response) => {
         console.log(response.data);
@@ -244,7 +245,7 @@ const Comment = ({ comment ,parent}) => {
   }
 
   const DeleteComment = () =>{
-    axios.delete(`http://127.0.0.1:8000/api/discussion/${comment.id}/delete/`)
+    axios.delete(`${envVariables.backendDomain}api/discussion/${comment.id}/delete/`)
     .then((response) => {
         console.log(response.data);
     })
@@ -256,7 +257,7 @@ const Comment = ({ comment ,parent}) => {
   const submitReply = () =>{
     toggleReply();
     console.log(replyText);
-            axios.post(`http://127.0.0.1:8000/api/discussion/${comment.id}/reply/`,{comment:replyText})
+            axios.post(`${envVariables.backendDomain}api/discussion/${comment.id}/reply/`,{comment:replyText})
             .then((response) => {
                 console.log(response.data);
             })
@@ -273,7 +274,7 @@ const Comment = ({ comment ,parent}) => {
       //*Voting-------------------------------------------------------
       const upvote = (id) =>{
         if(authState.loggedIn){
-        axios.post(`http://127.0.0.1:8000/api/discussion/${id}/upvote/`)
+        axios.post(`${envVariables.backendDomain}api/discussion/${id}/upvote/`)
         .then((response) => {
             console.log(response.data);
         }).catch((error) => {
@@ -284,7 +285,7 @@ const Comment = ({ comment ,parent}) => {
   
       const downvote = (id) =>{
         if(authState.loggedIn){
-        axios.post(`http://127.0.0.1:8000/api/discussion/${id}/downvote/`)
+        axios.post(`${envVariables.backendDomain}api/discussion/${id}/downvote/`)
         .then((response) => {
             console.log(response.data);
         }).catch((error) => {

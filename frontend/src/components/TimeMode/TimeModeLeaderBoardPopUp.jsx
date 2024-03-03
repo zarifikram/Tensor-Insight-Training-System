@@ -45,7 +45,7 @@ const TimeModeLeaderBoardPopUp = ({ isOpen, onClose ,times}) => {
     ]);
 
     useEffect(() => {
-      axios.get(`http://127.0.0.1:8000/api/time-mode/leaderboard/${600}`
+      axios.get(`${envVariables.backendDomain}api/time-mode/leaderboard/${600}`
       ).then((response) => {
         console.log(response.data);
         setLeaderboard(response.data);
@@ -65,7 +65,7 @@ const TimeModeLeaderBoardPopUp = ({ isOpen, onClose ,times}) => {
     const handleTimeChange = (value) => {
       // Convert value to number if necessary
       const selectedTime = parseInt(value);
-      axios.get(`http://127.0.0.1:8000/api/time-mode/leaderboard/${selectedTime}`
+      axios.get(`${envVariables.backendDomain}api/time-mode/leaderboard/${selectedTime}`
       ).then((response) => {
         console.log(response.data);
         setLeaderboard(response.data);

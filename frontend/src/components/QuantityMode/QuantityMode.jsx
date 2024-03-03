@@ -119,7 +119,7 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
       }
       const singleStringCode = codeRef.current
       console.log(singleStringCode);
-        axios.post("http://127.0.0.1:8000/api/run-problem/",{
+        axios.post(`${envVariables.backendDomain}api/run-problem/`,{
         test_cases:test_cases,code:singleStringCode
       }).then((response) => {
         for (let i = 0; i < 5; i++) {
@@ -145,7 +145,7 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
 
   //*Functions--------------------------------------------------------------------------
   const submitAnswer=()=>{
-    axios.post("http://127.0.0.1:8000/api/quantity-mode/submit/",{
+    axios.post(`${envVariables.backendDomain}api/quantity-mode/submit/`,{
       code:codeRef.current,
       taken_time:2
     }).then((response) => {
@@ -182,7 +182,7 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
   }
 
   const getProblem = () =>{
-    axios.get("http://127.0.0.1:8000/api/quantity-mode/")
+    axios.get(`${envVariables.backendDomain}api/quantity-mode/`)
     .then((response) => {
     const test_cases = response.data.current_problem.test_cases;
     for (let i = 0; i < test_cases.length; i++) {
@@ -208,7 +208,7 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
     }));
     setPages(iniPage);
     submitAnswer();
-    axios.post("http://127.0.0.1:8000/api/quantity-mode/force-end/")
+    axios.post(`${envVariables.backendDomain}api/quantity-mode/force-end/`)
     .then((response) => {
       toast.success("Quantity Mode Force Ended!");
     })

@@ -60,7 +60,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
   })
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/custom-mode/setting/")
+    axios.get(`${envVariables.backendDomain}api/custom-mode/setting/`)
     .then((response) => {
     setSettings(response.data)
     getProblem();
@@ -141,7 +141,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
 
   const closeSettingsSelectionPopUp =  () => {
     setSettingsSelectionPopUpOpen(false);
-    axios.post("http://127.0.0.1:8000/api/custom-mode/setting/",{
+    axios.post(`${envVariables.backendDomain}api/custom-mode/setting/`,{
       depth:settings.depth,
       initiator:settings.initiator,
       manipulator:settings.manipulator
@@ -171,7 +171,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
           });
         }
         const singleStringCode = codeRef.current
-          axios.post("http://127.0.0.1:8000/api/run-problem/",{
+          axios.post(`${envVariables.backendDomain}api/run-problem/`,{
           test_cases:test_cases,code:singleStringCode
         }).then((response) => {
           for (let i = 0; i < 5; i++) {
@@ -197,7 +197,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
 
   //*Functions--------------------------------------------------------------------------- 
   const submitAnswer=()=>{
-    axios.post("http://127.0.0.1:8000/api/custom-mode/submit/",{
+    axios.post(`${envVariables.backendDomain}api/custom-mode/submit/`,{
       code:codeRef.current,
       taken_time:2
     }).then((response) => {
@@ -221,7 +221,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
 
   const getProblem = ()=>{
     if(authState.loggedIn){
-      axios.get("http://127.0.0.1:8000/api/custom-mode/")
+      axios.get(`${envVariables.backendDomain}api/custom-mode/`)
       .then((response) => {
         console.log(response.data)
       const test_cases = response.data.test_cases;
@@ -237,7 +237,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
       console.error("Error fetching data:", error);
     });
     }else{
-      axios.get("http://127.0.0.1:8000/api/custom-mode/")
+      axios.get(`${envVariables.backendDomain}api/custom-mode/`)
       .then((response) => {
       const test_cases = response.data.test_cases;
       for (let i = 0; i < test_cases.length; i++) {

@@ -35,7 +35,7 @@ export default function User() {
         "num_of_prob_solved_in_time_mode": 12
       })
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/user/${authState.id}/`)
+        axios.get(`${envVariables.backendDomain}api/user/${authState.id}/`)
             .then(response => {
                 setUserInfo(response.data)
             })

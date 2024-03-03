@@ -139,7 +139,7 @@ const Discussion = () =>{
 
     useEffect(() => {
       const interval = setInterval(() => {
-        axios.get(`http://127.0.0.1:8000/api/discussion-forum/${id}/`)
+        axios.get(`${envVariables.backendDomain}api/discussion-forum/${id}/`)
             .then((response) => {
                 console.log(response.data);
                 setDiscussion(response.data)
@@ -155,7 +155,7 @@ const Discussion = () =>{
     //*Voting-------------------------------------------------------
     const upvote = () =>{
       if(authState.loggedIn){
-      axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/upvote/`)
+      axios.post(`${envVariables.backendDomain}api/discussion-forum/${id}/upvote/`)
       .then((response) => {
           console.log(response.data);
       }).catch((error) => {
@@ -166,7 +166,7 @@ const Discussion = () =>{
 
     const downvote = () =>{
       if(authState.loggedIn){
-      axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/downvote/`)
+      axios.post(`${envVariables.backendDomain}api/discussion-forum/${id}/downvote/`)
       .then((response) => {
           console.log(response.data);
       }).catch((error) => {
@@ -184,7 +184,7 @@ const Discussion = () =>{
   };
 
   const submitAnswer = () =>{
-    axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/add-answer/`,{answer:answerbox})
+    axios.post(`${envVariables.backendDomain}api/discussion-forum/${id}/add-answer/`,{answer:answerbox})
     .then((response) => {
         console.log(response.data);
     })
@@ -206,7 +206,7 @@ const Discussion = () =>{
         };
   
         const submitEdit = () =>{
-          axios.patch(`http://127.0.0.1:8000/api/discussion-forum/${id}/edit/`,{title:editbox1,description:editbox2})
+          axios.patch(`${envVariables.backendDomain}api/discussion-forum/${id}/edit/`,{title:editbox1,description:editbox2})
           .then((response) => {
               console.log(response.data);
               setEditbox1('New Title')
@@ -222,7 +222,7 @@ const Discussion = () =>{
 
       //*Delete Comment----------------------
       const DeleteComment = () =>{
-        axios.delete(`http://127.0.0.1:8000/api/discussion-forum/${id}/delete/`)
+        axios.delete(`${envVariables.backendDomain}api/discussion-forum/${id}/delete/`)
         .then((response) => {
             console.log(response.data);
             navigate(`/DiscussionList`)
@@ -236,7 +236,7 @@ const Discussion = () =>{
 
       //*Resolve----------------------------------
       const resolve = () =>{
-        axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/resolved/`)
+        axios.post(`${envVariables.backendDomain}api/discussion-forum/${id}/resolved/`)
         .then((response) => {
             console.log(response.data);
         })
@@ -334,11 +334,12 @@ const Discussion = () =>{
     const Answer = ({ answer,id }) => { 
       const [colorState,setColorState]= useContext(ColorContext);
       const [authState,setAuthState] = useContext(AuthContext);
+      const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
     //*Voting-------------------------------------------------------
     const upvote = () =>{
       if(authState.loggedIn){
-      axios.post(`http://127.0.0.1:8000/api/answer/${answer.id}/upvote/`)
+      axios.post(`${envVariables.backendDomain}api/answer/${answer.id}/upvote/`)
       .then((response) => {
           console.log(response.data);
       }).catch((error) => {
@@ -348,7 +349,7 @@ const Discussion = () =>{
 
     const downvote = () =>{
       if(authState.loggedIn){
-      axios.post(`http://127.0.0.1:8000/api/answer/${answer.id}/downvote/`)
+      axios.post(`${envVariables.backendDomain}api/answer/${answer.id}/downvote/`)
       .then((response) => {
           console.log(response.data);
       }).catch((error) => {
@@ -365,7 +366,7 @@ const Discussion = () =>{
       };
 
       const submitReply = (id) =>{
-        axios.post(`http://127.0.0.1:8000/api/answer/${id}/reply/`,{reply:replybox})
+        axios.post(`${envVariables.backendDomain}api/answer/${id}/reply/`,{reply:replybox})
         .then((response) => {
             console.log(response.data);
         })
@@ -382,7 +383,7 @@ const Discussion = () =>{
       };
 
       const submitEdit = (id) =>{
-        axios.patch(`http://127.0.0.1:8000/api/answer/${id}/edit/`,{answer:editbox})
+        axios.patch(`${envVariables.backendDomain}api/answer/${id}/edit/`,{answer:editbox})
         .then((response) => {
             console.log(response.data);
         })
@@ -398,7 +399,7 @@ const Discussion = () =>{
 
       //*Delete Comment----------------------
       const DeleteComment = () =>{
-      axios.delete(`http://127.0.0.1:8000/api/answer/${answer.id}/delete/`)
+      axios.delete(`${envVariables.backendDomain}api/answer/${answer.id}/delete/`)
       .then((response) => {
           console.log(response.data);
       })
@@ -409,7 +410,7 @@ const Discussion = () =>{
 
       //*Accept----------------------------------
           const accept = () =>{
-            axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/answer/${answer.id}/accept/`)
+            axios.post(`${envVariables.backendDomain}api/discussion-forum/${id}/answer/${answer.id}/accept/`)
             .then((response) => {
                 console.log(response.data);
             })
@@ -497,7 +498,7 @@ const Discussion = () =>{
     const Reply = ({ reply }) => { 
       const [colorState,setColorState]= useContext(ColorContext);
       const [authState,setAuthState] = useContext(AuthContext);
-
+      const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
             //*Edit Answer------------------------------------
             const [editbox, setEditbox] = useState('');
@@ -507,7 +508,7 @@ const Discussion = () =>{
             };
       
             const submitEdit = (id) =>{
-              axios.patch(`http://127.0.0.1:8000/api/reply/${id}/edit/`,{reply:editbox})
+              axios.patch(`${envVariables.backendDomain}api/reply/${id}/edit/`,{reply:editbox})
               .then((response) => {
                   console.log(response.data);
               })
@@ -522,7 +523,7 @@ const Discussion = () =>{
 
              //*Delete Comment----------------------
              const DeleteComment = () =>{
-              axios.delete(`http://127.0.0.1:8000/api/reply/${reply.id}/delete/`)
+              axios.delete(`${envVariables.backendDomain}api/reply/${reply.id}/delete/`)
               .then((response) => {
                   console.log(response.data);
               })

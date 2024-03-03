@@ -72,7 +72,7 @@ const DiscussionList = () => {
     const [discussions,setDiscussions]=useState(discussionIni)
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/discussion-forum/`)
+        axios.get(`${envVariables.backendDomain}api/discussion-forum/`)
             .then((response) => {
                 setDiscussions(response.data);
             }).catch((error) => {
@@ -205,6 +205,7 @@ const Option = ({ colorState, context, setContext, option }) => {
 //New Problem Addition-----------------------------
 
 const NewProblem = ({ colorState,onClose,isOpen }) => {
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const handleClose = (e) => {
         if (e.target.classList.contains('overlay')) {
             onClose();
@@ -225,7 +226,8 @@ const NewProblem = ({ colorState,onClose,isOpen }) => {
 
 
 const Submit = () =>{
-    axios.post(`http://127.0.0.1:8000/api/add-discussion/`,{
+
+    axios.post(`${envVariables.backendDomain}api/add-discussion/`,{
         title:title,
         description:description
       }).then((response) => {

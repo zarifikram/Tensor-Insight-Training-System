@@ -208,7 +208,7 @@ const Add = () =>{
     
   })
 //editorial_image: editorial_image,
-  axios.post(`http://127.0.0.1:8000/api/user/add-problem/`,problem).then((response) => {
+  axios.post(`${envVariables.backendDomain}api/user/add-problem/`,problem).then((response) => {
       console.log(response.data);
       toast.success("Problem Created")
   }).catch((error) => {

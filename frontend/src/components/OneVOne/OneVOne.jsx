@@ -144,14 +144,14 @@ const OneVOne = () => {
 
       useEffect(() => {
         const fetchData = () => {
-          axios.get(`http://127.0.0.1:8000/api/1-v-1/`)
+          axios.get(`${envVariables.backendDomain}api/1-v-1/`)
             .then((response) => {
               setOnevone(response.data);
             }).catch((error) => {
               console.error("Error fetching data:", error);
             });
 
-            axios.get(`http://127.0.0.1:8000/api/1-v-1/status/`)
+            axios.get(`${envVariables.backendDomain}api/1-v-1/status/`)
             .then((response) => {
               console.log(response.data)
               if(response.data.haveNew)
@@ -215,7 +215,7 @@ const OneVOne = () => {
     }, [isOpen]);
 
     const leave = () =>{
-        axios.post(`http://127.0.0.1:8000/api/1-v-1/left/`)
+        axios.post(`${envVariables.backendDomain}api/1-v-1/left/`)
         .then((response) => {
           setOnevone(null);
         }).catch((error) => {
@@ -224,7 +224,7 @@ const OneVOne = () => {
     }
 
     const getStatus = () =>{
-        axios.get(`http://127.0.0.1:8000/api/1-v-1/status/`)
+        axios.get(`${envVariables.backendDomain}api/1-v-1/status/`)
         .then((response) => {
           console.log(response.data)
         }).catch((error) => {
@@ -371,6 +371,7 @@ const KeyBoardInstruction2 = ({ colorState, OpenPopUp }) => {
 //New Problem Addition-----------------------------
 
 const NewOneVOne = ({ colorState, onClose, isOpen,setKey }) => {
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const handleClose = (e) => {
         if (e.target.classList.contains('overlay')) {
             onClose();
@@ -403,7 +404,7 @@ const NewOneVOne = ({ colorState, onClose, isOpen,setKey }) => {
 
 
     const Submit = () => {
-        axios.post(`http://127.0.0.1:8000/api/1-v-1/create/`, {
+        axios.post(`${envVariables.backendDomain}api/1-v-1/create/`, {
             title: title,
             description: description,
             duration: duration,
@@ -485,6 +486,7 @@ const NewOneVOne = ({ colorState, onClose, isOpen,setKey }) => {
 
 
 const JoinOneVOne = ({ colorState, onClose, isOpen }) => {
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const handleClose = (e) => {
         if (e.target.classList.contains('overlay')) {
             onClose();
@@ -497,7 +499,7 @@ const JoinOneVOne = ({ colorState, onClose, isOpen }) => {
     };
 
     const Submit = () => {
-        axios.post(`http://127.0.0.1:8000/api/1-v-1/join/`, {
+        axios.post(`${envVariables.backendDomain}api/1-v-1/join/`, {
             key: key,
         }).then((response) => {
             toast.success("You Have Joined a New OneVOne!")

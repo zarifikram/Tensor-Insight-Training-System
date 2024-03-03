@@ -36,7 +36,7 @@ const CustomModeLeaderBoardPopUp = ({ isOpen, onClose }) => {
     ]);
 
     useEffect(() => {
-      axios.get("http://127.0.0.1:8000/api/custom-mode/leaderboard/"
+      axios.get(`${envVariables.backendDomain}api/custom-mode/leaderboard/`
       ).then((response) => {
         console.log(response.data);
         setLeaderboard(response.data);

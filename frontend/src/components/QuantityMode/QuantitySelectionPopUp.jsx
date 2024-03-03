@@ -36,7 +36,7 @@ const QuantitySelectionPopUp = ({ isOpen, onClose, quantity,setQuantity,mode, se
 
     const initializeQuantityMode = () =>{
       
-      axios.post("http://127.0.0.1:8000/api/quantity-mode/create/",{number_of_problems:quantity.toString()})
+      axios.post(`${envVariables.backendDomain}api/quantity-mode/create/`,{number_of_problems:quantity.toString()})
       .then((response) => {
         console.log(response.data);
         console.log("okay----")

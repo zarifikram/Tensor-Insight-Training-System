@@ -85,7 +85,7 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
     };
 
     const handleDropdownAction = () => {
-            axios.post(`http://127.0.0.1:8000/api/signout/`
+            axios.post(`${envVariables.backendDomain}api/signout/`
             ).then((response) => {
                     console.log("You Have Successfully Logged Out");
                     toast.success("Successfully Logged Out");

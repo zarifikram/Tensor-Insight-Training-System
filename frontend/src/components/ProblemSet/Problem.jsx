@@ -126,7 +126,7 @@ const Problem = () => {
 
     useEffect(() => {
         console.log("ret")
-        axios.get(`http://127.0.0.1:8000/api/problem/${id}/`)
+        axios.get(`${envVariables.backendDomain}api/problem/${id}/`)
         .then((response) => {
         console.log(response.data);
         setProblem(response.data)
@@ -170,7 +170,7 @@ const Problem = () => {
             //const singleStringCode = codeRef.current.replace(/\n/g, "\\n");
             const singleStringCode = codeRef.current
             console.log(singleStringCode);
-             axios.post("http://127.0.0.1:8000/api/run-problem/",{
+             axios.post(`${envVariables.backendDomain}api/run-problem/`,{
               test_cases:test_cases,code:singleStringCode
             }).then((response) => {
               console.log("```")
@@ -212,7 +212,7 @@ const Problem = () => {
       }, []); // Empty dependency array ensures that this effect runs only once when the component mounts
     
       const submitAnswer=()=>{
-        axios.post(`http://127.0.0.1:8000/api/problem/${id}/submit/`,{
+        axios.post(`${envVariables.backendDomain}api/problem/${id}/submit/`,{
           code:codeRef.current,
           taken_time:2
         }).then((response) => {

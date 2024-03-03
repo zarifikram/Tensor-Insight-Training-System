@@ -140,7 +140,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
     useEffect(() => {
         let str = convertSettingsToString(settings)
 
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
+        axios.get(`${envVariables.backendDomain}api/problem-set/?page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
             .then((response) => {
                 console.log(response.data);
                 setProblems(response.data)
@@ -155,7 +155,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
     const goToPage = (page) => {
         let str = convertSettingsToString(settings)
 
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
+        axios.get(`${envVariables.backendDomain}api/problem-set/?page=${page}&page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
             .then((response) => {
                 console.log(response.data);
                 setProblems(response.data)
