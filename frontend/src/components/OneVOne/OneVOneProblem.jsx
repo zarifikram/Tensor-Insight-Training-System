@@ -18,6 +18,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 axios.defaults.withCredentials= true;
 
 function calculateTimeLeft(startedAt, durationInSeconds) {
@@ -41,6 +42,7 @@ function calculateTimeLeft(startedAt, durationInSeconds) {
 const OneVOneProblem = () => {
     //*Live Update------------------------------------------
     const [loading,setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const onevoneIni2 = {
         "title": "ertertert",
@@ -87,6 +89,9 @@ const OneVOneProblem = () => {
         if(onevone.started_at!=null){
         const timerInterval = setInterval(() => {
           setTimeLeft(calculateTimeLeft(onevone.started_at,onevone.duration));
+          if(calculateTimeLeft(onevone.started_at,onevone.duration)==="Ended")
+            navigate('/OneVOne')
+            
         }, 1000);
     
         return () => clearInterval(timerInterval);
@@ -95,7 +100,7 @@ const OneVOneProblem = () => {
 
       
 
-      useEffect(() => {
+      useEffect(() => {      
         const fetchData = () => {
           axios.get(`http://127.0.0.1:8000/api/1-v-1/`)
             .then((response) => {
@@ -345,7 +350,7 @@ const OneVOneProblem = () => {
                             </div>
                         </div>
                         <div className={`mx-2 flex items-center`}>vs</div>
-                        <div  className={`p-1  rounded-md flex  ${(onevone.user2.score>onevone.user1.score)?`${colorState.box2color}`:``}`}>
+                        <div  className={`p-1 rounded-md flex ${(onevone.user2.score > onevone.user1.score)?`${colorState.box2color}`:``}`}>
                             <div className={`px-2 py-2 ${colorState.box1color} flex rounded-md`}>
                                 <div className={`pr-2 py-1 ${colorState.textcolor2}`}>{onevone.user2.score}</div>
                                 <div className={`px-2 py-1 ${colorState.bgcolor} rounded-md`}>{onevone.user2.username}</div>
