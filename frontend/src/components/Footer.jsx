@@ -3,6 +3,7 @@ import { IoColorPalette } from "react-icons/io5";
 import { AuthContext } from "./helpers/AuthContext";
 import react,{ useContext } from "react";
 import { ColorContext } from "./helpers/ColorContext";
+import { EnvVariableContext } from "./helpers/EnvVariableContext";
 
 import ColorPickerPopup from "./ColorProfilePickerPopUp";
 import { useState } from "react";

@@ -12,6 +12,7 @@ import { FaHome } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { EnvVariableContext } from "./helpers/EnvVariableContext";
 
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";

@@ -3,6 +3,7 @@ import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { EnvVariableContext } from "./helpers/EnvVariableContext";
 
 const SettingsPopUp = ({ isOpen, onClose, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
