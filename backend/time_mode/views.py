@@ -19,7 +19,7 @@ class TimeModeView(generics.RetrieveAPIView):
             try:
                 time_mode = TimeMode.objects.get(user=request.user, is_finished=False)
                 serializer = TimeModeSerializer(time_mode)
-                print(serializer.data.current_problem.solution)
+                print(time_mode.current_problem.solution)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except TimeMode.DoesNotExist:
                 return Response({'message': 'Time mode not found'}, status=status.HTTP_404_NOT_FOUND)
