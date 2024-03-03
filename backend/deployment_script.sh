@@ -22,7 +22,9 @@ kubectl apply -f kubernetes/deployment.yaml
 kubectl apply -f kubernetes/service.yaml
 kubectl create secret docker-registry acr-secret --docker-server=tensorits.azurecr.io --docker-username=tensorits --docker-password=password --docker-email=anamulhoqueemtiaj@gmail.com
 
-kubectl exec -it pod-name -- python manage.py makemigrations
+kubectl exec -it tensorits-backend-deployment-b59cd6b85-wh4n7 -- python manage.py makemigrations
+
+kubectl logs -f tensorits-backend-deployment-b59cd6b85-wh4n7
 
 
 

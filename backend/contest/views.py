@@ -122,9 +122,11 @@ class ContestProblemView(APIView):
             return Response({"message": "Contest problem does not exist."}, status=status.HTTP_400_BAD_REQUEST)
         else:
             problem = problem.problem
-        serializer = ProblemDetailsSerializer(problem)
+        
         if ContestUser.objects.filter(user=request.user, contest__id=cid).count() == 0:
             return Response({"message": "You are not a participant of this contest."}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProblemDetailsSerializer(problem)
+        print(problem.solution)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ContestProblemSubmissionView(generics.CreateAPIView):

@@ -97,6 +97,9 @@ class ProblemDetailView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         problem = self.get_object()
         serializer = self.get_serializer(problem)
+        pk = self.kwargs['pk']
+        prob = Problem.objects.get(pk=pk)
+        print(prob.solution)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Problem Submission View:
@@ -365,3 +368,16 @@ class ProblemSaveView(APIView):
             return Response({'detail': 'Problem unsaved successfully.'}, status=status.HTTP_201_CREATED)
 
         return Response({'detail': 'Problem saved successfully.'}, status=status.HTTP_201_CREATED)
+
+class ProblemIsSavedView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        user = request.user
+        problem = Problem.objects.get(pk=pk)
+        if problem == None:
+            return Response({'detail': 'Problem not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        saved_problem = SavedProblem.objects.filter(user=user, problem=problem)
+        if saved_problem.exists():
+            return Response({'isSaved': True}, status=status.HTTP_200_OK)
+        return Response({'isSaved': False}, status=status.HTTP_200_OK)

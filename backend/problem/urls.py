@@ -3,7 +3,7 @@ from .views import (
     ProblemSetView, HomePageView,
     ProblemDetailView,ProblemSubmissionListView,
     AddDiscussionView,ProblemSubmitView,SubmissionDetailView,
-    DiscussionListView, RunProblemView,ProblemSaveView,
+    DiscussionListView, RunProblemView,ProblemSaveView,ProblemIsSavedView,
     UpvoteDiscussionView, DownvoteDiscussionView,ReplyDiscussionView, EditDiscussionView, DeleteDiscussionView
 )
 urlpatterns = [
@@ -31,5 +31,6 @@ urlpatterns = [
 
     #for online
     path('api/problem/<int:pk>/save/',ProblemSaveView.as_view(), name='problem_save'),
+    path('api/problem/<int:pk>/is-saved/',ProblemIsSavedView.as_view(), name='problem_issaved'),
 
 ]
