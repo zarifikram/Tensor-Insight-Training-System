@@ -212,11 +212,12 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
         }else{
           toast.error("Some Test Cases Did Not Match")
         }
+        getProblem();
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
-    getProblem();
+    
   }
 
   const getProblem = ()=>{
@@ -230,6 +231,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
         temp[i].inputTensor=test_cases[i].input;
         temp[i].expectedTensor=test_cases[i].output;
         temp[i].currentTensor=test_cases[i].input;
+        temp[i].reached=false;
         setPages(temp);
       }
     })
@@ -239,12 +241,12 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
     }else{
       axios.get(`${envVariables.backendDomain}api/custom-mode/`)
       .then((response) => {
-      const test_cases = response.data.test_cases;
+      const test_cases = JSON.parse(response.data.test_cases);
       for (let i = 0; i < test_cases.length; i++) {
         let temp = pages;
-        temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
-        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
-        temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+        temp[i].inputTensor=(JSON.stringify(test_cases[i].input));
+        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output));
+        temp[i].currentTensor=(JSON.stringify(test_cases[i].input));
         temp[i].reached=false;
         setPages(temp);
       }
