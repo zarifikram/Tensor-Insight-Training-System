@@ -1,6 +1,7 @@
 // Popup.js
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -18,6 +19,7 @@ const AddProblemSettingsPopUp = ({ isOpen, onClose, settings,setSettings,childre
   
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked

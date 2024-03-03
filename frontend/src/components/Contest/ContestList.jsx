@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import ContestLeaderboard from "./ContestLeaderboard";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 import axios from 'axios';
 import { useEffect } from "react";
@@ -20,6 +21,7 @@ const ContestList = () =>{
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [contestList,setContestList] = useState([
         {
           "id": 0,
@@ -34,7 +36,7 @@ const ContestList = () =>{
     const [visibilityStates, setVisibilityStates] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/contest-list/`)
+        axios.get(`${envVariables.backendDomain}api/contest-list/`)
             .then((response) => {
                 console.log(response.data);
                 setContestList(response.data);
@@ -70,7 +72,7 @@ const ContestList = () =>{
                 return updatedStates;
             });
         else{
-            axios.post(`http://127.0.0.1:8000/api/contest/${contestList[index].id}/add-user/`,{
+            axios.post(`${envVariables.backendDomain}api/contest/${contestList[index].id}/add-user/`,{
                 c_id: "string",
                 passkey: "string"
             }).then((response) => {
@@ -117,7 +119,7 @@ const ContestList = () =>{
     };
 
     const createContest = () =>{
-        axios.post(`http://127.0.0.1:8000/api/create-contest/`,{
+        axios.post(`${envVariables.backendDomain}api/create-contest/`,{
             contest: {
               title: title,
               start_time: startTime,
@@ -156,7 +158,7 @@ const ContestList = () =>{
 
     const searchproblem = () =>{
         console.log(cidtitle)
-        axios.get(`http://127.0.0.1:8000/api/search-contest/?cid=${cidtitle}`
+        axios.get(`${envVariables.backendDomain}api/search-contest/?cid=${cidtitle}`
         ).then((response) => {
             console.log(response.data);
             setCustomcontest(response.data);
@@ -171,7 +173,7 @@ const ContestList = () =>{
 
     const joinCustomContest = () =>{
         console.log(customContest.id)
-        axios.post(`http://127.0.0.1:8000/api/contest/${customContest.id}/add-user/`,{
+        axios.post(`${envVariables.backendDomain}api/contest/${customContest.id}/add-user/`,{
             c_id: c_id,
             passkey: passkey,
         }).then((response) => {

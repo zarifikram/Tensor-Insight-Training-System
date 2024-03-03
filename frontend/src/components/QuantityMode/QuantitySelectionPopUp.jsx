@@ -1,6 +1,7 @@
 // Popup.js
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -18,6 +19,7 @@ axios.defaults.withCredentials= true;
 
 const QuantitySelectionPopUp = ({ isOpen, onClose, quantity,setQuantity,mode, setMode, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     
     const [authState,setAuthState] = useContext(AuthContext);
 
@@ -34,7 +36,7 @@ const QuantitySelectionPopUp = ({ isOpen, onClose, quantity,setQuantity,mode, se
 
     const initializeQuantityMode = () =>{
       
-      axios.post("http://127.0.0.1:8000/api/quantity-mode/create/",{number_of_problems:quantity.toString()})
+      axios.post(`${envVariables.backendDomain}api/quantity-mode/create/`,{number_of_problems:quantity.toString()})
       .then((response) => {
         console.log(response.data);
         console.log("okay----")

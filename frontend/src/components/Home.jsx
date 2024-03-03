@@ -1,5 +1,6 @@
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
+import { EnvVariableContext } from "./helpers/EnvVariableContext";
 
 import React, { useContext } from "react";
 
@@ -14,6 +15,7 @@ axios.defaults.withCredentials = true;
 const Home = () =>{
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
 
     return(

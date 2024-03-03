@@ -1,6 +1,7 @@
 // Popup.js
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import react,{ useContext, useEffect } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -15,6 +16,7 @@ import { useState } from "react";
 
 const QuantityModeLeaderBoardPopUp = ({ isOpen, onClose }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [leaderboard,setLeaderboard] =useState([
       {
         "user": {
@@ -35,7 +37,7 @@ const QuantityModeLeaderBoardPopUp = ({ isOpen, onClose }) => {
     ]);
 
     useEffect(() => {
-      axios.get("http://127.0.0.1:8000/api/quantity-mode/leaderboard/"
+      axios.get(`${envVariables.backendDomain}api/quantity-mode/leaderboard/`
       ).then((response) => {
         console.log(response.data);
         setLeaderboard(response.data);

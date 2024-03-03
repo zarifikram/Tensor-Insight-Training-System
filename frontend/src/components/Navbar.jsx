@@ -12,6 +12,7 @@ import { FaHome } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { EnvVariableContext } from "./helpers/EnvVariableContext";
 
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
@@ -48,6 +49,7 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
     isQuantitySelecetionPopupOpen,setQuantitySelecetionPopupOpen,quantity,setQuantity}) => {
 
     const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 0 });
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const navigate = useNavigate();
 
    
@@ -83,7 +85,7 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
     };
 
     const handleDropdownAction = () => {
-            axios.post(`http://127.0.0.1:8000/api/signout/`
+            axios.post(`${envVariables.backendDomain}api/signout/`
             ).then((response) => {
                     console.log("You Have Successfully Logged Out");
                     toast.success("Successfully Logged Out");

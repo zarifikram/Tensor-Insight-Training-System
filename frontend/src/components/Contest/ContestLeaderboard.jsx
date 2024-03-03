@@ -4,6 +4,7 @@ import { RxCross2 } from "react-icons/rx";//<RxCross2/>
 import { IoMdCheckmark } from "react-icons/io";//<IoMdCheckmark />
 import React, { useContext } from "react";
 import { useState } from "react";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 import axios from 'axios';
 import { useEffect } from "react";
@@ -15,6 +16,7 @@ import { useNavigate } from "react-router";
 const ContestLeaderboard = (id) =>{
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [rankList,setRankList] = useState([
         {
           "user_id": 2,
@@ -126,7 +128,7 @@ const ContestLeaderboard = (id) =>{
 
     useEffect(() => {
         console.log(id);
-        axios.get(`http://127.0.0.1:8000/api/contest/${id.id}/rank-list/`)
+        axios.get(`${envVariables.backendDomain}api/contest/${id.id}/rank-list/`)
             .then((response) => {
                 console.log(response.data);
                 setRankList(response.data)
@@ -138,7 +140,7 @@ const ContestLeaderboard = (id) =>{
     // useEffect(() => {
     //     // Function to update time remaining every second
     //     const intervalId = setInterval(() => {
-    //         axios.get(`http://127.0.0.1:8000/api/contest/${id}/rank-list/`)
+    //         axios.get(`${envVariables.backendDomain}api/contest/${id}/rank-list/`)
     //         .then((response) => {
     //             console.log(response.data);
     //             setRankList(response.data)
