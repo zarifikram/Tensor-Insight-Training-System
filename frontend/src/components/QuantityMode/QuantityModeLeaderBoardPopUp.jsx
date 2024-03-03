@@ -65,7 +65,7 @@ const QuantityModeLeaderBoardPopUp = ({ isOpen, onClose }) => {
           <div className="overlay fixed inset-0 bg-black opacity-50"></div>
           <div className={` z-40 ${colorState.bgcolor} ${colorState.textcolor} p-4 max-w-screen-lg w-80% mx-auto rounded-md shadow-md transition-transform  transform duration-300 `} >
           
-          <div className={`text-2xl ${colorState.captioncolor} font-bold pb-5`}>Quantity Mode Leaderboard</div>
+          <div className={`text-2xl ${colorState.captioncolor} font-bold pb-5`}>Time Mode Leaderboard</div>
                 <div className="">
                   <div className="">
                       <div  className={`flex items-center py-2  justify-between ${colorState.textcolor2}`}>

@@ -13,6 +13,18 @@ import { useRef } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 
+function secondsToTime(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  const formattedHours = hours.toString().padStart(2, '0');
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+  const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
+
+  return `${formattedHours}:${formattedMinutes}:${Math.floor(formattedSeconds)}`;
+}
+
 const ContestLeaderboard = (id) =>{
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
@@ -173,9 +185,9 @@ const ContestLeaderboard = (id) =>{
           <div className=" mt-4 flex">
           <h2 className="font-bold text-lg p-2 w-32">{user.username}</h2>
             {user.submissions.map((submission, subIndex) => (
-              <div key={subIndex} className={` p-2  w-32 ${(submission.isSolved)?`bg-green-600`:`${submission.attempted>0?`bg-red-600`:``}`}`}>
+              <div key={subIndex} className={` flex justify-center p-2  w-32 ${(submission.isSolved)?`bg-green-500 text-gray-800 rounded-md mr-1 flex items-center`:`${submission.attempted>0?`bg-red-600 text-gray-100 rounded-md mr-1`:``}`}`}>
                 {
-                       (submission.isSolved)? <div>{submission.lastSubmissionTime}</div>:<div>Attempted: {submission.attempted} times</div>
+                       (submission.isSolved)? <div className={``}>{secondsToTime(submission.lastSubmissionTime)}</div>:<div>Attempted: {submission.attempted} times</div>
                 }
                 
                 

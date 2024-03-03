@@ -220,6 +220,7 @@ const Comment = ({ comment ,parent}) => {
 
   const toggleEdit = () =>{
     setEditing(prevIsEditing => !prevIsEditing);
+    setReplying(false);
     setEditText(comment.comment)
   }
 
@@ -242,6 +243,7 @@ const Comment = ({ comment ,parent}) => {
 
   const toggleReply = () =>{
     setReplying(prevIsReplying => !prevIsReplying);
+    setEditing(false);
   }
 
   const DeleteComment = () =>{

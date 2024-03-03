@@ -256,6 +256,7 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
             <p className={`${colorState.textcolor}`}>- Run</p>
           </div>
         </div>
+        <div>
         {
           <QuantityModePopUp isOpen={isPopupOpen} onClose={closePopup} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages}/>
         }
@@ -265,9 +266,11 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
         {
           <QuantityModeLeaderBoardPopUp isOpen={isLeaderBoardPopupOpen} onClose={closeLeaderBoardPopup}/>
         }
-        {      
-          <ToastContainer />       
-        }
+        </div>
+        <div>
+        <ToastContainer />  
+        </div>
+               
     </div>
     );
     
