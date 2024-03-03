@@ -170,7 +170,7 @@ const KeyBoardInstruction = ({ colorState,OpenPopUp }) => {
             <div className="text-4xl font-roboto font-bold">
                 <div className={` flex items-center center h-full hover:bg-gray-400 p-1 rounded-md`} onClick={OpenPopUp}>
                     <div className={`${colorState.box1color} mr-2 py-1 px-2 items-center rounded-md ${colorState.textcolor} text-sm`}>n</div>
-                    <p className={`${colorState.textcolor} text-sm`}>- Add New Contest</p>
+                    <p className={`${colorState.textcolor} text-sm`}>- Add New Discussion</p>
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AiOutlineCaretUp } from "react-icons/ai";
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
+import { AiOutlineCheck } from "react-icons/ai";
 
 import axios from 'axios';
 import { useEffect } from "react";
@@ -230,13 +231,26 @@ const Discussion = () =>{
 
         
       }
+
+      //*Resolve----------------------------------
+      const resolve = () =>{
+        axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/resolved/`)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+      }
   
 
     return(
     <div className={`mx-40 ${colorState.textcolor} font-roboto`}>  {
       (!isLoading)&&(<div>
         <div className={`flex mb-16`}>
-          <div className={`w-16 `}>
+          <div className={`w-16 `}>{(authState.loggedIn) &&(authState.id===discussion.user.id) &&(
+            <div className={`w-12 h-12 text-3xl flex justify-center items-center  rounded-full mb-2 ${discussion.is_resolved? `bg-green-500`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={resolve}><AiOutlineCheck/></div>
+          )}
             <div className={`w-12 h-12 text-3xl flex justify-center items-center  rounded-full ${discussion.user_vote==="up"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={upvote}><AiOutlineCaretUp/></div>
             <div className={`w-12 h-12 text-3xl flex justify-center items-center  ${discussion.user_vote!=null?`${colorState.textcolor2}`:``}`}>{discussion.vote}</div>
             <div className={`w-12 h-12 text-3xl flex justify-center items-center  rounded-full ${discussion.user_vote==="down"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={downvote}><AiOutlineCaretDown/></div>
@@ -298,7 +312,7 @@ const Discussion = () =>{
               </>)}
         </div>
         {(discussion.answers!=null)&&(discussion.answers.map((answer, index) => (
-                <Answer answer={answer} />
+                <Answer answer={answer} id={id} />
         )))}
         </div>)
         }
@@ -315,7 +329,7 @@ const Discussion = () =>{
 
 
 
-    const Answer = ({ answer }) => { 
+    const Answer = ({ answer,id }) => { 
       const [colorState,setColorState]= useContext(ColorContext);
       const [authState,setAuthState] = useContext(AuthContext);
 
@@ -391,10 +405,24 @@ const Discussion = () =>{
       });
     }
 
+      //*Accept----------------------------------
+          const accept = () =>{
+            axios.post(`http://127.0.0.1:8000/api/discussion-forum/${id}/answer/${answer.id}/accept/`)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+          }
+
       return (
 
         <div className={`flex mb-8`}>
         <div className={`w-16 `}>
+        {(authState.loggedIn) &&(authState.id===answer.user.id) &&(
+            <div className={`w-10 h-10 text-xl flex justify-center items-center  rounded-full mb-2 ${answer.is_accepted? `bg-green-500`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={accept}><AiOutlineCheck/></div>
+          )}
           <div className={`w-10 h-10 text-xl flex justify-center items-center  rounded-full ${answer.user_vote==="up"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={upvote}> <AiOutlineCaretUp/></div>
           <div className={`w-10 h-10 text-xl flex justify-center items-center  ${answer.user_vote!=null?`${colorState.textcolor2}`:``}`}>{answer.vote}</div>
           <div className={`w-10 h-10 text-xl flex justify-center items-center  rounded-full ${answer.user_vote==="down"? `${colorState.box2color}`:`${colorState.box1color} hover:bg-gray-400`}`} onClick={downvote}><AiOutlineCaretDown/></div>
