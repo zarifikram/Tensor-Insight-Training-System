@@ -166,7 +166,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
@@ -178,11 +178,11 @@ USE_TZ = True
 
 AZURE_STORAGE_CONTAINER_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT')
 STATIC_URL = f'https://{AZURE_STORAGE_CONTAINER_NAME}.blob.core.windows.net/static/'
-STATICFILES_STORAGE = 'main.custom_azure.CustomAzureStorageStatic'
+STATICFILES_STORAGE = 'utils.custom_azure.CustomAzureStorageStatic'
 
 # Use Azure Storage for media files.
 AZURE_MEDIA_URL = f'https://{AZURE_STORAGE_CONTAINER_NAME}.blob.core.windows.net/media/'
-DEFAULT_FILE_STORAGE = 'main.custom_azure.CustomAzureStorageMedia'
+DEFAULT_FILE_STORAGE = 'utils.custom_azure.CustomAzureStorageMedia'
 
 # STATIC_URL = '/static/'
 # STATIC_ROOT = BASE_DIR / 'staticfiles'

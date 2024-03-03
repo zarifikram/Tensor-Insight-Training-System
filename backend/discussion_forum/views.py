@@ -15,11 +15,13 @@ class AddDiscussionView(APIView):
         description = request.data.get('description')
         user = request.user
         discussion = DiscussionForum.objects.create(title=title,description=description,user=user)
+        user.xp += 10
+        user.level = xp_to_level(user.xp)
+        user.save()
         return Response({"message":"Discussion added successfully"},status=status.HTTP_201_CREATED)
 class DiscussionView(generics.ListAPIView):
-    queryset = DiscussionForum.objects.all()
+    queryset = DiscussionForum.objects.all().order_by('-created_at')
     serializer_class = DiscussionForumSerializer
-    permission_classes = [IsAuthenticated]
 
 class DiscussionDetailsView(generics.RetrieveAPIView):
     serializer_class = DiscussionForumDetailsSerializer
@@ -35,6 +37,9 @@ class AddAnswerView(APIView):
         user = request.user
         discussion = DiscussionForum.objects.get(id=pk)
         discussion_answer = DiscussionForumAnswer.objects.create(answer=answer,user=user,discussion_forum=discussion)
+        user.xp += 15
+        user.level = xp_to_level(user.xp)
+        user.save()
         return Response({"message":"Answer added successfully"},status=status.HTTP_201_CREATED)
 class ReplyAnswerView(APIView):
     permission_classes = [IsAuthenticated]
@@ -43,6 +48,9 @@ class ReplyAnswerView(APIView):
         user = request.user
         discussion_answer = DiscussionForumAnswer.objects.get(id=aid)
         discussion_answer_reply = DiscussionAnswerReply.objects.create(reply=reply,user=user,discussion_forum_answer=discussion_answer)
+        user.xp += 5
+        user.level = xp_to_level(user.xp)
+        user.save()
         return Response({"message":"Reply added successfully"},status=status.HTTP_201_CREATED)
 class EditDiscussionView(generics.UpdateAPIView):
     queryset = DiscussionForum.objects.all()
@@ -128,6 +136,9 @@ class UpvoteDiscussionView(APIView):
                 vote.vote = 'up'
                 vote.save()
         else:
+            user.xp += 5
+            user.level = xp_to_level(user.xp)
+            user.save()
             DiscussionForumVote.objects.create(discussion=discussion,user=user,vote='up')
         return Response(status=status.HTTP_200_OK)
 class DownvoteDiscussionView(APIView):
@@ -144,6 +155,9 @@ class DownvoteDiscussionView(APIView):
                 vote.vote = 'down'
                 vote.save()
         else:
+            user.xp += 5
+            user.level = xp_to_level(user.xp)
+            user.save()
             DiscussionForumVote.objects.create(discussion=discussion,user=user,vote='down')
         return Response(status=status.HTTP_200_OK)
 class UpvoteAnswerView(APIView):
@@ -160,6 +174,9 @@ class UpvoteAnswerView(APIView):
                 vote.vote = 'up'
                 vote.save()
         else:
+            user.xp += 5
+            user.level = xp_to_level(user.xp)
+            user.save()
             DiscussionForumAnswerVote.objects.create(discussion=discussion_answer,user=user,vote='up')
         return Response(status=status.HTTP_200_OK)
 class DownvoteAnswerView(APIView):
@@ -176,6 +193,9 @@ class DownvoteAnswerView(APIView):
                 vote.vote = 'down'
                 vote.save()
         else:
+            user.xp += 5
+            user.level = xp_to_level(user.xp)
+            user.save()
             DiscussionForumAnswerVote.objects.create(discussion=discussion_answer,user=user,vote='down')
         return Response(status=status.HTTP_200_OK)
 class AcceptAnswerView(APIView):
@@ -189,6 +209,9 @@ class AcceptAnswerView(APIView):
             answer.save()
             discussion.is_resolved = True
             discussion.save()
+            answer.user.xp += 50
+            answer.user.level = xp_to_level(answer.user.xp)
+            answer.user.save()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_403_FORBIDDEN)
 class ResolvedView(APIView):

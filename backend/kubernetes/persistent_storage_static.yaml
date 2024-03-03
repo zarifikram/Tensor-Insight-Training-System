@@ -7,7 +7,7 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
-  azureDisk:
-    kind: Managed
-    diskName: static-disk
-    diskURI: ""
+  azureFile:
+    secretName: tits-secrets
+    shareName: static
+    readOnly: false

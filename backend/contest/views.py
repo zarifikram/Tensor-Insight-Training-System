@@ -115,16 +115,18 @@ class ContestListView(generics.ListAPIView):
 # Contest Problem View:
 class ContestProblemView(APIView):
     serializer_class = ProblemDetailsSerializer
-    
+    permission_classes = [IsAuthenticated]
     def get(self, request, cid, pid):
         problem = ContestProblem.objects.filter(contest__id=cid, problem__id=pid).first()
         if problem == None:
             return Response({"message": "Contest problem does not exist."}, status=status.HTTP_400_BAD_REQUEST)
         else:
             problem = problem.problem
-        serializer = ProblemDetailsSerializer(problem)
+        
         if ContestUser.objects.filter(user=request.user, contest__id=cid).count() == 0:
             return Response({"message": "You are not a participant of this contest."}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProblemDetailsSerializer(problem)
+        print(problem.solution)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ContestProblemSubmissionView(generics.CreateAPIView):
@@ -311,6 +313,10 @@ class CreateContestView(generics.CreateAPIView):
 
         add_contest_problems(contest,num_random_problem)
 
+        request.user.xp = request.user.xp + 50
+        request.user.level = xp_to_level(request.user.xp)
+        request.user.save()
+
         return Response({"message": "Contest created successfully."}, status=status.HTTP_201_CREATED)
 
 class AddProblemToContestView(APIView):
@@ -362,6 +368,10 @@ class AddProblemToContestView(APIView):
 
         # create user problem
         user_problem = UserProblem.objects.create(user=request.user, problem=problem)
+
+        request.user.xp = request.user.xp + 10
+        request.user.level = xp_to_level(request.user.xp)
+        request.user.save()
 
         return Response({"message": "Problem added to contest successfully."}, status=status.HTTP_201_CREATED)
     
@@ -425,7 +435,9 @@ class AddUserToContestView(APIView):
             contest=contest,
             user=user
         )
-
+        user.xp = user.xp + 20
+        user.level = xp_to_level(user.xp)
+        user.save()
         return Response({"message": "User added to contest successfully."}, status=status.HTTP_201_CREATED)
     
 class SearchContestView(APIView):

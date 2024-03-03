@@ -14,6 +14,7 @@ import json
 from math import log2
 from utils.tensor_generator import tensor_generator
 from django.utils import timezone 
+from decimal import Decimal
 
 # Create your views here.
 def add_problems(oneVone,num_of_problem):
@@ -74,6 +75,26 @@ class CreateView(generics.CreateAPIView):
     serializer_class = CreateOneVOneSerializer
     permission_classes = [IsAuthenticated] 
     def create(self, request, *args, **kwargs):
+
+        user = request.user
+        existing_oneVone = OneVOne.objects.filter(primary_user=user, primary_user_status=OneVOne.JOINED).union(OneVOne.objects.filter(secondary_user=user, secondary_user_status=OneVOne.JOINED)).first()
+        if existing_oneVone:
+            if existing_oneVone.primary_user == request.user:
+                existing_oneVone.primary_user_status = OneVOne.LEFT
+                if existing_oneVone.secondary_user is None or existing_oneVone.secondary_user_status == OneVOne.LEFT:
+                    existing_oneVone.status = OneVOne.ENDED
+                else:
+                    message = existing_oneVone.primary_user.username+" have left at "+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+                    OneVOneNotification.objects.create(message=message, user=existing_oneVone.secondary_user)
+            else:
+                existing_oneVone.secondary_user_status = OneVOne.LEFT
+                if existing_oneVone.primary_user_status == OneVOne.LEFT:
+                    existing_oneVone.status = OneVOne.ENDED
+                else:
+                    message = existing_oneVone.secondary_user.username+" have left at "+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+                    OneVOneNotification.objects.create(message=message, user=existing_oneVone.primary_user)
+            existing_oneVone.save()
+
         serialized_data = CreateOneVOneSerializer(data=request.data)
         serialized_data.is_valid(raise_exception=True)
         serialized_data = serialized_data.validated_data
@@ -103,11 +124,34 @@ class JoinView(APIView):
                 return Response({'error':'You are already in this oneVone'}, status=status.HTTP_400_BAD_REQUEST)
             if oneVone.secondary_user is not None:
                 return Response({'error':'OneVOne is full'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            user = request.user
+            existing_oneVone = OneVOne.objects.filter(primary_user=user, primary_user_status=OneVOne.JOINED).union(OneVOne.objects.filter(secondary_user=user, secondary_user_status=OneVOne.JOINED)).first()
+            if existing_oneVone:
+                if existing_oneVone.primary_user == request.user:
+                    existing_oneVone.primary_user_status = OneVOne.LEFT
+                    if existing_oneVone.secondary_user is None or existing_oneVone.secondary_user_status == OneVOne.LEFT:
+                        existing_oneVone.status = OneVOne.ENDED
+                    else:
+                        message = existing_oneVone.primary_user.username+" have left at "+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+                        OneVOneNotification.objects.create(message=message, user=existing_oneVone.secondary_user)
+                else:
+                    existing_oneVone.secondary_user_status = OneVOne.LEFT
+                    if existing_oneVone.primary_user_status == OneVOne.LEFT:
+                        existing_oneVone.status = OneVOne.ENDED
+                    else:
+                        message = existing_oneVone.secondary_user.username+" have left at "+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+                        OneVOneNotification.objects.create(message=message, user=existing_oneVone.primary_user)
+                existing_oneVone.save()
+
             oneVone.secondary_user = request.user
             oneVone.status = OneVOne.STARTED
             oneVone.secondary_user_status = OneVOne.JOINED
             oneVone.started_at = timezone.now()
             oneVone.save()
+            opponent = oneVone.secondary_user.username
+            message = f'{opponent} have joined at '+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+            OneVOneNotification.objects.create(message=message, user=oneVone.primary_user)
             return Response({'message':'You have joined the oneVone'}, status=status.HTTP_200_OK)
         else:
             return Response({'error':'No oneVone found with this key'}, status=status.HTTP_404_NOT_FOUND) 
@@ -117,7 +161,7 @@ class StatusView(APIView):
         oneVones = OneVOne.objects.filter(primary_user=request.user, primary_user_status=OneVOne.JOINED, status=OneVOne.STARTED).union(OneVOne.objects.filter(secondary_user=request.user, secondary_user_status=OneVOne.JOINED, status=OneVOne.STARTED)).first()
         if oneVones is None:
             return Response({'error':'No oneVone found'}, status=status.HTTP_404_NOT_FOUND)
-        oneVoneNotification = OneVOneNotification.objects.filter(user=request.user, is_read=False)
+        
         problems = OneVOneProblem.objects.filter(oneVone=oneVones).order_by('problem_number')
         ret = dict()
         user1_solved = 0
@@ -138,19 +182,20 @@ class StatusView(APIView):
             else:
                 is_user2_solved = -1
             ret[problem.problem_number] = {'id': problem.problem.id, 'is_user1_solved':is_user1_solved,'is_user2_solved':is_user2_solved}
-        if oneVoneNotification.exists():
-            oneVoneNotification = oneVoneNotification.first()
-            problem_number = oneVoneNotification.oneVonesubmission.oneVone_problem.problem_number
-            solved_at = oneVoneNotification.oneVonesubmission.submission.timestamp-oneVones.started_at
-            oneVoneNotification.update(is_read=True) 
-            return Response({'haveNew':True,'problem_number':problem_number, 'solved_at':solved_at,'user1_solved':user1_solved,'user2_solved':user2_solved,'problems_status':ret}, status=status.HTTP_200_OK)
+
+        oneVoneNotifications = OneVOneNotification.objects.filter(user=request.user, is_read=False)
+        if oneVoneNotifications.exists():
+            oneVoneNotification = oneVoneNotifications.last()
+            message = oneVoneNotification.message
+            oneVoneNotifications.update(is_read=True) 
+            return Response({'haveNew':True,'message':message,'user1_solved':user1_solved,'user2_solved':user2_solved,'problems_status':ret}, status=status.HTTP_200_OK)
         return Response({'haveNew':False,'user1_solved':user1_solved,'user2_solved':user2_solved,'problems_status':ret}, status=status.HTTP_200_OK)
 
 class OneVOneView(APIView):
-    serializer_class = CreateOneVOneSerializer
+    serializer_class = OneVOneSerializer
     permission_classes = [IsAuthenticated]
     def get(self, request):
-        oneVones = OneVOne.objects.filter(primary_user=request.user, primary_user_status=OneVOne.JOINED, status=OneVOne.STARTED).union(OneVOne.objects.filter(secondary_user=request.user, secondary_user_status=OneVOne.JOINED, status=OneVOne.STARTED)).first()
+        oneVones = OneVOne.objects.filter(primary_user=request.user, primary_user_status=OneVOne.JOINED).union(OneVOne.objects.filter(secondary_user=request.user, secondary_user_status=OneVOne.JOINED)).first()
         if oneVones is None:
             return Response({'error':'No oneVone found'}, status=status.HTTP_404_NOT_FOUND)
         serialized_data = OneVOneSerializer(oneVones)
@@ -201,19 +246,27 @@ class ProblemSubmitView(APIView):
             submission_no=submission_no
         )
         accuracy = num_test_cases_passed/num_test_cases
-        user.xp = user.xp + float(problem.difficulty)*0.6 + accuracy*5.0
-        user.level = xp_to_level(user.xp)
-        user.save()
-        oneVoneSubmission = OneVOneSubmission.objects.create(submission=submission, oneVone_problem=oneVoneProblem)
+        oneVoneSubmission, created = OneVOneSubmission.objects.get_or_create(submission=submission, oneVone_problem=oneVoneProblem)
+        time_diff = (timezone.now()-oneVones.started_at).total_seconds()
+        gain = float(problem.difficulty)*1000*(1/log2(time_diff)*1.00)
 
-        if accuracy == 1:
+        if created and accuracy == 1:
+            user.xp = user.xp + float(problem.difficulty)*0.6 + accuracy*5.0
+            user.level = xp_to_level(user.xp)
+            user.save()
+
             problem.solve_count += 1
             problem.try_count += 1
             problem.save()
             if oneVones.primary_user == user:
-                OneVOneNotification.objects.create(oneVonesubmission=oneVoneSubmission, user=oneVones.secondary_user)
+                oneVones.primary_user_score += Decimal(gain)
+                message = oneVones.primary_user.username+" have solved "+" problem "+str(oneVoneProblem.problem_number)+" at "+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+                OneVOneNotification.objects.create(message=message, user=oneVones.secondary_user)
             else:
-                OneVOneNotification.objects.create(oneVonesubmission=oneVoneSubmission, user=oneVones.primary_user)
+                oneVones.secondary_user_score += Decimal(gain)
+                message = oneVones.secondary_user.username+" have solved "+" problem "+str(oneVoneProblem.problem_number)+" at "+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+                OneVOneNotification.objects.create(message=message, user=oneVones.primary_user)
+            oneVones.save()
 
         else:
             problem.try_count += 1
@@ -231,9 +284,23 @@ class LeftView(APIView):
             oneVones.primary_user_status = OneVOne.LEFT
             if oneVones.secondary_user is None or oneVones.secondary_user_status == OneVOne.LEFT:
                 oneVones.status = OneVOne.ENDED
+            else:
+                message = oneVones.primary_user.username+" have left at "+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+                OneVOneNotification.objects.create(message=message, user=oneVones.secondary_user)
+
+            request.user.xp = request.user.xp + oneVones.primary_user_score/100
+            request.user.level = xp_to_level(request.user.xp)
+            request.user.save()
         else:
             oneVones.secondary_user_status = OneVOne.LEFT
             if oneVones.primary_user_status == OneVOne.LEFT:
                 oneVones.status = OneVOne.ENDED
+            else:
+                message = oneVones.secondary_user.username+" have left at "+timezone.now().astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+                OneVOneNotification.objects.create(message=message, user=oneVones.primary_user)
+
+            request.user.xp = request.user.xp + oneVones.secondary_user_score/100
+            request.user.level = xp_to_level(request.user.xp)
+            request.user.save()
         oneVones.save()
         return Response({'message':'You have left the oneVone'}, status=status.HTTP_200_OK) 

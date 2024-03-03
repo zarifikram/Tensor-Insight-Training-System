@@ -37,7 +37,7 @@ class ModeProblemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Problem
-        fields = ['test_cases','used_manipulator']
+        fields = ['id','test_cases','used_manipulator']
 
 class ProblemDetailsSerializer(serializers.ModelSerializer):
     test_cases = TestCaseSerializer(many=True, read_only=True, source='testcase_set')

@@ -19,6 +19,7 @@ class TimeModeView(generics.RetrieveAPIView):
             try:
                 time_mode = TimeMode.objects.get(user=request.user, is_finished=False)
                 serializer = TimeModeSerializer(time_mode)
+                print(serializer.data.current_problem.solution)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except TimeMode.DoesNotExist:
                 return Response({'message': 'Time mode not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -30,7 +31,7 @@ class TimeModeView(generics.RetrieveAPIView):
                 time = request.session.get('time_mode_time')
                 problem = Problem.objects.get(pk=pid)
                 serializer = ModeProblemSerializer(problem)
-                print("TimeModeView end: ",request.session.get('time_mode'))
+                print(problem.solution)
                 return Response({'current_problem':serializer.data,'current_problem_num':current_problem_num,'time':time}, status=status.HTTP_200_OK)
             else:
                 print("TimeModeView end: ",request.session.get('time_mode'))
@@ -223,6 +224,9 @@ class TimeModeCompleteView(APIView):
             time_mode = TimeMode.objects.filter(user=request.user, is_finished=False).first()
             time_mode.is_finished = True
             time_mode.save()
+            request.user.xp = request.user.xp + time_mode.current_problem_num-1*10
+            request.user.level = xp_to_level(request.user.xp)
+            request.user.save()
             return Response({'detail': 'TimeMode has been completed.'}, status=status.HTTP_200_OK)
         else:
             request.session['time_mode'] = 'off'
