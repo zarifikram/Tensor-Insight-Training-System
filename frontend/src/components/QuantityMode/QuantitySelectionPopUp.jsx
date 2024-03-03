@@ -19,6 +19,7 @@ axios.defaults.withCredentials= true;
 
 const QuantitySelectionPopUp = ({ isOpen, onClose, quantity,setQuantity,mode, setMode, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     
     const [authState,setAuthState] = useContext(AuthContext);
 

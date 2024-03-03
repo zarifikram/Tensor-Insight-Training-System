@@ -15,6 +15,7 @@ import { useState } from "react";
 
 const CustomModeLeaderBoardPopUp = ({ isOpen, onClose }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [leaderboard,setLeaderboard] =useState([
       {
         "id": 4,

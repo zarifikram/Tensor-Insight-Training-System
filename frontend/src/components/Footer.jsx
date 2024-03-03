@@ -11,8 +11,10 @@ import { useState } from "react";
 const Footer = () =>{
 
     const [colorState,setColorState] = useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     //Popup--------------------------------------------
     const [isPopupOpen, setPopupOpen] = useState(false);
+    
 
     const openPopup = () => {
         setPopupOpen(true);

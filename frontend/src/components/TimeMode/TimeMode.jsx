@@ -34,6 +34,7 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
   //*Initialization useStates:---------------------------------------------------------------
   const [colorState,setColorState]= useContext(ColorContext); //theme selection state
   const [authState,setAuthState] = useContext(AuthContext); //authentication state
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
   const codeRef = useRef(); //code pane
 
   const iniPage =[

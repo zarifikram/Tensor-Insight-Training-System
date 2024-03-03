@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 
 const DiscussionList = () => {
     const navigate = useNavigate();
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
   
     const discussionIni = [
         {

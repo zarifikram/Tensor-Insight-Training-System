@@ -17,6 +17,7 @@ axios.defaults.withCredentials = true;
 
 const Authentication = () =>{
     const navigate=useNavigate();
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     // useEffect(() => {
     //     const csrfToken =  Cookies.get('csrf')
     //     console.log(csrfToken)

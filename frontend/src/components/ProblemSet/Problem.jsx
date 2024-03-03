@@ -24,6 +24,7 @@ axios.defaults.withCredentials= true;
 const Problem = () => {
   let {id} = useParams();
   const codeRef = useRef();
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
   const iniPage =[
     {

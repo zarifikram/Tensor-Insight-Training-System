@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 const ContestLeaderboard = (id) =>{
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [rankList,setRankList] = useState([
         {
           "user_id": 2,

@@ -16,6 +16,7 @@ import { useState } from "react";
 
 const QuantityModeLeaderBoardPopUp = ({ isOpen, onClose }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [leaderboard,setLeaderboard] =useState([
       {
         "user": {

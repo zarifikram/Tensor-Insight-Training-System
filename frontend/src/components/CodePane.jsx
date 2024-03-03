@@ -9,6 +9,7 @@ import { useState } from "react";
 const CodePane = ({onCodeChange}) => {
     const [colorState, setColorState] = useContext(ColorContext);
     const [code, setCode] = useState("Start typing your 1 code...");
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     
     const handleChange = (event) => {
         const newCode = event.target.value;

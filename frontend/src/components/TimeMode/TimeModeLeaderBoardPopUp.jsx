@@ -16,6 +16,7 @@ import { useState } from "react";
 
 const TimeModeLeaderBoardPopUp = ({ isOpen, onClose ,times}) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [leaderboard,setLeaderboard] =useState([
       {
         "user": {

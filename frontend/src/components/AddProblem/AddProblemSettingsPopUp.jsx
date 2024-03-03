@@ -19,6 +19,7 @@ const AddProblemSettingsPopUp = ({ isOpen, onClose, settings,setSettings,childre
   
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked

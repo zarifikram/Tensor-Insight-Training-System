@@ -73,6 +73,7 @@ function calculateTimeLeft(startedAt, durationInSeconds) {
 
 const OneVOne = () => {
     const navigate = useNavigate();
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const onevoneIni = {
         "title": "New One V One",
         "description": "This is The New One VS One challange",

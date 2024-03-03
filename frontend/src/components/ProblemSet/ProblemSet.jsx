@@ -29,6 +29,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
     const navigate = useNavigate();
     const [colorState, setColorState] = useContext(ColorContext);
     const [authState, setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
     //*Filtering-----------------------------------------
     const [is_user_added, setIs_user_added] = useState("");

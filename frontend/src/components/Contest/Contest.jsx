@@ -19,6 +19,7 @@ const Contest = () =>{
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [problemList,setProblemList] = useState({
         "id": 1,
         "title": "2024-01-27",

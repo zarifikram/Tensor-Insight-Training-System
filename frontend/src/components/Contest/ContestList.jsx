@@ -21,6 +21,7 @@ const ContestList = () =>{
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [contestList,setContestList] = useState([
         {
           "id": 0,

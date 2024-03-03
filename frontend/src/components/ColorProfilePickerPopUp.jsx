@@ -8,6 +8,7 @@ import { EnvVariableContext } from "./helpers/EnvVariableContext";
 
 const ColorPickerPopup = ({ isOpen, onClose, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked

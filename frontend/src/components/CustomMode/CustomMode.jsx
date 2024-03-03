@@ -25,6 +25,7 @@ import { useRef } from "react";
 axios.defaults.withCredentials = true;
 
 const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSelectionPopUpOpen }) =>{
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
   //*Initialization Settings:---------------------------------------------------------------
   const [settings,setSettings] = useState({
     "depth": 2,

@@ -43,6 +43,7 @@ function calculateTimeLeft(startedAt, durationInSeconds) {
 const OneVOneProblem = () => {
     //*Live Update------------------------------------------
     const [loading,setLoading] = useState(true);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const navigate = useNavigate();
 
     const onevoneIni2 = {

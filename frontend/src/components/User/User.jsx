@@ -9,7 +9,8 @@ import { EnvVariableContext } from "../helpers/EnvVariableContext";
 export default function User() {
 
     const [colorState, setColorState] = useContext(ColorContext);
-    const [authState,setAuthState] = useContext(AuthContext)
+    const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [userInfo, setUserInfo] = useState({
         "id": 6,
         "first_name": "saif",

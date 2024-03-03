@@ -23,6 +23,7 @@ const Filter = ({ isOpen, onClose,
     children }) => {
 
     const [colorState, setColorState] = useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
 
     const handleClose = (e) => {

@@ -19,6 +19,7 @@ axios.defaults.withCredentials= true;
 
 const TimeSelectionPopUp = ({ isOpen, onClose,setSendTime,mode,setMode, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [times, setTimes] = useState([600, 1800, 3600]);
     const [selectedTime, setSelectedTime] = useState(0);
     const [minutes,setMinutes]=useState(10);

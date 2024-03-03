@@ -17,6 +17,8 @@ const AddProblem = () =>{
 
   const [colorState,setColorState]= useContext(ColorContext);
   const [authState,setAuthState] = useContext(AuthContext);
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
+  
   const codeRef = useRef();
 
       const [settings,setSettings] = useState({

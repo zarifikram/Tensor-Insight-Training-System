@@ -49,6 +49,7 @@ const Navbar = ({mode,setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOp
     isQuantitySelecetionPopupOpen,setQuantitySelecetionPopupOpen,quantity,setQuantity}) => {
 
     const [routeContext, setRouteContext] = useState({ "isPractice": false, navItemIndex: 0 });
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const navigate = useNavigate();
 
    

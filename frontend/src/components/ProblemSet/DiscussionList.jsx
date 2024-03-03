@@ -43,6 +43,7 @@ const calculateTimeDifference = (time) => {
 };
 
 const DiscussionList = ({id}) => {
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
   useEffect(() => {
     //set axios csrf header

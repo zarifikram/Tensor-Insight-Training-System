@@ -18,6 +18,7 @@ const CustomSettingsPopUp = ({ isOpen, onClose, settings,setSettings,children })
   
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked

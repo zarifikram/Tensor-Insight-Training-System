@@ -38,7 +38,8 @@ const calculateTimeDifference = (time) => {
 };
 
 const Discussion = () =>{
-    const [isLoading,setIsloading]=useState(true)
+    const [isLoading,setIsloading]=useState(true);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const iniDiscussion={
         "id": 1,
         "title": "Cras porttitor augue nec consequat dignissim. Quisque pellentesque, eros ultrices lacinia",

@@ -15,6 +15,7 @@ import { useState } from "react";
 
 
 const OneVOneProblemPopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [colorState,setColorState]= useContext(ColorContext);
     const handleNavigation = (direction) => {
       if (direction === "prev") {
