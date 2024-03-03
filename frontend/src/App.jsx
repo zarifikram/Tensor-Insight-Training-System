@@ -50,9 +50,15 @@ function App() {
     username: "response.data.username",
   })
 
+  // const [envVariables,setEnvVariables]= useState({
+  //   backendDomain:"http://127.0.0.1:8000/"
+  // })
+
   const [envVariables,setEnvVariables]= useState({
-    backendDomain:"http://127.0.0.1:8000/"
+    backendDomain:"http://172.212.122.116/"
   })
+
+  http://172.212.122.116/
 
   useEffect(() => {
    
