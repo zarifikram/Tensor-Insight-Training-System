@@ -1,5 +1,6 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { ClipLoader } from 'react-spinners';
@@ -72,6 +73,7 @@ function calculateTimeLeft(startedAt, durationInSeconds) {
 
 const OneVOne = () => {
     const navigate = useNavigate();
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const onevoneIni = {
         "title": "New One V One",
         "description": "This is The New One VS One challange",
@@ -142,14 +144,14 @@ const OneVOne = () => {
 
       useEffect(() => {
         const fetchData = () => {
-          axios.get(`http://127.0.0.1:8000/api/1-v-1/`)
+          axios.get(`${envVariables.backendDomain}api/1-v-1/`)
             .then((response) => {
               setOnevone(response.data);
             }).catch((error) => {
               console.error("Error fetching data:", error);
             });
 
-            axios.get(`http://127.0.0.1:8000/api/1-v-1/status/`)
+            axios.get(`${envVariables.backendDomain}api/1-v-1/status/`)
             .then((response) => {
               console.log(response.data)
               if(response.data.haveNew)
@@ -213,7 +215,7 @@ const OneVOne = () => {
     }, [isOpen]);
 
     const leave = () =>{
-        axios.post(`http://127.0.0.1:8000/api/1-v-1/left/`)
+        axios.post(`${envVariables.backendDomain}api/1-v-1/left/`)
         .then((response) => {
           setOnevone(null);
         }).catch((error) => {
@@ -222,7 +224,7 @@ const OneVOne = () => {
     }
 
     const getStatus = () =>{
-        axios.get(`http://127.0.0.1:8000/api/1-v-1/status/`)
+        axios.get(`${envVariables.backendDomain}api/1-v-1/status/`)
         .then((response) => {
           console.log(response.data)
         }).catch((error) => {
@@ -232,7 +234,6 @@ const OneVOne = () => {
 
     return (
         <div className={`mx-40 ${colorState.textcolor} font-roboto`} >
-            <div onClick={getStatus}>get status</div>
             {
                 (authState.loggedIn)&&(onevone === null) && <div><KeyBoardInstruction colorState={colorState} OpenPopUp={OpenPopUp} />
                     <KeyBoardInstruction2 colorState={colorState} OpenPopUp={OpenPopUp2} />
@@ -370,6 +371,7 @@ const KeyBoardInstruction2 = ({ colorState, OpenPopUp }) => {
 //New Problem Addition-----------------------------
 
 const NewOneVOne = ({ colorState, onClose, isOpen,setKey }) => {
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const handleClose = (e) => {
         if (e.target.classList.contains('overlay')) {
             onClose();
@@ -402,7 +404,7 @@ const NewOneVOne = ({ colorState, onClose, isOpen,setKey }) => {
 
 
     const Submit = () => {
-        axios.post(`http://127.0.0.1:8000/api/1-v-1/create/`, {
+        axios.post(`${envVariables.backendDomain}api/1-v-1/create/`, {
             title: title,
             description: description,
             duration: duration,
@@ -484,6 +486,7 @@ const NewOneVOne = ({ colorState, onClose, isOpen,setKey }) => {
 
 
 const JoinOneVOne = ({ colorState, onClose, isOpen }) => {
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const handleClose = (e) => {
         if (e.target.classList.contains('overlay')) {
             onClose();
@@ -496,7 +499,7 @@ const JoinOneVOne = ({ colorState, onClose, isOpen }) => {
     };
 
     const Submit = () => {
-        axios.post(`http://127.0.0.1:8000/api/1-v-1/join/`, {
+        axios.post(`${envVariables.backendDomain}api/1-v-1/join/`, {
             key: key,
         }).then((response) => {
             toast.success("You Have Joined a New OneVOne!")

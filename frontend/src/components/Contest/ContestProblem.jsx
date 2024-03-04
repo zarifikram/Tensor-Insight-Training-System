@@ -3,6 +3,7 @@ import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 //import { useRef } from "react";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -31,6 +32,7 @@ const ContestProblem = () =>{
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const codeRef = useRef();
 
 
@@ -88,7 +90,7 @@ const ContestProblem = () =>{
 
 
       useEffect(() => {
-      axios.get(`http://127.0.0.1:8000/api/contest/${contestId}/problem/${problemId}/`)
+      axios.get(`${envVariables.backendDomain}api/contest/${contestId}/problem/${problemId}/`)
       .then((response) => {
       console.log(response.data);
       const test_cases = response.data.test_cases;
@@ -132,7 +134,7 @@ const ContestProblem = () =>{
                 //const singleStringCode = codeRef.current.replace(/\n/g, "\\n");
                 const singleStringCode = codeRef.current
                 console.log(singleStringCode);
-                 axios.post("http://127.0.0.1:8000/api/run-problem/",{
+                 axios.post(`${envVariables.backendDomain}api/run-problem/`,{
                   test_cases:test_cases,code:singleStringCode
                 }).then((response) => {
                   console.log("```")
@@ -165,7 +167,7 @@ const ContestProblem = () =>{
 
 
           const submitAnswer=()=>{
-            axios.post(`http://127.0.0.1:8000/api/contest/${contestId}/problem/${problemId}/submit/`,{
+            axios.post(`${envVariables.backendDomain}api/contest/${contestId}/problem/${problemId}/submit/`,{
               code:codeRef.current,
               taken_time:2
             }).then((response) => {

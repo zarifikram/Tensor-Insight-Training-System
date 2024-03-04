@@ -1,6 +1,7 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -16,6 +17,7 @@ axios.defaults.withCredentials = true;
 
 const Authentication = () =>{
     const navigate=useNavigate();
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     // useEffect(() => {
     //     const csrfToken =  Cookies.get('csrf')
     //     console.log(csrfToken)
@@ -56,7 +58,7 @@ const Authentication = () =>{
 
     const SignUp =()=>{
         console.log("signUp")
-        axios.post(`http://127.0.0.1:8000/api/signup/`,{   
+        axios.post(`${envVariables.backendDomain}api/signup/`,{   
             username: username,
             email: email,
             first_name:firstname,
@@ -77,7 +79,7 @@ const Authentication = () =>{
 
 
     const SignIn=()=>{
-        axios.post(`http://127.0.0.1:8000/api/signin-with-email-password/`,{   
+        axios.post(`${envVariables.backendDomain}api/signin-with-email-password/`,{   
             username: usernameLogin,
             password: passwordLogin,
             }).then((response) => {
@@ -92,7 +94,7 @@ const Authentication = () =>{
 
                 setCSRFToken();
 
-                            axios.get(`http://127.0.0.1:8000/api/user/${response.data.id}`
+                            axios.get(`${envVariables.backendDomain}api/user/${response.data.id}`
                             ).then((response) => {         
                                 console.log(response.data);
                                 setAuthState(prevState => ({
@@ -125,7 +127,7 @@ const Authentication = () =>{
 
 
 const setCSRFToken = () => {
-  axios.get('http://127.0.0.1:8000/api/get-csrftoken/')
+  axios.get(`${envVariables.backendDomain}api/get-csrftoken/`)
   .then(response => {
     const csrfToken = response.data.csrftoken;
     //console.log(csrfToken);
@@ -142,7 +144,7 @@ const setCSRFToken = () => {
 
 
     const SignOut=()=>{
-        axios.post(`http://127.0.0.1:8000/api/signout/`
+        axios.post(`${envVariables.backendDomain}api/signout/`
         ).then((response) => {
                 console.log("You Have Successfully Logged Out");
                 toast.success("Successfully Logged Out");

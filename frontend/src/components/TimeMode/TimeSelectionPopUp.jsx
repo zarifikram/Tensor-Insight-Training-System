@@ -1,6 +1,7 @@
 // Popup.js
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -18,6 +19,7 @@ axios.defaults.withCredentials= true;
 
 const TimeSelectionPopUp = ({ isOpen, onClose,setSendTime,mode,setMode, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [times, setTimes] = useState([600, 1800, 3600]);
     const [selectedTime, setSelectedTime] = useState(0);
     const [minutes,setMinutes]=useState(10);

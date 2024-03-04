@@ -4,9 +4,11 @@ import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { AiOutlineCheck } from "react-icons/ai";
 import { ColorContext } from "./helpers/ColorContext";
+import { EnvVariableContext } from "./helpers/EnvVariableContext";
 
 const ColorPickerPopup = ({ isOpen, onClose, children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked

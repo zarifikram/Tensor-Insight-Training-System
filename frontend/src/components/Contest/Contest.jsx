@@ -2,6 +2,7 @@ import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
 import React, { useContext } from "react";
 import { useState } from "react";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 import axios from 'axios';
 import { useEffect } from "react";
@@ -18,6 +19,7 @@ const Contest = () =>{
 
     const [colorState,setColorState]= useContext(ColorContext);
     const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [problemList,setProblemList] = useState({
         "id": 1,
         "title": "2024-01-27",
@@ -45,7 +47,7 @@ const Contest = () =>{
       })
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/contest/${id}/`)
+        axios.get(`${envVariables.backendDomain}api/contest/${id}/`)
             .then((response) => {
                 console.log(response.data);
                 setProblemList(response.data)

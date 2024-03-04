@@ -1,6 +1,7 @@
 // Popup.js
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import react,{ useContext } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -14,6 +15,7 @@ import { useState } from "react";
 
 const TimeModePopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const handleNavigation = (direction) => {
       if (direction === "prev") {
         setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));

@@ -264,9 +264,9 @@ const TestCasePicker = ({ colorState, context, setContext }) => {
 const TestCase = ({ colorState, test_case }) => {
     return (
         <div className="flex-col h-72 w-full mb-8 ">
-            <div className="text-white font-roboto text-2xl mb-4 font-roboto">input tensor</div>
+            <div className="text-white  text-2xl mb-4 font-roboto">input tensor</div>
             <div className={`flex flex-col h-fit bg-white bg-opacity-20 rounded-lg text-white font-roboto text-2xl p-10 mb-4`}><div className="bg-opacity-100">t = {test_case.input}</div></div>
-            <div className="text-white font-roboto text-2xl mb-4 font-roboto mb-4">expected tensor</div>
+            <div className="text-white  text-2xl  font-roboto mb-4">expected tensor</div>
             <div className={`flex flex-col h-fit bg-white bg-opacity-20 rounded-lg text-white font-roboto text-2xl p-10`}><div className="bg-opacity-100">t = {test_case.output}</div></div>
         </div>
     );
@@ -375,9 +375,9 @@ const TestCaseField = ({ colorState, context, setContext }) => {
                     </div>
                 </div>
                 <div className="flex-col h-full w-1/12">
-                    <div className="flex items-center h-20 w-full justify-center w-20 cursor-pointer" onClick={() => setTestCaseId(testCaseId < context.newProblemDetails.num_cases - 1 ? testCaseId + 1 : testCaseId)}><FaUpLong className={`${colorState.textcolor} text-2xl`} /></div>
+                    <div className="flex items-center h-20  justify-center w-20 cursor-pointer" onClick={() => setTestCaseId(testCaseId < context.newProblemDetails.num_cases - 1 ? testCaseId + 1 : testCaseId)}><FaUpLong className={`${colorState.textcolor} text-2xl`} /></div>
                     <div className="text-white font-roboto text-2xl font-bold text-center">{testCaseId + 1} </div>
-                    <div className="flex items-center h-20 w-full justify-center w-20 cursor-pointer" onClick={() => setTestCaseId(testCaseId > 0 ? testCaseId - 1 : testCaseId)}><FaDownLong className={`${colorState.textcolor} text-2xl`} /></div>
+                    <div className="flex items-center h-20  justify-center w-20 cursor-pointer" onClick={() => setTestCaseId(testCaseId > 0 ? testCaseId - 1 : testCaseId)}><FaDownLong className={`${colorState.textcolor} text-2xl`} /></div>
                 </div>
             </div> : <div />
     );

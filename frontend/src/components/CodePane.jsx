@@ -1,12 +1,15 @@
 import { AuthContext } from "./helpers/AuthContext";
 import { ColorContext } from "./helpers/ColorContext";
+import { EnvVariableContext } from "./helpers/EnvVariableContext";
 import React, { useContext, useEffect, useRef } from "react";
 import { useState } from "react";
 //const [colorState, setColorState] = useContext(ColorContext);
 
+
 const CodePane = ({onCodeChange}) => {
     const [colorState, setColorState] = useContext(ColorContext);
     const [code, setCode] = useState("Start typing your 1 code...");
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     
     const handleChange = (event) => {
         const newCode = event.target.value;

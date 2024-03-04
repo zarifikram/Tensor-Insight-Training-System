@@ -1,6 +1,7 @@
 // Popup.js
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import react,{ useContext } from "react";
 import { useEffect } from "react";
 import axios from "axios";
@@ -18,12 +19,16 @@ import DiscussionList from "./DiscussionList";
 import { toast } from "react-toastify";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaClipboardQuestion } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 axios.defaults.withCredentials= true;
 
 const Problem = () => {
   let {id} = useParams();
   const codeRef = useRef();
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
+  const navigate = useNavigate();
   const iniPage =[
     {
       inputTensor: "",
@@ -124,7 +129,7 @@ const Problem = () => {
 
     useEffect(() => {
         console.log("ret")
-        axios.get(`http://127.0.0.1:8000/api/problem/${id}/`)
+        axios.get(`${envVariables.backendDomain}api/problem/${id}/`)
         .then((response) => {
         console.log(response.data);
         setProblem(response.data)
@@ -168,7 +173,7 @@ const Problem = () => {
             //const singleStringCode = codeRef.current.replace(/\n/g, "\\n");
             const singleStringCode = codeRef.current
             console.log(singleStringCode);
-             axios.post("http://127.0.0.1:8000/api/run-problem/",{
+             axios.post(`${envVariables.backendDomain}api/run-problem/`,{
               test_cases:test_cases,code:singleStringCode
             }).then((response) => {
               console.log("```")
@@ -210,7 +215,7 @@ const Problem = () => {
       }, []); // Empty dependency array ensures that this effect runs only once when the component mounts
     
       const submitAnswer=()=>{
-        axios.post(`http://127.0.0.1:8000/api/problem/${id}/submit/`,{
+        axios.post(`${envVariables.backendDomain}api/problem/${id}/submit/`,{
           code:codeRef.current,
           taken_time:2
         }).then((response) => {
@@ -255,6 +260,7 @@ const Problem = () => {
           <div>Test Cases:</div>
         </div>
         <div className=" h-24 flex justify-center py-4 items-center">
+        <div onClick={()=>{navigate(`/Suggestion/${id}`)}} className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  ${colorState.textcolor} justify-center items-center`}><FaClipboardQuestion /></div>
         <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
                 <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
@@ -278,7 +284,7 @@ const Problem = () => {
                 </div>
 
             </div>
-            <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  text-gray-700 justify-center items-center`}><CgArrowUpO /></div>
+            <div onClick={submitAnswer} className={ `hover:bg-gray-400 ml-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  ${colorState.textcolor} justify-center items-center`}><CgArrowUpO /></div>
         </div>
         <CodePane  onCodeChange={handleCodeChange} />
         <div className=" flex justify-center text-2xl font-bold py-5"> Comments</div>

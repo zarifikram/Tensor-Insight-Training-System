@@ -1,5 +1,6 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import AddProblemSettingsPopUp from "./AddProblemSettingsPopUp";
@@ -16,6 +17,8 @@ const AddProblem = () =>{
 
   const [colorState,setColorState]= useContext(ColorContext);
   const [authState,setAuthState] = useContext(AuthContext);
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
+  
   const codeRef = useRef();
 
       const [settings,setSettings] = useState({
@@ -205,7 +208,7 @@ const Add = () =>{
     
   })
 //editorial_image: editorial_image,
-  axios.post(`http://127.0.0.1:8000/api/user/add-problem/`,problem).then((response) => {
+  axios.post(`${envVariables.backendDomain}api/user/add-problem/`,problem).then((response) => {
       console.log(response.data);
       toast.success("Problem Created")
   }).catch((error) => {

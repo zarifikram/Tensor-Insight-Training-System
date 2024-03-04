@@ -1,5 +1,6 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
@@ -28,6 +29,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
     const navigate = useNavigate();
     const [colorState, setColorState] = useContext(ColorContext);
     const [authState, setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
     //*Filtering-----------------------------------------
     const [is_user_added, setIs_user_added] = useState("");
@@ -138,7 +140,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
     useEffect(() => {
         let str = convertSettingsToString(settings)
 
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
+        axios.get(`${envVariables.backendDomain}api/problem-set/?page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
             .then((response) => {
                 console.log(response.data);
                 setProblems(response.data)
@@ -153,7 +155,7 @@ const ProblemSet = ({ routeContext, setRouteContext }) => {
     const goToPage = (page) => {
         let str = convertSettingsToString(settings)
 
-        axios.get(`http://127.0.0.1:8000/api/problem-set/?page=${page}&page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
+        axios.get(`${envVariables.backendDomain}api/problem-set/?page=${page}&page_size=${perPage}${str}&is_user_added=${is_user_added}&difficulty__gte=${difficultyGTE}&difficulty__lte=${difficultyLTE}&depth__gte=${depthGTE}&depth__lte=${depthLTE}`)
             .then((response) => {
                 console.log(response.data);
                 setProblems(response.data)

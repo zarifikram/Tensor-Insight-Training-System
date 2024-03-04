@@ -4,11 +4,13 @@ import axios from 'axios'
 import { ColorContext } from '../helpers/ColorContext'
 import { Audio, RotatingLines } from 'react-loader-spinner'
 import { AuthContext } from '../helpers/AuthContext'
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 export default function User() {
 
     const [colorState, setColorState] = useContext(ColorContext);
-    const [authState,setAuthState] = useContext(AuthContext)
+    const [authState,setAuthState] = useContext(AuthContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const [userInfo, setUserInfo] = useState({
         "id": 6,
         "first_name": "saif",
@@ -33,7 +35,7 @@ export default function User() {
         "num_of_prob_solved_in_time_mode": 12
       })
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/user/${authState.id}/`)
+        axios.get(`${envVariables.backendDomain}api/user/${authState.id}/`)
             .then(response => {
                 setUserInfo(response.data)
             })

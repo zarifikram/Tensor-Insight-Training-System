@@ -1,6 +1,7 @@
 import { AuthContext } from "../helpers/AuthContext";
 import { ColorContext } from "../helpers/ColorContext";
 import { CSRFContext } from "../helpers/CSRFContext";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { IoMdSettings } from "react-icons/io";
@@ -25,6 +26,7 @@ import { useRef } from "react";
 axios.defaults.withCredentials = true;
 
 const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSelectionPopUpOpen }) =>{
+  const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
   //*Initialization Settings:---------------------------------------------------------------
   const [settings,setSettings] = useState({
     "depth": 2,
@@ -58,7 +60,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
   })
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/custom-mode/setting/")
+    axios.get(`${envVariables.backendDomain}api/custom-mode/setting/`)
     .then((response) => {
     setSettings(response.data)
     getProblem();
@@ -139,7 +141,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
 
   const closeSettingsSelectionPopUp =  () => {
     setSettingsSelectionPopUpOpen(false);
-    axios.post("http://127.0.0.1:8000/api/custom-mode/setting/",{
+    axios.post(`${envVariables.backendDomain}api/custom-mode/setting/`,{
       depth:settings.depth,
       initiator:settings.initiator,
       manipulator:settings.manipulator
@@ -169,7 +171,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
           });
         }
         const singleStringCode = codeRef.current
-          axios.post("http://127.0.0.1:8000/api/run-problem/",{
+          axios.post(`${envVariables.backendDomain}api/run-problem/`,{
           test_cases:test_cases,code:singleStringCode
         }).then((response) => {
           for (let i = 0; i < 5; i++) {
@@ -195,7 +197,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
 
   //*Functions--------------------------------------------------------------------------- 
   const submitAnswer=()=>{
-    axios.post("http://127.0.0.1:8000/api/custom-mode/submit/",{
+    axios.post(`${envVariables.backendDomain}api/custom-mode/submit/`,{
       code:codeRef.current,
       taken_time:2
     }).then((response) => {
@@ -210,16 +212,17 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
         }else{
           toast.error("Some Test Cases Did Not Match")
         }
+        getProblem();
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
-    getProblem();
+    
   }
 
   const getProblem = ()=>{
     if(authState.loggedIn){
-      axios.get("http://127.0.0.1:8000/api/custom-mode/")
+      axios.get(`${envVariables.backendDomain}api/custom-mode/`)
       .then((response) => {
         console.log(response.data)
       const test_cases = response.data.test_cases;
@@ -228,6 +231,7 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
         temp[i].inputTensor=test_cases[i].input;
         temp[i].expectedTensor=test_cases[i].output;
         temp[i].currentTensor=test_cases[i].input;
+        temp[i].reached=false;
         setPages(temp);
       }
     })
@@ -235,14 +239,14 @@ const CustomMode = ({ mode, setMode,isSettingsSelectionPopUpOpen, setSettingsSel
       console.error("Error fetching data:", error);
     });
     }else{
-      axios.get("http://127.0.0.1:8000/api/custom-mode/")
+      axios.get(`${envVariables.backendDomain}api/custom-mode/`)
       .then((response) => {
-      const test_cases = response.data.test_cases;
+      const test_cases = JSON.parse(response.data.test_cases);
       for (let i = 0; i < test_cases.length; i++) {
         let temp = pages;
-        temp[i].inputTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
-        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output)).slice(1, -1);
-        temp[i].currentTensor=(JSON.stringify(test_cases[i].input)).slice(1, -1);
+        temp[i].inputTensor=(JSON.stringify(test_cases[i].input));
+        temp[i].expectedTensor=(JSON.stringify(test_cases[i].output));
+        temp[i].currentTensor=(JSON.stringify(test_cases[i].input));
         temp[i].reached=false;
         setPages(temp);
       }

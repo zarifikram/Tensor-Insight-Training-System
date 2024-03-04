@@ -9,11 +9,13 @@ import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+import { EnvVariableContext } from "../helpers/EnvVariableContext";
 
 import { useState } from "react";
 
 const ContestProblemPopUp = ({ isOpen, onClose,currentPage, setCurrentPage, pages,children }) => {
     const [colorState,setColorState]= useContext(ColorContext);
+    const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
     const handleNavigation = (direction) => {
       if (direction === "prev") {
         setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
