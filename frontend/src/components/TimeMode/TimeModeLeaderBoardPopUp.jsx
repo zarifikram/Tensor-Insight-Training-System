@@ -53,7 +53,7 @@ const TimeModeLeaderBoardPopUp = ({ isOpen, onClose ,times}) => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    }, []);
+    }, [isOpen]);
 
     const handleClose = (e) => {
     // Close the popup only if the overlay is clicked

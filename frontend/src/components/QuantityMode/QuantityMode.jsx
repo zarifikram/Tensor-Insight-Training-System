@@ -22,8 +22,35 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { FaStop } from "react-icons/fa6";
+import Notification from "../Notifications";
 
 const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantitySelecetionPopupOpen,quantity,setQuantity}) =>{
+  const [showNotification, setShowNotification] = useState(false);
+  const handleNotificationClose = () => {
+    setShowNotification(false);
+  };
+
+  const showNotificationHandler = () => {
+    setShowNotification(true);
+  };
+
+  const [showNotification2, setShowNotification2] = useState(false);
+  const handleNotificationClose2 = () => {
+    setShowNotification2(false);
+  };
+
+  const showNotificationHandler2 = () => {
+    setShowNotification2(true);
+  };
+
+  const [showNotification3, setShowNotification3] = useState(false);
+  const handleNotificationClose3 = () => {
+    setShowNotification3(false);
+  };
+
+  const showNotificationHandler3 = () => {
+    setShowNotification3(true);
+  };
   //*Initialization useStates:---------------------------------------------------------------
   const [colorState,setColorState]= useContext(ColorContext);
   const [authState,setAuthState] = useContext(AuthContext);
@@ -156,9 +183,11 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
         received_result.result[2].correct &&
         received_result.result[3].correct &&
         received_result.result[4].correct)){
-          toast.success("All Test Cases Matched!")
+         // toast.success("All Test Cases Matched!")
+          showNotificationHandler();
         }else{
-          toast.error("Some Test Cases Did Not Match")
+          //toast.error("Some Test Cases Did Not Match")
+          showNotificationHandler2();
         }
         if(authState.QuantityModeRunning===quantity){
           let q = authState.QuantityModeRunning
@@ -167,7 +196,8 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
             ...prevState,
             QuantityModeRunning: 0
           }));
-          toast.success("Congraulations! You have completed all "+(q)+" Problems");
+          //toast.success("Congraulations! You have completed all "+(q)+" Problems");
+          showNotificationHandler3();
         }else{
           setAuthState(prevState => ({
             ...prevState,
@@ -210,7 +240,8 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
     submitAnswer();
     axios.post(`${envVariables.backendDomain}api/quantity-mode/force-end/`)
     .then((response) => {
-      toast.success("Quantity Mode Force Ended!");
+      //toast.success("Quantity Mode Force Ended!");
+      showNotificationHandler3();
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -268,8 +299,29 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
         }
         </div>
         <div>
-          <ToastContainer/>  
+          {
+            //<ToastContainer/> 
+          }
+           
         </div>
+        <Notification
+        message="All Test Cases Matched!"
+        onClose={handleNotificationClose}
+        isVisible={showNotification}
+        isSuccess={true}
+      />
+        <Notification
+        message="Some Test Cases Did Not Match"
+        onClose={handleNotificationClose2}
+        isVisible={showNotification2}
+        isSuccess={false}
+      />
+    <Notification
+        message="Quantity Mode Completed"
+        onClose={handleNotificationClose3}
+        isVisible={showNotification3}
+        isSuccess={true}
+      />
                
     </div>
     );

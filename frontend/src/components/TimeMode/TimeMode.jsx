@@ -12,6 +12,7 @@ import { MdLeaderboard } from "react-icons/md";
 import TimeModeLeaderBoardPopUp from "./TimeModeLeaderBoardPopUp";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Notification from "../Notifications";
 
 import CodePane from "../CodePane";
 import { RxCross2 } from "react-icons/rx";//<RxCross2/>
@@ -28,6 +29,33 @@ import { useRef } from "react";
 axios.defaults.withCredentials= true;
 
 const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPopupOpen,sendTime,setSendTime }) =>{
+  const [showNotification, setShowNotification] = useState(false);
+  const handleNotificationClose = () => {
+    setShowNotification(false);
+  };
+
+  const showNotificationHandler = () => {
+    setShowNotification(true);
+  };
+
+  const [showNotification2, setShowNotification2] = useState(false);
+  const handleNotificationClose2 = () => {
+    setShowNotification2(false);
+  };
+
+  const showNotificationHandler2 = () => {
+    setShowNotification2(true);
+  };
+
+  const [showNotification3, setShowNotification3] = useState(false);
+  const handleNotificationClose3 = () => {
+    setShowNotification3(false);
+  };
+
+  const showNotificationHandler3 = () => {
+    setShowNotification3(true);
+  };
+
   //*Loading Screen--------------------------------------------------------------------------
   const [isLoading,setIsLoading] = useState(false);
 
@@ -201,10 +229,12 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
         received_result.result[2].correct &&
         received_result.result[3].correct &&
         received_result.result[4].correct){
-          toast.success("All Test Cases Matched!")
+          //toast.success("All Test Cases Matched!")
+          showNotificationHandler();
           console.log("All Test Cases Matched");
         }else{
-          toast.error("Some Test Cases Did Not Match")
+          //toast.error("Some Test Cases Did Not Match")
+          showNotificationHandler2();
         }  
         setAuthState(prevState => ({
           ...prevState,
@@ -225,7 +255,8 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
     axios.post(`${envVariables.backendDomain}api/time-mode/complete/`)
     .then((response) => {
       console.log(response.data)
-      toast.success("Time mode completed")
+      //toast.success("Time mode completed")
+      showNotificationHandler3();
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -328,9 +359,24 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
       {
         <LoadingScreen isLoading={isLoading} />
       }
-      {
-        <ToastContainer />
-      }
+        <Notification
+        message="All Test Cases Matched!"
+        onClose={handleNotificationClose}
+        isVisible={showNotification}
+        isSuccess={true}
+      />
+        <Notification
+        message="Some Test Cases Did Not Match"
+        onClose={handleNotificationClose2}
+        isVisible={showNotification2}
+        isSuccess={false}
+      />
+    <Notification
+        message="Time Mode Completed"
+        onClose={handleNotificationClose3}
+        isVisible={showNotification3}
+        isSuccess={true}
+      />
   </div>
   );
 }; 
