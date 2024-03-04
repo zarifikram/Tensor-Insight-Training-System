@@ -21,7 +21,8 @@ import Cookies from "js-cookie";
 import { useState } from "react";
 axios.defaults.withCredentials= true;
 
-const calculateTimeDifference = (time) => {
+const calculateTimeDifference = (time2) => {
+  const time="2024-02-20T18:47:55.633753Z"
   const currentTime = new Date();
   const pastTime = new Date(time);
   const difference = currentTime - pastTime;
@@ -304,8 +305,12 @@ const Comment = ({ comment ,parent}) => {
   <div className={`flex justify-start`}>
     <div className={`flex items-center `}><FaUserCircle /></div>
     <div className={`pl-3 flex items-center ${colorState.textcolor2}`}>{comment.user.first_name+" "+comment.user.last_name}</div>
-    <div>{parent&&(<div className={`ml-5 mr-2`}>commented at</div>)  } {(!parent)&&(<div className={`ml-5 mr-2`}>replied at</div>)  }</div>
-    <div>{calculateTimeDifference(comment.created_at)}</div>
+    {
+    /*<div>{parent&&(<div className={`ml-5 mr-2`}>commented at</div>)  } {(!parent)&&(<div className={`ml-5 mr-2`}>replied at</div>)  }</div>
+ 
+       <div>{calculateTimeDifference(comment.created_at)}</div>*/
+    }
+   
   </div>
   <div className={`flex w-full`}> 
     <div className={`w-2 flex-shrink-0 ${colorState.box1color} mx-1 rounded-full hover:bg-gray-400`}></div>

@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaClipboardQuestion } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 axios.defaults.withCredentials= true;
 
 const Problem = () => {
@@ -27,6 +28,7 @@ const Problem = () => {
   const codeRef = useRef();
   const [envVariables,setEnvVariables] = useContext(EnvVariableContext);
 
+  const navigate = useNavigate();
   const iniPage =[
     {
       inputTensor: "",
@@ -258,7 +260,7 @@ const Problem = () => {
           <div>Test Cases:</div>
         </div>
         <div className=" h-24 flex justify-center py-4 items-center">
-        <div onClick={()=>{}} className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  ${colorState.textcolor} justify-center items-center`}><FaClipboardQuestion /></div>
+        <div onClick={()=>{navigate(`/Suggestion/${id}`)}} className={ `hover:bg-gray-400 mr-3 ${colorState.box1color} w-16  h-16 rounded-full font-bold text-2xl flex  ${colorState.textcolor} justify-center items-center`}><FaClipboardQuestion /></div>
         <div className={` ${colorState.box1color}  w-40% rounded-full font-bold text-2xl flex justify-evenly py-5 text-gray-700`}>
                 <div className={`${pages[0].reached?`bg-green-600 rounded-full hover:cursor-pointer`:`bg-red-600 rounded-full hover:cursor-pointer`}`}  onClick={()=>openPopup(0)}>
                   <div className={`${pages[0].reached?``:`hidden invisible`}`}><IoMdCheckmark/></div>
