@@ -268,7 +268,7 @@ const QuantityMode = ({ mode, setMode ,isQuantitySelecetionPopupOpen,setQuantity
         }
         </div>
         <div>
-        <ToastContainer />  
+          <ToastContainer/>  
         </div>
                
     </div>

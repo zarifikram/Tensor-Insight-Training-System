@@ -226,23 +226,24 @@ const Suggestion = () => {
     ];
     const [suggestions,setSuggestions]=useState(iniSuggestions);
 
-    // useEffect(() => {
-    //     axios.get(`${envVariables.backendDomain}api/problem/${id}/submission-list/`)
-    //     .then((response) => {
-    //     console.log(response.data);
-    //     setSuggestions(response.data);
-    //     }).catch((error) => {
-    //         console.error("Error fetching data:", error);
-    //     });
-    //   }, [id]);
+    useEffect(() => {
+        axios.get(`${envVariables.backendDomain}api/problem/${id}/submission-list/`)
+        .then((response) => {
+        console.log(response.data);
+        setSuggestions(response.data);
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+      }, [id]);
 
     return (
     <div className={`mx-40 ${colorState.textcolor2} font-roboto`}>
-     <div className={`font-bold text-2xl py-10 ${colorState.captioncolor} flex`} >code suggestions from other users for problem <div  className={`ml-2`}>{id}</div></div>
+     <div className={`font-bold text-2xl py-10 ${colorState.captioncolor} flex`} >code submissions for problem <div  className={`ml-2`}>{id}</div></div>
      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {suggestions.map((item, index) => (
         <div key={index} className={`${colorState.box1color} rounded-lg p-6`}>
           <h2 className="text-xl font-semibold">{item.user.username}</h2>
+          <h2 className={`pt-1 font-semibold ${colorState.captioncolor} flex`}>test cases passed: <div className={`ml-2`}>{item.num_test_cases_passed}/{item.num_test_cases}</div></h2>
           <p className={`mt-2 ${colorState.textcolor}`}>{item.code}</p>
         </div>
       ))}

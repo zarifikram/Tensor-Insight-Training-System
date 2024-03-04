@@ -201,7 +201,7 @@ const TimeMode = ({ mode, setMode,isTimeSelecetionPopupOpen,setTimeSelecetionPop
         received_result.result[2].correct &&
         received_result.result[3].correct &&
         received_result.result[4].correct){
-          //toast.success("All Test Cases Matched!")
+          toast.success("All Test Cases Matched!")
           console.log("All Test Cases Matched");
         }else{
           toast.error("Some Test Cases Did Not Match")
