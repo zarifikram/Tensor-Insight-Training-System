@@ -41,7 +41,7 @@ function App() {
   const [authState, setAuthState] = useState({
     QuantityModeRunning: 0,
     timerModeRunning: 0,
-    loggedIn: false,
+    loggedIn: true,
     id: -1,
     first_name: "response.data.first_name",
     last_name: "response.data.last_name",
@@ -59,7 +59,7 @@ function App() {
   //   backendDomain:"http://172.212.122.116/"
   // })
 
-  http://172.212.122.116/
+  //http:172.212.122.116/
 
   useEffect(() => {
    
